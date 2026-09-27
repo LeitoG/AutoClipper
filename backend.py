@@ -154,7 +154,11 @@ def serve_frontend():
             html = f.read()
             html = html.replace("__VIDEO_DIR__", VIDEO_DIR.replace("\\", "/"))
             html = html.replace("__EXPORTS_DIR__", EXPORTS_DIR.replace("\\", "/"))
-            return HTMLResponse(content=html)
+            response = HTMLResponse(content=html)
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+            return response
     return HTMLResponse(content="<h1>Index.html no encontrado</h1>", status_code=404)
 
 @app.get("/progress")
