@@ -1971,7 +1971,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         });
 
         function updateCropBoxesVisuals() {
-            if (!activeSceneId || !editorScenes[activeSceneId]) return;
+            if (activeSceneId === null || !editorScenes[activeSceneId] || !editorScenes[activeSceneId].cropState) return;
             const container = document.getElementById('workspace-container');
             if(!container) return;
             const cw = container.clientWidth;
