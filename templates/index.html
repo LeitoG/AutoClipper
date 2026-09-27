@@ -1980,17 +1980,23 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             const scaleY = ch / VID_H;
             
             const applyVisual = (id, state) => {
+                if (!state) return;
                 const el = document.getElementById(id);
                 if(!el) return;
-                el.style.left = `${state.x * scaleX}px`;
-                el.style.top = `${state.y * scaleY}px`;
-                el.style.width = `${state.w * scaleX}px`;
-                el.style.height = `${state.h * scaleY}px`;
+                el.style.left = ${state.x * scaleX}px;
+                el.style.top = ${state.y * scaleY}px;
+                el.style.width = ${state.w * scaleX}px;
+                el.style.height = ${state.h * scaleY}px;
             };
-            applyVisual('crop-face', editorScenes[activeSceneId].cropState.face);
-            applyVisual('crop-game', editorScenes[activeSceneId].cropState.game);
-            applyVisual('crop-full', editorScenes[activeSceneId].cropState.full);
-            applyVisual('crop-subs', editorScenes[activeSceneId].cropState.subs);
+            try {
+                let s = editorScenes[activeSceneId];
+                if (s && s.cropState) {
+                    applyVisual('crop-face', s.cropState.face);
+                    applyVisual('crop-game', s.cropState.game);
+                    applyVisual('crop-full', s.cropState.full);
+                    applyVisual('crop-subs', s.cropState.subs);
+                }
+            } catch(e) { console.warn("Error visual crop:", e); }
         }
         window.addEventListener('resize', updateCropBoxesVisuals);
 
