@@ -1958,7 +1958,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             if (isHook && hookCropState) {
                 hookCropState.splitY = y;
-            } else if (!isHook && editorScenes[activeSceneId]) {
+            } else if (!isHook && editorScenes[activeSceneId] && editorScenes[activeSceneId].cropState) {
                 editorScenes[activeSceneId].cropState.splitY = y;
             }
         });
@@ -1971,7 +1971,9 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         });
 
         function updateCropBoxesVisuals() {
-            if (activeSceneId === null || !editorScenes[activeSceneId] || !editorScenes[activeSceneId].cropState) return;
+            if (activeSceneId == null) return;
+            let currentScene = editorScenes[activeSceneId];
+            if (!currentScene || !currentScene.cropState) return;
             const container = document.getElementById('workspace-container');
             if(!container) return;
             const cw = container.clientWidth;
