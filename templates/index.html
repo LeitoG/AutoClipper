@@ -1672,9 +1672,9 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         function togglePlayPauseWorkspace() {
             if(!workspaceVideo) return;
             if(workspaceVideo.paused) {
-                if (currentClip && currentVideoName) {
-                    let vUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(currentVideoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=1';
-                    let jUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(currentVideoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=2';
+                if (currentClip && videoName) {
+                    let vUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(videoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=1';
+                    let jUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(videoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=2';
                     document.getElementById('global-audio-voice').src = vUrl;
                     document.getElementById('global-audio-game').src = jUrl;
                     attachAudioSync(workspaceVideo, currentClip.start);
@@ -4657,25 +4657,25 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                             <td style="padding: 10px;">
                                 <div style="display:flex; align-items:flex-start; gap:5px; margin-bottom: 4px;">
                                     <div style="color: #d09010; font-weight: bold; flex:1; max-width: 200px; word-wrap: break-word;">${clip.social_title || clip.yt_title || ''}</div>
-                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar"></button>
+                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar">📋</button>
                                 </div>
                             </td>
                             <td style="padding: 10px;">
                                 <div style="display:flex; align-items:flex-start; gap:5px;">
                                     <div style="color: #ccc; font-size: 11px; flex:1; max-width: 250px; word-wrap: break-word;">${clip.social_desc || clip.yt_desc || ''}</div>
-                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar"></button>
+                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar">📋</button>
                                 </div>
                             </td>
                             <td style="padding: 10px;">
                                 <div style="display:flex; align-items:flex-start; gap:5px;">
                                     <div style="color: #00aced; font-size: 11px; flex:1; max-width: 150px; word-break: break-all;">${clip.yt_tags || '#Leito4Gaming, #Leito4GamingPlus'}</div>
-                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar"></button>
+                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar">📋</button>
                                 </div>
                             </td>
                             <td style="padding: 10px;">
                                 <div style="display:flex; align-items:flex-start; gap:5px;">
                                     <div style="color: #ccc; font-size: 11px; flex:1; max-width: 200px; word-wrap: break-word;">${clip.social_desc || ''}</div>
-                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar"></button>
+                                    <button onclick="copyToClipboard(this)" style="background:transparent; border:none; cursor:pointer; font-size:12px; padding:0; filter: grayscale(1); opacity:0.7;" title="Copiar">📋</button>
                                 </div>
                             </td>
                             <td style="padding: 10px;">
