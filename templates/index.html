@@ -969,7 +969,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 rejectedClipsData = json.data.rejected_clips || [];
                 videoName = json.data.video_name;
                 
-                const dynamicVideoUrl = "http://localhost:8000/videos/" + videoName;
+                const dynamicVideoUrl = window.location.origin + "/videos/" + videoName;
                 if (tlVideo.src !== dynamicVideoUrl) {
                     tlVideo.src = dynamicVideoUrl;
                 }
