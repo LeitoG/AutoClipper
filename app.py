@@ -1,22 +1,21 @@
 ﻿import webview
 import threading
 import uvicorn
-import random
+import time
 
 from backend import app
 
-PORT = random.randint(8100, 8900)
-
 def start_server():
-    uvicorn.run(app, host='127.0.0.1', port=PORT, log_level='info')
+    uvicorn.run(app, host='127.0.0.1', port=8000, log_level='info')
 
 if __name__ == '__main__':
     server_thread = threading.Thread(target=start_server, daemon=True)
     server_thread.start()
     
+    timestamp = int(time.time())
     webview.create_window(
         'AutoClipper 2.0',
-        f'http://127.0.0.1:{PORT}',
+        f'http://127.0.0.1:8000/?t={timestamp}',
         width=1280,
         height=800,
         min_size=(1024, 768),
