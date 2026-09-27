@@ -4881,16 +4881,55 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     </script>
 
     <script>
+        let audioCtx;
+        let voiceGain, gameGain;
+
+        function initWebAudio() {
+            if (audioCtx) return;
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            audioCtx = new AudioContext();
+            
+            let vAudio = document.getElementById('global-audio-voice');
+            let jAudio = document.getElementById('global-audio-game');
+            
+            // Required for Web Audio API with external media
+            vAudio.crossOrigin = "anonymous";
+            jAudio.crossOrigin = "anonymous";
+            
+            let sourceVoice = audioCtx.createMediaElementSource(vAudio);
+            let sourceGame = audioCtx.createMediaElementSource(jAudio);
+            
+            voiceGain = audioCtx.createGain();
+            gameGain = audioCtx.createGain();
+            
+            sourceVoice.connect(voiceGain).connect(audioCtx.destination);
+            sourceGame.connect(gameGain).connect(audioCtx.destination);
+        }
+
         function updateAudioVolumes() {
             let v = document.getElementById('vol-voz') ? parseFloat(document.getElementById('vol-voz').value) : 1.0;
             let j = document.getElementById('vol-juego') ? parseFloat(document.getElementById('vol-juego').value) : 1.0;
-            document.getElementById('global-audio-voice').volume = Math.max(0, Math.min(1, v));
-            document.getElementById('global-audio-game').volume = Math.max(0, Math.min(1, j));
+            
             if (document.getElementById('lbl-vol-voz')) document.getElementById('lbl-vol-voz').innerText = v.toFixed(1);
             if (document.getElementById('lbl-vol-juego')) document.getElementById('lbl-vol-juego').innerText = j.toFixed(1);
+
+            if (audioCtx && voiceGain && gameGain) {
+                // Web Audio API permite volumen > 1.0 sin problema
+                voiceGain.gain.value = v;
+                gameGain.gain.value = j;
+            } else {
+                // Fallback si Web Audio no inicia todavia
+                document.getElementById('global-audio-voice').volume = Math.max(0, Math.min(1, v));
+                document.getElementById('global-audio-game').volume = Math.max(0, Math.min(1, j));
+            }
         }
         
         function attachAudioSync(videoEl, clipStart) {
+            initWebAudio();
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
             videoEl.muted = true;
             let vAudio = document.getElementById('global-audio-voice');
             let jAudio = document.getElementById('global-audio-game');
