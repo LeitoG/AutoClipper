@@ -1,0 +1,489 @@
+
+        window.onload = async () => {
+            try {
+                const cfg = await fetch('').then(r => r.json());
+                const vidInput = document.getElementById('');
+                const expInput = document.getElementById('');
+                if (vidInput) vidInput.value = cfg.video_dir;
+                if (expInput) expInput.value = cfg.exports_dir;
+                
+                
+                const vidsData = await fetch('').then(r => r.json());
+                const vids = vidsData.videos || [];
+                const select = document.getElementById('');
+                if (select) {
+                    select.innerHTML = '';
+                    vids.forEach(v => {
+                        select.innerHTML += ``;
+                    });
+                    if(vids.length > 0) {
+                        videoName = vids[0];
+                        tlVideo.src = "" + videoName;
+                        init();
+                    } else {
+                        select.innerHTML = '';
+                    }
+                }
+            } catch (err) {
+                console.error("", err);
+            }
+        };
+        const errorContainer = document.getElementById('');
+        const clipListEl = document.getElementById('');
+        const viewTimeline = document.getElementById('');
+        const viewEditor = document.getElementById('');
+        const tlVideo = document.getElementById('');
+        const workspaceVideo = document.getElementById('');
+        const previewCanvas = document.getElementById('');
+        const ctxPreview = previewCanvas ? previewCanvas.getContext('') : null;
+        
+        let clipsData = [];
+        let completedClipsData = [];
+        let currentClip = null;
+        let videoName = "";
+        let stopListener = null;
+
+        function formatTime(totalSeconds) {
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = Math.floor(totalSeconds % 60);
+            if (h > 0) return ``;
+            return ``;
+        }
+
+        async function init() {
+            try {
+                const res = await fetch('', { cache: '' });
+                const json = await res.json();
+                
+                if (json.status === "") {
+                    showError(json.message);
+                    return;
+                }
+                
+                clipsData = json.data.clips;
+                completedClipsData = json.data.completed_clips || [];
+                videoName = json.data.video_name;
+                
+                const dynamicVideoUrl = ""No se pudo conectar con FastAPI. ""error-alert""""color:#aaa;""color:#28a745; float:right; font-size: 14px;""font-weight:bold; color:#007acc; font-size:18px;""font-size:13px; color:#ddd; margin-top:4px; font-style:italic;""${clip.reason || ''}""font-size:0.85em; color:#aaa; margin-top:5px;""times-${clip.id}""color:#fff; font-weight:bold;""display: flex; gap: 10px; margin-top: 10px; align-items: stretch;""btn""background:#d09010; flex: 1; margin:0;""enterTrimMode('', event)""display:flex; align-items:center; background:#444; padding: 0 10px; border-radius:4px; cursor:pointer;""event.stopPropagation()""checkbox""markClipDone('', this)""margin-right:5px; width:16px; height:16px; cursor:pointer;""controls-${clip.id}""display:none; flex-direction:column; gap:8px; margin-top: 15px; background: #1a1a1a; padding: 12px; border-radius: 4px; border: 1px solid #444;""font-size: 11px; color: #aaa; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;""display: flex; gap: 10px;""btn""flex:1; background:#333; font-size:12px; padding:8px 0; margin:0; border: 1px solid #555;""setClipStart('', event)""btn""flex:1; background:#333; font-size:12px; padding:8px 0; margin:0; border: 1px solid #555;""setClipEnd('', event)""color:#aaa;""font-weight:bold; color:#28a745; font-size:16px;""font-size:0.85em; color:#aaa; margin-top:5px;""btn""background:#444; margin-top:10px; padding: 5px;""restoreClip('', event)""color:#fff; font-weight:bold;""🔇 Audio Muteado""🔊 Audio Activado""center""middle""#000""Error renderCanvasLoop: ""color:#d09010; font-weight:bold;""""Error enterEditMode: ""Sincronizando Backend...""&H00FF33CC&""Arial Black""bounce""95""error""✅ Render Iniciado""#28a745""font-weight:bold; margin-bottom:10px;""width:100%; height:10px; background:#111; border-radius:5px; overflow:hidden;""export-progress-bar""width:0%; height:100%; background:#4CAF50; transition:width 0.5s;""export-progress-text""font-size:11px; color:#aaa; margin-top:5px; text-align:right;""font-weight:bold; margin-bottom:5px; color:#4CAF50;""font-size:11px; color:#aaa;""🚀 Exportar a FFmpeg""#2080df""Error polling progress""🚨 Backend Falló: ""🚀 Exportar a FFmpeg""#FF4B4B""[]""btn custom-tpl-btn""width:100%; margin-bottom:10px; border: 2px solid transparent; background: #333; color: #d09010;""Nombre de la plantilla:");
+            if(!name) return;
+            const tpl = {
+                name: name,
+                cropState: JSON.parse(JSON.stringify(editorScenes[activeSceneId].cropState))
+            };
+            customTemplates.push(tpl);
+            localStorage.setItem('', JSON.stringify(customTemplates));
+            loadCustomTemplates();
+        }
+
+        function syncSubtitlesFromText() {
+            const rawText = document.getElementById('').value.trim();
+            if (!rawText) { editorWords = []; renderTimelineTracks(); return; }
+            const rawWords = rawText.split(/\s+/);
+            const wordDur = (currentClip.end - currentClip.start) / rawWords.length;
+            const newEditorWords = [];
+            rawWords.forEach((txt, i) => {
+                if (editorWords[i]) {
+                    newEditorWords.push({...editorWords[i], text: txt});
+                } else {
+                    newEditorWords.push({id: i, text: txt, start: currentClip.start + (i * wordDur), end: currentClip.start + ((i + 1) * wordDur)});
+                }
+            });
+            editorWords = newEditorWords;
+            renderTimelineTracks();
+            saveCurrentClipState();
+        }
+        
+        async function saveCurrentClipState() {
+            if(!currentClip) return;
+            currentClip.words = editorWords;
+            currentClip.ass_text = document.getElementById('').value;
+            try {
+                await fetch('', {
+                    method: '',
+                    headers: {'': ''},
+                    body: JSON.stringify({ clip_id: currentClip.id, ass_text: currentClip.ass_text, words: currentClip.words })
+                });
+            } catch (err) { console.error("", err); }
+        }
+        
+        let draggingWord = null, draggingHandle = null, dragStartX = 0, dragStartVal = 0;
+        function startWordDrag(e, word, handle) {
+            e.stopPropagation(); e.preventDefault();
+            draggingWord = word; draggingHandle = handle; dragStartX = e.clientX;
+            dragStartVal = handle === '' ? word.start : word.end;
+            document.addEventListener('', onWordDrag);
+            document.addEventListener('', onWordDragEnd);
+        }
+        function onWordDrag(e) {
+            if(!draggingWord) return;
+            const subsTrack = document.getElementById('');
+            const totalDur = currentClip.end - currentClip.start;
+            const trackWidth = subsTrack.getBoundingClientRect().width;
+            const dx = e.clientX - dragStartX;
+            const dt = (dx / trackWidth) * totalDur;
+            if (draggingHandle === '') draggingWord.start = Math.max(currentClip.start, Math.min(draggingWord.end - 0.1, dragStartVal + dt));
+            else draggingWord.end = Math.max(draggingWord.start + 0.1, Math.min(currentClip.end, dragStartVal + dt));
+            renderTimelineTracks();
+        }
+        function onWordDragEnd() {
+            if(draggingWord) saveCurrentClipState();
+            draggingWord = null;
+            document.removeEventListener('', onWordDrag);
+            document.removeEventListener('', onWordDragEnd);
+        }
+        
+        async function runAIAutoTranscribe() {
+            const btn = document.getElementById('');
+            
+            const originalText = btn.innerText;
+            btn.innerText = "";
+            btn.disabled = true;
+            btn.style.background = "";
+            
+            
+            const toast = document.createElement('');
+            toast.style.cssText = '';
+            toast.innerHTML = '';
+            document.body.appendChild(toast);
+            
+            try {
+                const res = await fetch('', {
+                    method: '',
+                    headers: {'': ''},
+                    body: JSON.stringify({ clip_id: currentClip.id, video_name: videoName, start: currentClip.start, end: currentClip.end })
+                });
+                const data = await res.json();
+                if(data.status === "") throw new Error(data.message);
+                
+                editorWords = data.words.map((w, i) => ({ id: i, text: w.word, start: w.start, end: w.end }));
+                document.getElementById('').value = editorWords.map(w => w.text).join('');
+                renderTimelineTracks();
+                await saveCurrentClipState();
+                btn.disabled = false;
+                btn.style.background = "";
+                toast.remove();
+            }
+        }
+        
+        function exitEditMode() {
+            document.getElementById('').style.display = '';
+            document.getElementById('').style.display = '';
+            if (trimmerVideo) trimmerVideo.play();
+            if (workspaceVideo) workspaceVideo.pause();
+        }
+
+        
+        function switchSidePanel(panelName) {
+            const panels = ['', '', '', '', ''];
+            panels.forEach(p => {
+                document.getElementById('' + p).style.display = '';
+                document.getElementById('' + p).classList.remove('');
+            });
+            document.getElementById('' + panelName).style.display = '';
+            document.getElementById('' + panelName).classList.add('');
+        }
+
+        
+        let hookTime = null;
+        let hookText = "";
+
+        function captureHookFrame() {
+            if(!workspaceVideo) return;
+            hookTime = workspaceVideo.currentTime;
+            
+            
+            const canvas = document.createElement('');
+            canvas.width = workspaceVideo.videoWidth;
+            canvas.height = workspaceVideo.videoHeight;
+            const ctx = canvas.getContext('');
+            ctx.drawImage(workspaceVideo, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('');
+            
+            const preview = document.getElementById('');
+            preview.style.backgroundImage = ``;
+            preview.innerText = "";
+            
+            alert(``);
+        }
+        
+        function updateHookText() {
+            hookText = document.getElementById('').value;
+        }
+
+        
+        let editorStickers = []; 
+        
+        function uploadSticker(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const id = Date.now().toString();
+                editorStickers.push({
+                    id: id,
+                    name: file.name,
+                    file: file,
+                    dataUrl: ev.target.result,
+                    x: 100, y: 100, w: 200, h: 200
+                });
+                renderStickersList();
+                renderStickersCanvas();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderStickersList() {
+            const container = document.getElementById('');
+            container.innerHTML = "";
+            editorStickers.forEach(s => {
+                container.innerHTML += ``;
+            });
+        }
+        
+        function removeSticker(id) {
+            editorStickers = editorStickers.filter(s => s.id !== id);
+            renderStickersList();
+            renderStickersCanvas();
+        }
+
+        function renderStickersCanvas() {
+            
+            document.querySelectorAll('').forEach(el => el.remove());
+            const workspace = document.getElementById('');
+            
+            editorStickers.forEach(s => {
+                const div = document.createElement('');
+                div.className = '';
+                div.id = '' + s.id;
+                div.style.position = '';
+                div.style.border = '';
+                div.style.background = '';
+                div.style.cursor = '';
+                div.style.zIndex = '';
+                
+                
+                const scaleX = workspace.clientWidth / VID_W;
+                const scaleY = workspace.clientHeight / VID_H;
+                
+                div.style.left = (s.x * scaleX) + '';
+                div.style.top = (s.y * scaleY) + '';
+                div.style.width = (s.w * scaleX) + '';
+                div.style.height = (s.h * scaleY) + '';
+                
+                div.innerHTML = ``;
+                
+                workspace.appendChild(div);
+                makeDraggable(div, (rect) => {
+                    s.x = rect.x / scaleX;
+                    s.y = rect.y / scaleY;
+                    s.w = rect.w / scaleX;
+                    s.h = rect.h / scaleY;
+                });
+            });
+        }
+
+        
+        let outroDataUrl = null;
+        let outroFile = null; 
+
+        function uploadOutro(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            outroFile = file;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                outroDataUrl = ev.target.result;
+                const preview = document.getElementById('');
+                preview.style.backgroundImage = ``;
+                preview.innerText = "";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        
+        function openAiModal() {
+            document.getElementById('').classList.remove('');
+            document.getElementById('').value = "";
+        }
+        function closeAiModal() {
+            document.getElementById('').classList.add('');
+        }
+        async function generateAiClips() {
+            const prompt = document.getElementById('').value;
+            if(!prompt) return;
+            
+            closeAiModal();
+            
+            
+            const loadingScreen = document.getElementById('');
+            const progressBar = document.getElementById('');
+            const progressText = document.getElementById('');
+            
+            loadingScreen.classList.remove('');
+            progressBar.style.width = '';
+            progressText.innerText = "";
+            
+            try {
+                
+                const fetchPromise = fetch('', {
+                    method: '',
+                    headers: {'': ''},
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                
+                setTimeout(() => { progressBar.style.width = ''; progressText.innerText = ""; }, 1000);
+                setTimeout(() => { progressBar.style.width = ''; progressText.innerText = ""; }, 2500);
+                setTimeout(() => { progressBar.style.width = ''; progressText.innerText = ""; }, 3500);
+                
+                
+                const res = await fetchPromise;
+                const json = await res.json();
+                
+                if(json.status === "") throw new Error(json.message);
+                
+                progressBar.style.width = '';
+                progressText.innerText = "";
+                
+                
+                setTimeout(() => {
+                    loadingScreen.classList.add('');
+                    init();
+                }, 800);
+                
+            } catch (err) {
+                alert("" + err.message);
+                loadingScreen.classList.add('');
+            }
+        }
+
+        async function markClipDone(clipId, checkbox) {
+            if (!checkbox) return;
+            const itemEl = document.getElementById(``);
+            if(itemEl) {
+                itemEl.style.opacity = '';
+                itemEl.style.pointerEvents = '';
+            }
+            checkbox.disabled = true;
+            
+            const clip = clipsData.find(c => c.id === clipId);
+            
+            try {
+                const res = await fetch('', {
+                    method: '',
+                    headers: {'': ''},
+                    body: JSON.stringify({ clip_id: clipId, start: clip.start, end: clip.end })
+                });
+                const json = await res.json();
+                if (json.status === "") throw new Error(json.message);
+                
+                
+                init();
+                
+            } catch (err) {
+                alert("" + err.message);
+                if(itemEl) {
+                    itemEl.style.opacity = '';
+                    itemEl.style.pointerEvents = '';
+                }
+                checkbox.disabled = false;
+                checkbox.checked = false;
+            }
+        }
+
+        async function restoreClip(clipId, event) {
+            if (event) event.stopPropagation();
+            try {
+                const res = await fetch('', {
+                    method: '',
+                    headers: {'': ''},
+                    body: JSON.stringify({ clip_id: clipId })
+                });
+                const json = await res.json();
+                if (json.status === "") throw new Error(json.message);
+                
+                init(); 
+            } catch (err) {
+                alert("" + err.message);
+            }
+        }
+
+        init();
+        function updateSubtitlePreview() {
+            
+        }
+        
+        async function openConfigModal() {
+            try {
+                const res = await fetch('');
+                const cfg = await res.json();
+                document.getElementById('').value = cfg.video_dir;
+                document.getElementById('').value = cfg.exports_dir;
+                document.getElementById('').classList.remove('');
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        function closeConfigModal() {
+            document.getElementById('').classList.add('');
+        }
+        async function browseFolder(inputId) {
+            try {
+                const res = await fetch('');
+                const data = await res.json();
+                if (data.path) {
+                    document.getElementById(inputId).value = data.path;
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        async function saveConfig() {
+            const v = document.getElementById('').value;
+            const e = document.getElementById('').value;
+            try {
+                await fetch('', {
+                    method: '',
+                    headers: {'': ''},
+                    body: JSON.stringify({ video_dir: v, exports_dir: e })
+                });
+                alert("");
+                location.reload();
+            } catch(e) {
+                console.error(e);
+                alert("");
+            }
+        }
+
+        async function loadVideosList() {
+            try {
+                const res = await fetch('');
+                const data = await res.json();
+                if(data.videos) {
+                    const sel = document.getElementById('');
+                    sel.innerHTML = '';
+                    data.videos.forEach(v => {
+                        const opt = document.createElement('');
+                        opt.value = v;
+                        opt.innerText = v;
+                        if(v === videoName) opt.selected = true;
+                        sel.appendChild(opt);
+                    });
+                }
+            } catch(e) {}
+        }
+        
+        function changeVideo(newVideo) {
+            
+            alert("" + newVideo + ".\n\nPara generar clips de este nuevo video, necesitas usar el botón '' y especificarlo.");
+        }
+        
+        
+        const style = document.createElement('');
+        style.innerHTML = ``;
+        document.head.appendChild(style);
+        
+        
+        loadVideosList();
+    

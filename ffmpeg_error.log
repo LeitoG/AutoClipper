@@ -1,0 +1,107 @@
+Error en run_ffmpeg: FFmpeg exit code 4294967274
+  Stream #2:1(eng): Audio: opus, 48000 Hz, stereo, fltp (default)
+    Metadata:
+      ENCODER         : Lavc62.28.101 libopus
+      HANDLER_NAME    : Apple Sound Media Handler
+      VENDOR_ID       :     
+      TIMECODE        : 00:07:22:46
+      DURATION        : 00:00:06.891000000
+[libvpx-vp9 @ 000001f1621f3cc0] v1.16.0-108-g640d4ce27
+[libvpx-vp9 @ 000001f1621f4040] v1.16.0-108-g640d4ce27
+Stream mapping:
+  Stream #0:0 (h264) -> trim:default
+  Stream #0:0 (h264) -> trim:default
+  Stream #0:1 (aac) -> atrim:default
+  Stream #1:0 (libvpx-vp9) -> format:default
+  Stream #2:0 (libvpx-vp9) -> format:default
+  copy:default -> Stream #0:0 (libx264)
+  concat -> Stream #0:1 (aac)
+Press [q] to stop, [?] for help
+[libvpx-vp9 @ 000001f1621f3cc0] v1.16.0-108-g640d4ce27
+[libvpx-vp9 @ 000001f1621f4040] v1.16.0-108-g640d4ce27
+[Parsed_subtitles_31 @ 000001f167296c00] libass API version: 0x1704000
+[Parsed_subtitles_31 @ 000001f167296c00] libass source: commit: 0.17.4-27-g1cbba0a8818c83495114b3c2b5730410eecbdb2c
+[Parsed_subtitles_31 @ 000001f167296c00] Shaper: FriBidi 1.0.16 (SIMPLE) HarfBuzz-ng 14.2.0 (COMPLEX)
+[Parsed_subtitles_31 @ 000001f167296c00] Using font provider directwrite (with GDI)
+[Parsed_crop_4 @ 000001f162814880] Invalid too big or non positive size for width '0' or height '692'
+[Parsed_crop_4 @ 000001f162814880] Failed to configure input pad on Parsed_crop_4
+[fc#0 @ 000001f16055f340] Error reinitializing filters!
+[fc#0 @ 000001f16055f340] Task finished with error code: -22 (Invalid argument)
+[fc#0 @ 000001f16055f340] Terminating thread with return code -22 (Invalid argument)
+[vost#0:0/libx264 @ 000001f16056c6c0] [enc:libx264 @ 000001f160573980] Could not open encoder before EOF
+[vost#0:0/libx264 @ 000001f16056c6c0] Task finished with error code: -22 (Invalid argument)
+[vost#0:0/libx264 @ 000001f16056c6c0] Terminating thread with return code -22 (Invalid argument)
+[aost#0:1/aac @ 000001f1621c5740] [enc:aac @ 000001f160574280] Could not open encoder before EOF
+[aost#0:1/aac @ 000001f1621c5740] Task finished with error code: -22 (Invalid argument)
+[aost#0:1/aac @ 000001f1621c5740] Terminating thread with return code -22 (Invalid argument)
+[out#0/mp4 @ 000001f162814540] Nothing was written into output file, because at least one of its streams received no packets.
+frame=    0 fps=0.0 q=0.0 Lsize=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:00.09    
+frame=0
+fps=0.00
+stream_0_0_q=0.0
+bitrate=N/A
+total_size=0
+out_time_us=N/A
+out_time_ms=N/A
+out_time=N/A
+dup_frames=0
+drop_frames=0
+speed=N/A
+progress=end
+Conversion failed!
+
+Traceback (most recent call last):
+  File "C:\Users\leone\Desktop\OBS Grabaciones\Exports\Complete Games\backend.py", line 338, in run_ffmpeg
+    raise Exception("FFmpeg exit code " + str(process.returncode) + "\n" + "".join(stdout_lines[-50:]))
+Exception: FFmpeg exit code 4294967274
+  Stream #2:1(eng): Audio: opus, 48000 Hz, stereo, fltp (default)
+    Metadata:
+      ENCODER         : Lavc62.28.101 libopus
+      HANDLER_NAME    : Apple Sound Media Handler
+      VENDOR_ID       :     
+      TIMECODE        : 00:07:22:46
+      DURATION        : 00:00:06.891000000
+[libvpx-vp9 @ 000001f1621f3cc0] v1.16.0-108-g640d4ce27
+[libvpx-vp9 @ 000001f1621f4040] v1.16.0-108-g640d4ce27
+Stream mapping:
+  Stream #0:0 (h264) -> trim:default
+  Stream #0:0 (h264) -> trim:default
+  Stream #0:1 (aac) -> atrim:default
+  Stream #1:0 (libvpx-vp9) -> format:default
+  Stream #2:0 (libvpx-vp9) -> format:default
+  copy:default -> Stream #0:0 (libx264)
+  concat -> Stream #0:1 (aac)
+Press [q] to stop, [?] for help
+[libvpx-vp9 @ 000001f1621f3cc0] v1.16.0-108-g640d4ce27
+[libvpx-vp9 @ 000001f1621f4040] v1.16.0-108-g640d4ce27
+[Parsed_subtitles_31 @ 000001f167296c00] libass API version: 0x1704000
+[Parsed_subtitles_31 @ 000001f167296c00] libass source: commit: 0.17.4-27-g1cbba0a8818c83495114b3c2b5730410eecbdb2c
+[Parsed_subtitles_31 @ 000001f167296c00] Shaper: FriBidi 1.0.16 (SIMPLE) HarfBuzz-ng 14.2.0 (COMPLEX)
+[Parsed_subtitles_31 @ 000001f167296c00] Using font provider directwrite (with GDI)
+[Parsed_crop_4 @ 000001f162814880] Invalid too big or non positive size for width '0' or height '692'
+[Parsed_crop_4 @ 000001f162814880] Failed to configure input pad on Parsed_crop_4
+[fc#0 @ 000001f16055f340] Error reinitializing filters!
+[fc#0 @ 000001f16055f340] Task finished with error code: -22 (Invalid argument)
+[fc#0 @ 000001f16055f340] Terminating thread with return code -22 (Invalid argument)
+[vost#0:0/libx264 @ 000001f16056c6c0] [enc:libx264 @ 000001f160573980] Could not open encoder before EOF
+[vost#0:0/libx264 @ 000001f16056c6c0] Task finished with error code: -22 (Invalid argument)
+[vost#0:0/libx264 @ 000001f16056c6c0] Terminating thread with return code -22 (Invalid argument)
+[aost#0:1/aac @ 000001f1621c5740] [enc:aac @ 000001f160574280] Could not open encoder before EOF
+[aost#0:1/aac @ 000001f1621c5740] Task finished with error code: -22 (Invalid argument)
+[aost#0:1/aac @ 000001f1621c5740] Terminating thread with return code -22 (Invalid argument)
+[out#0/mp4 @ 000001f162814540] Nothing was written into output file, because at least one of its streams received no packets.
+frame=    0 fps=0.0 q=0.0 Lsize=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:00.09    
+frame=0
+fps=0.00
+stream_0_0_q=0.0
+bitrate=N/A
+total_size=0
+out_time_us=N/A
+out_time_ms=N/A
+out_time=N/A
+dup_frames=0
+drop_frames=0
+speed=N/A
+progress=end
+Conversion failed!
+

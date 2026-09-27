@@ -1,0 +1,2783 @@
+[
+    {
+        "id": 0,
+        "seek": 3000,
+        "start": 30.0,
+        "end": 32.88,
+        "text": " relaxed",
+        "tokens": [
+            50412,
+            14628,
+            50508
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.918465614318848,
+        "compression_ratio": 0.4666666666666667,
+        "no_speech_prob": 0.5731147527694702
+    },
+    {
+        "id": 1,
+        "seek": 6000,
+        "start": 60.0,
+        "end": 65.66,
+        "text": " 잘 못참OS",
+        "tokens": [
+            50364,
+            6644,
+            10239,
+            5786,
+            116,
+            4367,
+            50647
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.0515998840332035,
+        "compression_ratio": 0.6666666666666666,
+        "no_speech_prob": 0.4547654986381531
+    },
+    {
+        "id": 2,
+        "seek": 6000,
+        "start": 73.46000000000001,
+        "end": 75.6,
+        "text": " 삼겹살",
+        "tokens": [
+            51037,
+            32391,
+            1368,
+            117,
+            26082,
+            51144
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.0515998840332035,
+        "compression_ratio": 0.6666666666666666,
+        "no_speech_prob": 0.4547654986381531
+    },
+    {
+        "id": 3,
+        "seek": 7560,
+        "start": 76.58,
+        "end": 77.22,
+        "text": " 참",
+        "tokens": [
+            50413,
+            18255,
+            50445
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.03927346934443,
+        "compression_ratio": 0.9642857142857143,
+        "no_speech_prob": 0.35120514035224915
+    },
+    {
+        "id": 4,
+        "seek": 7560,
+        "start": 77.46,
+        "end": 78.53999999999999,
+        "text": " 난",
+        "tokens": [
+            50457,
+            19252,
+            50511
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.03927346934443,
+        "compression_ratio": 0.9642857142857143,
+        "no_speech_prob": 0.35120514035224915
+    },
+    {
+        "id": 5,
+        "seek": 7560,
+        "start": 79.53999999999999,
+        "end": 81.24,
+        "text": " 한",
+        "tokens": [
+            50561,
+            4815,
+            50646
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.03927346934443,
+        "compression_ratio": 0.9642857142857143,
+        "no_speech_prob": 0.35120514035224915
+    },
+    {
+        "id": 6,
+        "seek": 7560,
+        "start": 82.55999999999999,
+        "end": 83.25999999999999,
+        "text": " 한",
+        "tokens": [
+            50712,
+            4815,
+            50747
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.03927346934443,
+        "compression_ratio": 0.9642857142857143,
+        "no_speech_prob": 0.35120514035224915
+    },
+    {
+        "id": 7,
+        "seek": 7560,
+        "start": 84.1,
+        "end": 85.41999999999999,
+        "text": " 한",
+        "tokens": [
+            50789,
+            4815,
+            50855
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.03927346934443,
+        "compression_ratio": 0.9642857142857143,
+        "no_speech_prob": 0.35120514035224915
+    },
+    {
+        "id": 8,
+        "seek": 7560,
+        "start": 91.3,
+        "end": 93.53999999999999,
+        "text": " 으",
+        "tokens": [
+            51149,
+            37163,
+            51261
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.03927346934443,
+        "compression_ratio": 0.9642857142857143,
+        "no_speech_prob": 0.35120514035224915
+    },
+    {
+        "id": 9,
+        "seek": 7560,
+        "start": 97.3,
+        "end": 99.19999999999999,
+        "text": " 수",
+        "tokens": [
+            51449,
+            4446,
+            51544
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.03927346934443,
+        "compression_ratio": 0.9642857142857143,
+        "no_speech_prob": 0.35120514035224915
+    },
+    {
+        "id": 10,
+        "seek": 9920,
+        "start": 99.2,
+        "end": 117.72,
+        "text": " 아이 Teacher",
+        "tokens": [
+            50364,
+            25130,
+            19745,
+            51290
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.210656483968099,
+        "compression_ratio": 0.7419354838709677,
+        "no_speech_prob": 0.5204229354858398
+    },
+    {
+        "id": 11,
+        "seek": 9920,
+        "start": 117.72,
+        "end": 120.4,
+        "text": " campuses",
+        "tokens": [
+            51290,
+            24233,
+            51424
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.210656483968099,
+        "compression_ratio": 0.7419354838709677,
+        "no_speech_prob": 0.5204229354858398
+    },
+    {
+        "id": 12,
+        "seek": 15040,
+        "start": 150.4,
+        "end": 152.26000000000002,
+        "text": "� Understood.",
+        "tokens": [
+            50364,
+            44008,
+            42832,
+            13,
+            50457
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.876422882080078,
+        "compression_ratio": 0.71875,
+        "no_speech_prob": 0.33633220195770264
+    },
+    {
+        "id": 13,
+        "seek": 15040,
+        "start": 155.86,
+        "end": 176.22,
+        "text": " 쥐지!",
+        "tokens": [
+            50637,
+            451,
+            98,
+            238,
+            1831,
+            0,
+            51655
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.876422882080078,
+        "compression_ratio": 0.71875,
+        "no_speech_prob": 0.33633220195770264
+    },
+    {
+        "id": 14,
+        "seek": 18040,
+        "start": 180.54,
+        "end": 181.64000000000001,
+        "text": " 어우, 아빠.",
+        "tokens": [
+            50371,
+            27755,
+            108,
+            11,
+            41281,
+            13,
+            50426
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.1028366088867188,
+        "compression_ratio": 1.5789473684210527,
+        "no_speech_prob": 0.2609933912754059
+    },
+    {
+        "id": 15,
+        "seek": 18040,
+        "start": 186.38,
+        "end": 187.48000000000002,
+        "text": " 엄마 엄마.",
+        "tokens": [
+            50663,
+            23747,
+            23747,
+            13,
+            50718
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.1028366088867188,
+        "compression_ratio": 1.5789473684210527,
+        "no_speech_prob": 0.2609933912754059
+    },
+    {
+        "id": 16,
+        "seek": 18040,
+        "start": 206.0,
+        "end": 208.4,
+        "text": " 엄마 엄마, 엄마 엄마.",
+        "tokens": [
+            51644,
+            23747,
+            23747,
+            11,
+            23747,
+            23747,
+            13,
+            51764
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.1028366088867188,
+        "compression_ratio": 1.5789473684210527,
+        "no_speech_prob": 0.2609933912754059
+    },
+    {
+        "id": 17,
+        "seek": 24040,
+        "start": 240.4,
+        "end": 256.66,
+        "text": " 다른 나� flattering",
+        "tokens": [
+            50364,
+            16435,
+            12623,
+            49722,
+            51177
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.169138431549072,
+        "compression_ratio": 0.8363636363636363,
+        "no_speech_prob": 0.16048868000507355
+    },
+    {
+        "id": 18,
+        "seek": 24040,
+        "start": 256.66,
+        "end": 259.12,
+        "text": " 남편이 또",
+        "tokens": [
+            51177,
+            11689,
+            25716,
+            1129,
+            7992,
+            51300
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.169138431549072,
+        "compression_ratio": 0.8363636363636363,
+        "no_speech_prob": 0.16048868000507355
+    },
+    {
+        "id": 19,
+        "seek": 24040,
+        "start": 259.12,
+        "end": 261.46,
+        "text": " servant",
+        "tokens": [
+            51300,
+            17896,
+            51417
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.169138431549072,
+        "compression_ratio": 0.8363636363636363,
+        "no_speech_prob": 0.16048868000507355
+    },
+    {
+        "id": 20,
+        "seek": 26146,
+        "start": 261.46,
+        "end": 287.2,
+        "text": " 역시",
+        "tokens": [
+            50364,
+            34522,
+            51651
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.017197132110596,
+        "compression_ratio": 0.42857142857142855,
+        "no_speech_prob": 0.07558116316795349
+    },
+    {
+        "id": 21,
+        "seek": 32146,
+        "start": 321.46,
+        "end": 324.5,
+        "text": " 어?",
+        "tokens": [
+            50364,
+            9076,
+            30,
+            50516
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.857452392578125,
+        "compression_ratio": 1.065217391304348,
+        "no_speech_prob": 0.587341845035553
+    },
+    {
+        "id": 22,
+        "seek": 32146,
+        "start": 325.06,
+        "end": 328.15999999999997,
+        "text": "아...",
+        "tokens": [
+            50544,
+            2230,
+            485,
+            50699
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.857452392578125,
+        "compression_ratio": 1.065217391304348,
+        "no_speech_prob": 0.587341845035553
+    },
+    {
+        "id": 23,
+        "seek": 32146,
+        "start": 338.74,
+        "end": 342.32,
+        "text": " 아...",
+        "tokens": [
+            51228,
+            2216,
+            485,
+            51407
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.857452392578125,
+        "compression_ratio": 1.065217391304348,
+        "no_speech_prob": 0.587341845035553
+    },
+    {
+        "id": 24,
+        "seek": 32146,
+        "start": 343.62,
+        "end": 346.82,
+        "text": " 아하하�",
+        "tokens": [
+            51472,
+            2216,
+            39385,
+            230,
+            51632
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.857452392578125,
+        "compression_ratio": 1.065217391304348,
+        "no_speech_prob": 0.587341845035553
+    },
+    {
+        "id": 25,
+        "seek": 32146,
+        "start": 346.82,
+        "end": 349.5,
+        "text": " 안�蘿 activate",
+        "tokens": [
+            51632,
+            9658,
+            31882,
+            123,
+            13615,
+            51766
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.857452392578125,
+        "compression_ratio": 1.065217391304348,
+        "no_speech_prob": 0.587341845035553
+    },
+    {
+        "id": 26,
+        "seek": 34950,
+        "start": 349.5,
+        "end": 351.5,
+        "text": " 아유 heading",
+        "tokens": [
+            50364,
+            2216,
+            19062,
+            9864,
+            50464
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.904703903198242,
+        "compression_ratio": 0.7,
+        "no_speech_prob": 0.24073241651058197
+    },
+    {
+        "id": 27,
+        "seek": 34950,
+        "start": 353.0,
+        "end": 357.38,
+        "text": " 진짜",
+        "tokens": [
+            50539,
+            7106,
+            50758
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.904703903198242,
+        "compression_ratio": 0.7,
+        "no_speech_prob": 0.24073241651058197
+    },
+    {
+        "id": 28,
+        "seek": 35738,
+        "start": 357.38,
+        "end": 361.0,
+        "text": " 일로 와, 일로 와, 일로 와, 일로 와!",
+        "tokens": [
+            50364,
+            16623,
+            1955,
+            12500,
+            11,
+            16623,
+            1955,
+            12500,
+            11,
+            16623,
+            1955,
+            12500,
+            11,
+            16623,
+            1955,
+            12500,
+            0,
+            50545
+        ],
+        "temperature": 0.8,
+        "avg_logprob": -0.9825764656066894,
+        "compression_ratio": 1.88,
+        "no_speech_prob": 0.1707167625427246
+    },
+    {
+        "id": 29,
+        "seek": 36100,
+        "start": 361.0,
+        "end": 387.02,
+        "text": " 분들은",
+        "tokens": [
+            50364,
+            40821,
+            51665
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.6668846130371096,
+        "compression_ratio": 0.5,
+        "no_speech_prob": 0.3136211335659027
+    },
+    {
+        "id": 30,
+        "seek": 38702,
+        "start": 387.02,
+        "end": 400.58,
+        "text": " Mutter",
+        "tokens": [
+            50364,
+            31517,
+            51042
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.998823801676433,
+        "compression_ratio": 0.7333333333333333,
+        "no_speech_prob": 0.3833467960357666
+    },
+    {
+        "id": 31,
+        "seek": 38702,
+        "start": 405.9,
+        "end": 408.28,
+        "text": " 예미",
+        "tokens": [
+            51308,
+            10134,
+            36372,
+            51427
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.998823801676433,
+        "compression_ratio": 0.7333333333333333,
+        "no_speech_prob": 0.3833467960357666
+    },
+    {
+        "id": 32,
+        "seek": 38702,
+        "start": 408.28,
+        "end": 413.56,
+        "text": " Business",
+        "tokens": [
+            51427,
+            10715,
+            51691
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.998823801676433,
+        "compression_ratio": 0.7333333333333333,
+        "no_speech_prob": 0.3833467960357666
+    },
+    {
+        "id": 33,
+        "seek": 41356,
+        "start": 413.56,
+        "end": 418.94,
+        "text": "arts of 라는",
+        "tokens": [
+            50364,
+            11814,
+            295,
+            49121,
+            50633
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.957571120489211,
+        "compression_ratio": 0.8135593220338984,
+        "no_speech_prob": 0.3557201325893402
+    },
+    {
+        "id": 34,
+        "seek": 41356,
+        "start": 432.14,
+        "end": 433.58,
+        "text": " 아리타 게임",
+        "tokens": [
+            51293,
+            9200,
+            2250,
+            25439,
+            23927,
+            51365
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.957571120489211,
+        "compression_ratio": 0.8135593220338984,
+        "no_speech_prob": 0.3557201325893402
+    },
+    {
+        "id": 35,
+        "seek": 41356,
+        "start": 434.06,
+        "end": 438.2,
+        "text": "끝에 있 찍기",
+        "tokens": [
+            51389,
+            167,
+            223,
+            251,
+            1517,
+            2297,
+            17285,
+            2401,
+            51596
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.957571120489211,
+        "compression_ratio": 0.8135593220338984,
+        "no_speech_prob": 0.3557201325893402
+    },
+    {
+        "id": 36,
+        "seek": 44356,
+        "start": 443.92,
+        "end": 444.56,
+        "text": " Mama",
+        "tokens": [
+            50382,
+            17775,
+            50414
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 37,
+        "seek": 44356,
+        "start": 446.3,
+        "end": 447.58,
+        "text": "CU",
+        "tokens": [
+            50501,
+            25864,
+            50565
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 38,
+        "seek": 44356,
+        "start": 450.36,
+        "end": 452.38,
+        "text": " volte",
+        "tokens": [
+            50704,
+            37801,
+            50805
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 39,
+        "seek": 44356,
+        "start": 456.32,
+        "end": 457.68,
+        "text": " nadie",
+        "tokens": [
+            51002,
+            28060,
+            51070
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 40,
+        "seek": 44356,
+        "start": 461.88,
+        "end": 463.38,
+        "text": " 오지 Murph",
+        "tokens": [
+            51280,
+            5175,
+            1831,
+            9373,
+            950,
+            51355
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 41,
+        "seek": 44356,
+        "start": 464.86,
+        "end": 465.96,
+        "text": " 저런게",
+        "tokens": [
+            51429,
+            13163,
+            7436,
+            1810,
+            51484
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 42,
+        "seek": 44356,
+        "start": 469.94,
+        "end": 470.76,
+        "text": " 혼자 봐",
+        "tokens": [
+            51683,
+            36028,
+            15507,
+            51724
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 43,
+        "seek": 44356,
+        "start": 471.64,
+        "end": 472.98,
+        "text": " 어어어어어",
+        "tokens": [
+            51768,
+            11474,
+            244,
+            1041,
+            244,
+            1041,
+            244,
+            1041,
+            25982,
+            51835
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.931408221905048,
+        "compression_ratio": 1.0,
+        "no_speech_prob": 0.13234037160873413
+    },
+    {
+        "id": 44,
+        "seek": 50298,
+        "start": 502.98,
+        "end": 506.66,
+        "text": " plug",
+        "tokens": [
+            50364,
+            5452,
+            50548
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.799337768554688,
+        "compression_ratio": 0.7647058823529411,
+        "no_speech_prob": 0.23494386672973633
+    },
+    {
+        "id": 45,
+        "seek": 50298,
+        "start": 506.66,
+        "end": 507.82,
+        "text": " the",
+        "tokens": [
+            50548,
+            264,
+            50606
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.799337768554688,
+        "compression_ratio": 0.7647058823529411,
+        "no_speech_prob": 0.23494386672973633
+    },
+    {
+        "id": 46,
+        "seek": 50298,
+        "start": 507.82,
+        "end": 512.12,
+        "text": " am",
+        "tokens": [
+            50606,
+            669,
+            50821
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.799337768554688,
+        "compression_ratio": 0.7647058823529411,
+        "no_speech_prob": 0.23494386672973633
+    },
+    {
+        "id": 47,
+        "seek": 50298,
+        "start": 513.78,
+        "end": 516.9200000000001,
+        "text": " follow",
+        "tokens": [
+            50904,
+            1524,
+            51061
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.799337768554688,
+        "compression_ratio": 0.7647058823529411,
+        "no_speech_prob": 0.23494386672973633
+    },
+    {
+        "id": 48,
+        "seek": 50298,
+        "start": 516.9200000000001,
+        "end": 524.54,
+        "text": " vo",
+        "tokens": [
+            51061,
+            1650,
+            51442
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.799337768554688,
+        "compression_ratio": 0.7647058823529411,
+        "no_speech_prob": 0.23494386672973633
+    },
+    {
+        "id": 49,
+        "seek": 50298,
+        "start": 524.54,
+        "end": 531.14,
+        "text": " well",
+        "tokens": [
+            51442,
+            731,
+            51772
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.799337768554688,
+        "compression_ratio": 0.7647058823529411,
+        "no_speech_prob": 0.23494386672973633
+    },
+    {
+        "id": 50,
+        "seek": 53114,
+        "start": 531.14,
+        "end": 534.5,
+        "text": " 람이요?",
+        "tokens": [
+            50364,
+            531,
+            252,
+            234,
+            3946,
+            1206,
+            30,
+            50532
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.6658829583062067,
+        "compression_ratio": 0.5263157894736842,
+        "no_speech_prob": 0.3930085301399231
+    },
+    {
+        "id": 51,
+        "seek": 56114,
+        "start": 561.14,
+        "end": 586.0,
+        "text": " 여기가",
+        "tokens": [
+            50364,
+            7543,
+            1453,
+            51607
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.071119944254557,
+        "compression_ratio": 0.5,
+        "no_speech_prob": 0.5130720734596252
+    },
+    {
+        "id": 52,
+        "seek": 58600,
+        "start": 586.0,
+        "end": 602.26,
+        "text": " 왠지 잘 알아� 1997년write",
+        "tokens": [
+            50364,
+            4186,
+            254,
+            1831,
+            6644,
+            32352,
+            8580,
+            22383,
+            12092,
+            21561,
+            51177
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.802377065022786,
+        "compression_ratio": 0.7843137254901961,
+        "no_speech_prob": 0.5814307332038879
+    },
+    {
+        "id": 53,
+        "seek": 58600,
+        "start": 603.26,
+        "end": 614.9,
+        "text": " 무한",
+        "tokens": [
+            51227,
+            531,
+            18129,
+            3049,
+            51809
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.802377065022786,
+        "compression_ratio": 0.7843137254901961,
+        "no_speech_prob": 0.5814307332038879
+    },
+    {
+        "id": 54,
+        "seek": 61490,
+        "start": 614.9,
+        "end": 616.04,
+        "text": " Hanım",
+        "tokens": [
+            50364,
+            37182,
+            50421
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -6.8975913307883525,
+        "compression_ratio": 0.7419354838709677,
+        "no_speech_prob": 0.5279587507247925
+    },
+    {
+        "id": 55,
+        "seek": 61490,
+        "start": 618.8,
+        "end": 620.84,
+        "text": " accompanying",
+        "tokens": [
+            50559,
+            43648,
+            50661
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -6.8975913307883525,
+        "compression_ratio": 0.7419354838709677,
+        "no_speech_prob": 0.5279587507247925
+    },
+    {
+        "id": 56,
+        "seek": 61490,
+        "start": 625.0799999999999,
+        "end": 627.6,
+        "text": "ople",
+        "tokens": [
+            50873,
+            548,
+            50999
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -6.8975913307883525,
+        "compression_ratio": 0.7419354838709677,
+        "no_speech_prob": 0.5279587507247925
+    },
+    {
+        "id": 57,
+        "seek": 62760,
+        "start": 627.6,
+        "end": 653.4200000000001,
+        "text": " 여러분들, 맛있게 입 Elistar shear",
+        "tokens": [
+            50364,
+            25745,
+            11,
+            13441,
+            1810,
+            10051,
+            2699,
+            468,
+            289,
+            24082,
+            51655
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.348327000935872,
+        "compression_ratio": 0.7884615384615384,
+        "no_speech_prob": 0.45976901054382324
+    },
+    {
+        "id": 58,
+        "seek": 65760,
+        "start": 657.6,
+        "end": 658.6,
+        "text": " 설마 seas",
+        "tokens": [
+            50364,
+            24175,
+            8667,
+            22535,
+            50414
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.669445495605469,
+        "compression_ratio": 0.8125,
+        "no_speech_prob": 0.22815664112567902
+    },
+    {
+        "id": 59,
+        "seek": 65760,
+        "start": 658.6,
+        "end": 663.5,
+        "text": "ler",
+        "tokens": [
+            50414,
+            1918,
+            50659
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.669445495605469,
+        "compression_ratio": 0.8125,
+        "no_speech_prob": 0.22815664112567902
+    },
+    {
+        "id": 60,
+        "seek": 65760,
+        "start": 663.5,
+        "end": 669.16,
+        "text": " bright",
+        "tokens": [
+            50659,
+            4730,
+            50942
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.669445495605469,
+        "compression_ratio": 0.8125,
+        "no_speech_prob": 0.22815664112567902
+    },
+    {
+        "id": 61,
+        "seek": 65760,
+        "start": 669.16,
+        "end": 672.0,
+        "text": " truck",
+        "tokens": [
+            50942,
+            5898,
+            51084
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.669445495605469,
+        "compression_ratio": 0.8125,
+        "no_speech_prob": 0.22815664112567902
+    },
+    {
+        "id": 62,
+        "seek": 65760,
+        "start": 672.0,
+        "end": 673.5400000000001,
+        "text": " 전",
+        "tokens": [
+            51084,
+            6831,
+            51161
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.669445495605469,
+        "compression_ratio": 0.8125,
+        "no_speech_prob": 0.22815664112567902
+    },
+    {
+        "id": 63,
+        "seek": 65760,
+        "start": 673.5400000000001,
+        "end": 674.8000000000001,
+        "text": " 한",
+        "tokens": [
+            51161,
+            4815,
+            51224
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.669445495605469,
+        "compression_ratio": 0.8125,
+        "no_speech_prob": 0.22815664112567902
+    },
+    {
+        "id": 64,
+        "seek": 65760,
+        "start": 674.8000000000001,
+        "end": 676.5400000000001,
+        "text": " 와",
+        "tokens": [
+            51224,
+            12500,
+            51311
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.669445495605469,
+        "compression_ratio": 0.8125,
+        "no_speech_prob": 0.22815664112567902
+    },
+    {
+        "id": 65,
+        "seek": 67654,
+        "start": 676.54,
+        "end": 678.54,
+        "text": " 끝",
+        "tokens": [
+            50364,
+            13932,
+            50464
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.099345960115132,
+        "compression_ratio": 0.7906976744186046,
+        "no_speech_prob": 0.5733775496482849
+    },
+    {
+        "id": 66,
+        "seek": 67654,
+        "start": 688.6999999999999,
+        "end": 690.6999999999999,
+        "text": " 쌘히 싸 nominated",
+        "tokens": [
+            50972,
+            451,
+            234,
+            246,
+            5905,
+            33949,
+            25159,
+            51072
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.099345960115132,
+        "compression_ratio": 0.7906976744186046,
+        "no_speech_prob": 0.5733775496482849
+    },
+    {
+        "id": 67,
+        "seek": 67654,
+        "start": 690.6999999999999,
+        "end": 691.4399999999999,
+        "text": " grounds",
+        "tokens": [
+            51072,
+            19196,
+            51109
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.099345960115132,
+        "compression_ratio": 0.7906976744186046,
+        "no_speech_prob": 0.5733775496482849
+    },
+    {
+        "id": 68,
+        "seek": 67654,
+        "start": 691.4399999999999,
+        "end": 693.1999999999999,
+        "text": " 1",
+        "tokens": [
+            51109,
+            502,
+            51197
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.099345960115132,
+        "compression_ratio": 0.7906976744186046,
+        "no_speech_prob": 0.5733775496482849
+    },
+    {
+        "id": 69,
+        "seek": 75320,
+        "start": 753.2,
+        "end": 757.1,
+        "text": " 마프 τ저트",
+        "tokens": [
+            50364,
+            6437,
+            19514,
+            3596,
+            11738,
+            8857,
+            50559
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.57193115234375,
+        "compression_ratio": 0.7924528301886793,
+        "no_speech_prob": 0.35317954421043396
+    },
+    {
+        "id": 70,
+        "seek": 75320,
+        "start": 771.22,
+        "end": 772.0,
+        "text": " 시아니",
+        "tokens": [
+            51265,
+            5710,
+            37256,
+            51304
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.57193115234375,
+        "compression_ratio": 0.7924528301886793,
+        "no_speech_prob": 0.35317954421043396
+    },
+    {
+        "id": 71,
+        "seek": 75320,
+        "start": 772.0,
+        "end": 775.32,
+        "text": " 개흰",
+        "tokens": [
+            51304,
+            14552,
+            9428,
+            108,
+            51470
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.57193115234375,
+        "compression_ratio": 0.7924528301886793,
+        "no_speech_prob": 0.35317954421043396
+    },
+    {
+        "id": 72,
+        "seek": 75320,
+        "start": 776.82,
+        "end": 778.9200000000001,
+        "text": "ìn",
+        "tokens": [
+            51545,
+            41320,
+            51650
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.57193115234375,
+        "compression_ratio": 0.7924528301886793,
+        "no_speech_prob": 0.35317954421043396
+    },
+    {
+        "id": 73,
+        "seek": 75320,
+        "start": 778.9200000000001,
+        "end": 779.96,
+        "text": " 도포",
+        "tokens": [
+            51650,
+            10701,
+            30600,
+            51702
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.57193115234375,
+        "compression_ratio": 0.7924528301886793,
+        "no_speech_prob": 0.35317954421043396
+    },
+    {
+        "id": 74,
+        "seek": 80996,
+        "start": 809.96,
+        "end": 811.6,
+        "text": " 에엑 에어어~~",
+        "tokens": [
+            50364,
+            20122,
+            1170,
+            239,
+            20122,
+            2782,
+            25982,
+            5990,
+            50446
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.032888412475586,
+        "compression_ratio": 1.02,
+        "no_speech_prob": 0.526885449886322
+    },
+    {
+        "id": 75,
+        "seek": 80996,
+        "start": 812.5400000000001,
+        "end": 812.94,
+        "text": " 헐",
+        "tokens": [
+            50493,
+            1175,
+            8926,
+            50513
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.032888412475586,
+        "compression_ratio": 1.02,
+        "no_speech_prob": 0.526885449886322
+    },
+    {
+        "id": 76,
+        "seek": 80996,
+        "start": 818.9000000000001,
+        "end": 819.5,
+        "text": " 아",
+        "tokens": [
+            50811,
+            2216,
+            50841
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.032888412475586,
+        "compression_ratio": 1.02,
+        "no_speech_prob": 0.526885449886322
+    },
+    {
+        "id": 77,
+        "seek": 80996,
+        "start": 827.3000000000001,
+        "end": 828.0400000000001,
+        "text": " 안녕",
+        "tokens": [
+            51231,
+            13810,
+            51268
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.032888412475586,
+        "compression_ratio": 1.02,
+        "no_speech_prob": 0.526885449886322
+    },
+    {
+        "id": 78,
+        "seek": 80996,
+        "start": 834.6,
+        "end": 835.24,
+        "text": " 뭐야",
+        "tokens": [
+            51596,
+            18410,
+            51628
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.032888412475586,
+        "compression_ratio": 1.02,
+        "no_speech_prob": 0.526885449886322
+    },
+    {
+        "id": 79,
+        "seek": 80996,
+        "start": 835.76,
+        "end": 836.6,
+        "text": " 아 아아",
+        "tokens": [
+            51654,
+            2216,
+            2216,
+            2230,
+            51696
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.032888412475586,
+        "compression_ratio": 1.02,
+        "no_speech_prob": 0.526885449886322
+    },
+    {
+        "id": 80,
+        "seek": 83996,
+        "start": 839.96,
+        "end": 845.1800000000001,
+        "text": " 조심ventil awesome",
+        "tokens": [
+            50364,
+            48164,
+            2475,
+            388,
+            3476,
+            50625
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.882862854003906,
+        "compression_ratio": 0.8333333333333334,
+        "no_speech_prob": 0.4694393277168274
+    },
+    {
+        "id": 81,
+        "seek": 83996,
+        "start": 845.1800000000001,
+        "end": 848.5,
+        "text": " riches",
+        "tokens": [
+            50625,
+            35777,
+            50791
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.882862854003906,
+        "compression_ratio": 0.8333333333333334,
+        "no_speech_prob": 0.4694393277168274
+    },
+    {
+        "id": 82,
+        "seek": 83996,
+        "start": 848.5,
+        "end": 854.34,
+        "text": " 웬 � Graham",
+        "tokens": [
+            50791,
+            6891,
+            105,
+            6768,
+            22691,
+            51083
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.882862854003906,
+        "compression_ratio": 0.8333333333333334,
+        "no_speech_prob": 0.4694393277168274
+    },
+    {
+        "id": 83,
+        "seek": 83996,
+        "start": 854.34,
+        "end": 864.26,
+        "text": "eka",
+        "tokens": [
+            51083,
+            36361,
+            51579
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.882862854003906,
+        "compression_ratio": 0.8333333333333334,
+        "no_speech_prob": 0.4694393277168274
+    },
+    {
+        "id": 84,
+        "seek": 89426,
+        "start": 894.26,
+        "end": 896.98,
+        "text": " killing",
+        "tokens": [
+            50364,
+            8011,
+            50500
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.002744197845459,
+        "compression_ratio": 0.6521739130434783,
+        "no_speech_prob": 0.2944146990776062
+    },
+    {
+        "id": 85,
+        "seek": 89426,
+        "start": 896.98,
+        "end": 898.98,
+        "text": " Because",
+        "tokens": [
+            50500,
+            1436,
+            50600
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.002744197845459,
+        "compression_ratio": 0.6521739130434783,
+        "no_speech_prob": 0.2944146990776062
+    },
+    {
+        "id": 86,
+        "seek": 107898,
+        "start": 1078.98,
+        "end": 1079.56,
+        "text": " 다진 치즈",
+        "tokens": [
+            50364,
+            4279,
+            8097,
+            18447,
+            20235,
+            50393
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.5025424379290957,
+        "compression_ratio": 1.2549019607843137,
+        "no_speech_prob": 0.3835110068321228
+    },
+    {
+        "id": 87,
+        "seek": 107898,
+        "start": 1083.76,
+        "end": 1085.6200000000001,
+        "text": " 라라라라라라라라라",
+        "tokens": [
+            50603,
+            44831,
+            9316,
+            9316,
+            9316,
+            9316,
+            9316,
+            9316,
+            9316,
+            2742,
+            50696
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.5025424379290957,
+        "compression_ratio": 1.2549019607843137,
+        "no_speech_prob": 0.3835110068321228
+    },
+    {
+        "id": 88,
+        "seek": 107898,
+        "start": 1092.6200000000001,
+        "end": 1093.98,
+        "text": " relying spiter",
+        "tokens": [
+            51046,
+            24140,
+            637,
+            1681,
+            51114
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.5025424379290957,
+        "compression_ratio": 1.2549019607843137,
+        "no_speech_prob": 0.3835110068321228
+    },
+    {
+        "id": 89,
+        "seek": 107898,
+        "start": 1094.52,
+        "end": 1094.94,
+        "text": " 4",
+        "tokens": [
+            51141,
+            1017,
+            51162
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.5025424379290957,
+        "compression_ratio": 1.2549019607843137,
+        "no_speech_prob": 0.3835110068321228
+    },
+    {
+        "id": 90,
+        "seek": 107898,
+        "start": 1094.94,
+        "end": 1095.64,
+        "text": " 1",
+        "tokens": [
+            51162,
+            502,
+            51197
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.5025424379290957,
+        "compression_ratio": 1.2549019607843137,
+        "no_speech_prob": 0.3835110068321228
+    },
+    {
+        "id": 91,
+        "seek": 107898,
+        "start": 1095.64,
+        "end": 1105.46,
+        "text": " 야",
+        "tokens": [
+            51197,
+            13450,
+            51688
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.5025424379290957,
+        "compression_ratio": 1.2549019607843137,
+        "no_speech_prob": 0.3835110068321228
+    },
+    {
+        "id": 92,
+        "seek": 110546,
+        "start": 1105.46,
+        "end": 1107.46,
+        "text": " ・・",
+        "tokens": [
+            50364,
+            220,
+            9509,
+            50464
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.071638974276456,
+        "compression_ratio": 0.7272727272727273,
+        "no_speech_prob": 0.3885364234447479
+    },
+    {
+        "id": 93,
+        "seek": 110546,
+        "start": 1110.24,
+        "end": 1112.24,
+        "text": " 이제 gang three",
+        "tokens": [
+            50603,
+            8424,
+            10145,
+            1045,
+            50703
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.071638974276456,
+        "compression_ratio": 0.7272727272727273,
+        "no_speech_prob": 0.3885364234447479
+    },
+    {
+        "id": 94,
+        "seek": 111224,
+        "start": 1112.24,
+        "end": 1117.84,
+        "text": " 아,first is receipt",
+        "tokens": [
+            50364,
+            2216,
+            11,
+            29581,
+            307,
+            33882,
+            50644
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.5583720207214355,
+        "compression_ratio": 0.82,
+        "no_speech_prob": 0.09529422968626022
+    },
+    {
+        "id": 95,
+        "seek": 111224,
+        "start": 1135.0,
+        "end": 1137.64,
+        "text": " 라콰치 o assemble",
+        "tokens": [
+            51502,
+            22339,
+            15385,
+            108,
+            8464,
+            277,
+            22364,
+            51634
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -5.5583720207214355,
+        "compression_ratio": 0.82,
+        "no_speech_prob": 0.09529422968626022
+    },
+    {
+        "id": 96,
+        "seek": 114224,
+        "start": 1142.24,
+        "end": 1162.36,
+        "text": " 샴푸가",
+        "tokens": [
+            50364,
+            3694,
+            112,
+            36132,
+            116,
+            1453,
+            51370
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.591901567247179,
+        "compression_ratio": 0.5,
+        "no_speech_prob": 0.0632377490401268
+    },
+    {
+        "id": 97,
+        "seek": 116236,
+        "start": 1162.36,
+        "end": 1185.26,
+        "text": " countries",
+        "tokens": [
+            50364,
+            3517,
+            51509
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.486045837402344,
+        "compression_ratio": 0.5294117647058824,
+        "no_speech_prob": 0.16524074971675873
+    },
+    {
+        "id": 98,
+        "seek": 118526,
+        "start": 1185.26,
+        "end": 1192.48,
+        "text": " 자는 주 Matthew",
+        "tokens": [
+            50364,
+            5650,
+            1098,
+            7757,
+            12434,
+            50725
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.992577107747396,
+        "compression_ratio": 0.9736842105263158,
+        "no_speech_prob": 0.5383784174919128
+    },
+    {
+        "id": 99,
+        "seek": 118526,
+        "start": 1192.48,
+        "end": 1199.44,
+        "text": " 으 으 으",
+        "tokens": [
+            50725,
+            37163,
+            37163,
+            37163,
+            51073
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.992577107747396,
+        "compression_ratio": 0.9736842105263158,
+        "no_speech_prob": 0.5383784174919128
+    },
+    {
+        "id": 100,
+        "seek": 118526,
+        "start": 1204.8799999999999,
+        "end": 1210.28,
+        "text": " 사진",
+        "tokens": [
+            51345,
+            29899,
+            51615
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.992577107747396,
+        "compression_ratio": 0.9736842105263158,
+        "no_speech_prob": 0.5383784174919128
+    },
+    {
+        "id": 101,
+        "seek": 127526,
+        "start": 1275.26,
+        "end": 1297.98,
+        "text": " 3번쯤",
+        "tokens": [
+            50364,
+            805,
+            22050,
+            168,
+            46652,
+            51500
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.629993570261988,
+        "compression_ratio": 1.3461538461538463,
+        "no_speech_prob": 0.2889251708984375
+    },
+    {
+        "id": 102,
+        "seek": 127526,
+        "start": 1298.7,
+        "end": 1299.46,
+        "text": " 2번한",
+        "tokens": [
+            51536,
+            568,
+            22050,
+            3049,
+            51574
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.629993570261988,
+        "compression_ratio": 1.3461538461538463,
+        "no_speech_prob": 0.2889251708984375
+    },
+    {
+        "id": 103,
+        "seek": 127526,
+        "start": 1303.04,
+        "end": 1303.68,
+        "text": " 2번",
+        "tokens": [
+            51753,
+            568,
+            22050,
+            51785
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.629993570261988,
+        "compression_ratio": 1.3461538461538463,
+        "no_speech_prob": 0.2889251708984375
+    },
+    {
+        "id": 104,
+        "seek": 127526,
+        "start": 1303.68,
+        "end": 1304.32,
+        "text": " 2번",
+        "tokens": [
+            51785,
+            568,
+            22050,
+            51817
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.629993570261988,
+        "compression_ratio": 1.3461538461538463,
+        "no_speech_prob": 0.2889251708984375
+    },
+    {
+        "id": 105,
+        "seek": 127526,
+        "start": 1304.32,
+        "end": 1304.58,
+        "text": " 2번",
+        "tokens": [
+            51817,
+            568,
+            22050,
+            51830
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.629993570261988,
+        "compression_ratio": 1.3461538461538463,
+        "no_speech_prob": 0.2889251708984375
+    },
+    {
+        "id": 106,
+        "seek": 127526,
+        "start": 1304.58,
+        "end": 1305.1,
+        "text": " 2번",
+        "tokens": [
+            51830,
+            568,
+            22050,
+            51856
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.629993570261988,
+        "compression_ratio": 1.3461538461538463,
+        "no_speech_prob": 0.2889251708984375
+    },
+    {
+        "id": 107,
+        "seek": 145510,
+        "start": 1455.1,
+        "end": 1478.82,
+        "text": " 다시 귀여운",
+        "tokens": [
+            50364,
+            15463,
+            36083,
+            9996,
+            51550
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -2.969070162091936,
+        "compression_ratio": 0.64,
+        "no_speech_prob": 0.5799562335014343
+    },
+    {
+        "id": 108,
+        "seek": 147882,
+        "start": 1478.82,
+        "end": 1479.82,
+        "text": " 9!",
+        "tokens": [
+            50364,
+            1722,
+            0,
+            50414
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.627134323120117,
+        "compression_ratio": 0.7096774193548387,
+        "no_speech_prob": 0.5772310495376587
+    },
+    {
+        "id": 109,
+        "seek": 147882,
+        "start": 1479.82,
+        "end": 1491.32,
+        "text": " 러브�簡",
+        "tokens": [
+            50414,
+            531,
+            7871,
+            44787,
+            26612,
+            50989
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.627134323120117,
+        "compression_ratio": 0.7096774193548387,
+        "no_speech_prob": 0.5772310495376587
+    },
+    {
+        "id": 110,
+        "seek": 147882,
+        "start": 1491.32,
+        "end": 1496.56,
+        "text": " 설상",
+        "tokens": [
+            50989,
+            30630,
+            5979,
+            51251
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -4.627134323120117,
+        "compression_ratio": 0.7096774193548387,
+        "no_speech_prob": 0.5772310495376587
+    },
+    {
+        "id": 111,
+        "seek": 149656,
+        "start": 1496.56,
+        "end": 1520.34,
+        "text": " 수수가",
+        "tokens": [
+            50364,
+            4446,
+            39621,
+            51553
+        ],
+        "temperature": 1.0,
+        "avg_logprob": -3.275230089823405,
+        "compression_ratio": 0.5294117647058824,
+        "no_speech_prob": 0.2651028037071228
+    },
+    {
+        "id": 112,
+        "seek": 152034,
+        "start": 1520.34,
+        "end": 1522.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 113,
+        "seek": 152034,
+        "start": 1522.34,
+        "end": 1523.34,
+        "text": " 오우!",
+        "tokens": [
+            50464,
+            5175,
+            7812,
+            0,
+            50514
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 114,
+        "seek": 152034,
+        "start": 1523.34,
+        "end": 1524.34,
+        "text": " 오우!",
+        "tokens": [
+            50514,
+            5175,
+            7812,
+            0,
+            50564
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 115,
+        "seek": 152034,
+        "start": 1524.34,
+        "end": 1525.34,
+        "text": " 오우!",
+        "tokens": [
+            50564,
+            5175,
+            7812,
+            0,
+            50614
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 116,
+        "seek": 152034,
+        "start": 1525.34,
+        "end": 1526.34,
+        "text": " 오우!",
+        "tokens": [
+            50614,
+            5175,
+            7812,
+            0,
+            50664
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 117,
+        "seek": 152034,
+        "start": 1539.34,
+        "end": 1540.34,
+        "text": " 오우!",
+        "tokens": [
+            51314,
+            5175,
+            7812,
+            0,
+            51364
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 118,
+        "seek": 152034,
+        "start": 1541.34,
+        "end": 1543.34,
+        "text": " 이거라, 호시.",
+        "tokens": [
+            51414,
+            2620,
+            7325,
+            2742,
+            11,
+            26932,
+            3833,
+            13,
+            51514
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 119,
+        "seek": 152034,
+        "start": 1543.34,
+        "end": 1544.34,
+        "text": " 오우!",
+        "tokens": [
+            51514,
+            5175,
+            7812,
+            0,
+            51564
+        ],
+        "temperature": 0.2,
+        "avg_logprob": -0.9065827263726128,
+        "compression_ratio": 1.85,
+        "no_speech_prob": 0.46473026275634766
+    },
+    {
+        "id": 120,
+        "seek": 155034,
+        "start": 1550.34,
+        "end": 1552.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.38773325085639954,
+        "compression_ratio": 1.2105263157894737,
+        "no_speech_prob": 0.6822280287742615
+    },
+    {
+        "id": 121,
+        "seek": 155034,
+        "start": 1556.34,
+        "end": 1558.34,
+        "text": " 오우!",
+        "tokens": [
+            50664,
+            5175,
+            7812,
+            0,
+            50764
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.38773325085639954,
+        "compression_ratio": 1.2105263157894737,
+        "no_speech_prob": 0.6822280287742615
+    },
+    {
+        "id": 122,
+        "seek": 155034,
+        "start": 1565.34,
+        "end": 1567.34,
+        "text": " 오우!",
+        "tokens": [
+            51114,
+            5175,
+            7812,
+            0,
+            51214
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.38773325085639954,
+        "compression_ratio": 1.2105263157894737,
+        "no_speech_prob": 0.6822280287742615
+    },
+    {
+        "id": 123,
+        "seek": 158034,
+        "start": 1580.34,
+        "end": 1582.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.42106489701704547,
+        "compression_ratio": 0.7894736842105263,
+        "no_speech_prob": 0.6584306955337524
+    },
+    {
+        "id": 124,
+        "seek": 158034,
+        "start": 1607.34,
+        "end": 1609.34,
+        "text": " 오우!",
+        "tokens": [
+            51714,
+            5175,
+            7812,
+            0,
+            51814
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.42106489701704547,
+        "compression_ratio": 0.7894736842105263,
+        "no_speech_prob": 0.6584306955337524
+    },
+    {
+        "id": 125,
+        "seek": 161034,
+        "start": 1610.34,
+        "end": 1612.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.23758538564046225,
+        "compression_ratio": 0.4666666666666667,
+        "no_speech_prob": 0.7748643159866333
+    },
+    {
+        "id": 126,
+        "seek": 164034,
+        "start": 1640.34,
+        "end": 1642.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.15900580088297525,
+        "compression_ratio": 0.4666666666666667,
+        "no_speech_prob": 0.8014208078384399
+    },
+    {
+        "id": 127,
+        "seek": 167034,
+        "start": 1670.34,
+        "end": 1672.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.17586588859558105,
+        "compression_ratio": 0.4666666666666667,
+        "no_speech_prob": 0.8564352989196777
+    },
+    {
+        "id": 128,
+        "seek": 170034,
+        "start": 1700.34,
+        "end": 1702.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.23968259493509927,
+        "compression_ratio": 0.4666666666666667,
+        "no_speech_prob": 0.9191867113113403
+    },
+    {
+        "id": 129,
+        "seek": 173034,
+        "start": 1730.34,
+        "end": 1732.34,
+        "text": " 오우!",
+        "tokens": [
+            50364,
+            5175,
+            7812,
+            0,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.22673267126083374,
+        "compression_ratio": 0.4666666666666667,
+        "no_speech_prob": 0.755005419254303
+    },
+    {
+        "id": 130,
+        "seek": 176034,
+        "start": 1760.34,
+        "end": 1762.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50464
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.6239344596862793,
+        "compression_ratio": 0.6190476190476191,
+        "no_speech_prob": 0.9188007712364197
+    },
+    {
+        "id": 131,
+        "seek": 179034,
+        "start": 1790.34,
+        "end": 1810.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.5163880348205566,
+        "compression_ratio": 0.6190476190476191,
+        "no_speech_prob": 0.19020211696624756
+    },
+    {
+        "id": 132,
+        "seek": 182034,
+        "start": 1820.34,
+        "end": 1824.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50564
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.48615684509277346,
+        "compression_ratio": 0.6190476190476191,
+        "no_speech_prob": 0.7212099432945251
+    },
+    {
+        "id": 133,
+        "seek": 185034,
+        "start": 1850.34,
+        "end": 1860.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.3670017719268799,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.9116014838218689
+    },
+    {
+        "id": 134,
+        "seek": 185034,
+        "start": 1860.34,
+        "end": 1870.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.3670017719268799,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.9116014838218689
+    },
+    {
+        "id": 135,
+        "seek": 185034,
+        "start": 1870.34,
+        "end": 1878.34,
+        "text": " strange sound",
+        "tokens": [
+            51364,
+            5861,
+            1626,
+            51764
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.3670017719268799,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.9116014838218689
+    },
+    {
+        "id": 136,
+        "seek": 187834,
+        "start": 1878.34,
+        "end": 1888.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.23024707181113108,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.26771280169487
+    },
+    {
+        "id": 137,
+        "seek": 187834,
+        "start": 1888.34,
+        "end": 1898.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.23024707181113108,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.26771280169487
+    },
+    {
+        "id": 138,
+        "seek": 187834,
+        "start": 1898.34,
+        "end": 1904.34,
+        "text": " strange sound",
+        "tokens": [
+            51364,
+            5861,
+            1626,
+            51664
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.23024707181113108,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.26771280169487
+    },
+    {
+        "id": 139,
+        "seek": 190434,
+        "start": 1904.34,
+        "end": 1914.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.182117189679827,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.18871580064296722
+    },
+    {
+        "id": 140,
+        "seek": 190434,
+        "start": 1914.34,
+        "end": 1924.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.182117189679827,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.18871580064296722
+    },
+    {
+        "id": 141,
+        "seek": 190434,
+        "start": 1924.34,
+        "end": 1932.34,
+        "text": " strange sound",
+        "tokens": [
+            51364,
+            5861,
+            1626,
+            51764
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.182117189679827,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.18871580064296722
+    },
+    {
+        "id": 142,
+        "seek": 193234,
+        "start": 1932.34,
+        "end": 1942.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.13424775430134364,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.5591233372688293
+    },
+    {
+        "id": 143,
+        "seek": 193234,
+        "start": 1942.34,
+        "end": 1952.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.13424775430134364,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.5591233372688293
+    },
+    {
+        "id": 144,
+        "seek": 193234,
+        "start": 1952.34,
+        "end": 1958.34,
+        "text": " strange sound",
+        "tokens": [
+            51364,
+            5861,
+            1626,
+            51664
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.13424775430134364,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.5591233372688293
+    },
+    {
+        "id": 145,
+        "seek": 195834,
+        "start": 1958.34,
+        "end": 1968.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.10928806236812047,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.41525304317474365
+    },
+    {
+        "id": 146,
+        "seek": 195834,
+        "start": 1968.34,
+        "end": 1978.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.10928806236812047,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.41525304317474365
+    },
+    {
+        "id": 147,
+        "seek": 195834,
+        "start": 1978.34,
+        "end": 1986.34,
+        "text": " strange sound",
+        "tokens": [
+            51364,
+            5861,
+            1626,
+            51764
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.10928806236812047,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.41525304317474365
+    },
+    {
+        "id": 148,
+        "seek": 198634,
+        "start": 1986.34,
+        "end": 1996.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.21142457212720597,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.22464267909526825
+    },
+    {
+        "id": 149,
+        "seek": 198634,
+        "start": 1996.34,
+        "end": 2006.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.21142457212720597,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.22464267909526825
+    },
+    {
+        "id": 150,
+        "seek": 198634,
+        "start": 2006.34,
+        "end": 2012.34,
+        "text": " strange sound",
+        "tokens": [
+            51364,
+            5861,
+            1626,
+            51664
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.21142457212720597,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.22464267909526825
+    },
+    {
+        "id": 151,
+        "seek": 201234,
+        "start": 2012.34,
+        "end": 2022.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.12398265940802437,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.15066474676132202
+    },
+    {
+        "id": 152,
+        "seek": 201234,
+        "start": 2022.34,
+        "end": 2032.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.12398265940802437,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.15066474676132202
+    },
+    {
+        "id": 153,
+        "seek": 201234,
+        "start": 2032.34,
+        "end": 2040.34,
+        "text": " strange sound",
+        "tokens": [
+            51364,
+            5861,
+            1626,
+            51764
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.12398265940802437,
+        "compression_ratio": 1.64,
+        "no_speech_prob": 0.15066474676132202
+    },
+    {
+        "id": 154,
+        "seek": 204034,
+        "start": 2040.34,
+        "end": 2050.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.16007957458496094,
+        "compression_ratio": 1.08,
+        "no_speech_prob": 0.5015201568603516
+    },
+    {
+        "id": 155,
+        "seek": 204034,
+        "start": 2050.34,
+        "end": 2060.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.16007957458496094,
+        "compression_ratio": 1.08,
+        "no_speech_prob": 0.5015201568603516
+    },
+    {
+        "id": 156,
+        "seek": 206034,
+        "start": 2060.34,
+        "end": 2070.34,
+        "text": " strange sound",
+        "tokens": [
+            50364,
+            5861,
+            1626,
+            50864
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.163604998588562,
+        "compression_ratio": 1.08,
+        "no_speech_prob": 0.648034393787384
+    },
+    {
+        "id": 157,
+        "seek": 206034,
+        "start": 2070.34,
+        "end": 2080.34,
+        "text": " strange sound",
+        "tokens": [
+            50864,
+            5861,
+            1626,
+            51364
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.163604998588562,
+        "compression_ratio": 1.08,
+        "no_speech_prob": 0.648034393787384
+    }
+]

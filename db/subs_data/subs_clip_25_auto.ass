@@ -1,0 +1,47 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial Black,95,&H00FF33CC,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,12,0,5,10,10,10,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:06.53,0:00:07.05,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}No
+Dialogue: 0,0:00:07.05,0:00:07.17,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}se
+Dialogue: 0,0:00:07.17,0:00:07.43,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}levantó,
+Dialogue: 0,0:00:07.51,0:00:07.53,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}va
+Dialogue: 0,0:00:07.53,0:00:07.61,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}a
+Dialogue: 0,0:00:07.61,0:00:07.61,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}ser
+Dialogue: 0,0:00:07.61,0:00:08.01,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}agresivo.
+Dialogue: 0,0:00:14.17,0:00:14.69,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Perdón,
+Dialogue: 0,0:00:14.83,0:00:14.87,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no
+Dialogue: 0,0:00:14.87,0:00:21.47,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}puedo
+Dialogue: 0,0:00:21.47,0:00:21.67,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}ir
+Dialogue: 0,0:00:21.67,0:00:21.79,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}a
+Dialogue: 0,0:00:21.79,0:00:21.91,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}dos
+Dialogue: 0,0:00:21.91,0:00:22.31,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}tiros
+Dialogue: 0,0:00:22.31,0:00:22.63,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}boludo.
+Dialogue: 0,0:00:23.61,0:00:23.97,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Eso
+Dialogue: 0,0:00:23.97,0:00:24.11,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no
+Dialogue: 0,0:00:24.11,0:00:24.25,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}puede
+Dialogue: 0,0:00:24.25,0:00:24.53,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}pasar.
+Dialogue: 0,0:00:26.91,0:00:28.31,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Es
+Dialogue: 0,0:00:28.31,0:00:28.39,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}un
+Dialogue: 0,0:00:28.39,0:00:29.89,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}boludo.
+Dialogue: 0,0:00:41.63,0:00:43.03,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Amigo,
+Dialogue: 0,0:00:43.03,0:00:44.43,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}pero...
+Dialogue: 0,0:00:45.97,0:00:46.31,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}La
+Dialogue: 0,0:00:46.31,0:00:46.65,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}nación
+Dialogue: 0,0:00:46.65,0:00:46.89,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}de
+Dialogue: 0,0:00:46.89,0:00:47.61,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}sátreo,
+Dialogue: 0,0:00:47.65,0:00:47.75,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}boludo.
+Dialogue: 0,0:00:47.83,0:00:47.91,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Ahora
+Dialogue: 0,0:00:47.91,0:00:48.03,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}la
+Dialogue: 0,0:00:48.03,0:00:48.35,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}partimos
+Dialogue: 0,0:00:48.35,0:00:48.57,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}con
+Dialogue: 0,0:00:48.57,0:00:48.67,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}un
+Dialogue: 0,0:00:48.67,0:00:49.21,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}desastre.
+Dialogue: 2,0:00:22.45,0:00:27.45,Default,,54,4,0,,{\pos(565,751)\c&H00ffffff&\3c&H00000000&\bord4\fnArial Black\fs60\an5\q1}

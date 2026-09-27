@@ -1,0 +1,2947 @@
+{
+    "video": "Gourmet/Bad_Cheese.mp4",
+    "proposals": [
+        {
+            "start": 105.0,
+            "end": 140.0,
+            "reason": "Explicación juego terror",
+            "virality_score": 80,
+            "transcript": "Cada vez que cometés un error, la atmósfera se vuelve más pesada. La animación que al principio parece hasta incluso un poco cómica, se empieza a deformar. El padre deja de ser un simple dibujo animado enojado para convertirse en una masa monstruosa de rabia y violencia. Durante los primeros minutos del juego, tu instinto de supervivencia gamer se activa. Intentás identificar patrones y moverte por la casa de forma sigilosa para ir avanzando en el juego. Pero a medida que avanza el tiempo en la casa, el juego te va soltando algunas pistas que te van a entender de que el ratoncito...",
+            "social_title": "ASÍ TE VA A CAGAR DE MIEDO ESTE JUEGO! 😱",
+            "social_desc": "Che, mirá cómo te explico este juegazo de terror que te va a volar la cabeza. Cada error te la complica más, ¡es una locura! Contame si ya lo jugaste. #Terror #Gaming #JuegosDeMiedo #Leito4Gaming #Argentina",
+            "yt_title": "LA EXPLICACIÓN DEFINITIVA DEL JUEGO QUE TE VA A DAR UN CAGAZO! 🐭",
+            "yt_desc": "En este clip les cuento cómo funciona la mecánica de este juego de terror que te va a poner los pelos de punta. ¡Cada error te acerca más al final!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, terror, gaming, juego de terror, horror game, explicacion, gameplay, argentina, gamer, miedo, sustos, indie game, creepy, animacion, ratoncito",
+            "id": "clip_3",
+            "ass_text": "No tiene ningún sentido, boludo. No es como hago para... ¡Ay, la concha! ¡Ay, fuck! Le cierro la puerta en la cara del gordo. No me dejas. El grito que metia. No sé cómo hacer para acceder al ala. ¿Cómo hago para acceder? Pulsera nivel 1. Necesito avanzar de alguna manera. A la sala de conferencias, ¿no? ¿Pasa que a este tipo no lo puedo matar",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "No",
+                    "start": 105,
+                    "end": 105.53030303030303
+                },
+                {
+                    "id": 1,
+                    "text": "tiene",
+                    "start": 105.53030303030303,
+                    "end": 106.06060606060606
+                },
+                {
+                    "id": 2,
+                    "text": "ningún",
+                    "start": 106.06060606060606,
+                    "end": 106.5909090909091
+                },
+                {
+                    "id": 3,
+                    "text": "sentido,",
+                    "start": 106.5909090909091,
+                    "end": 107.12121212121212
+                },
+                {
+                    "id": 4,
+                    "text": "boludo.",
+                    "start": 107.12121212121212,
+                    "end": 107.65151515151516
+                },
+                {
+                    "id": 5,
+                    "text": "No",
+                    "start": 107.65151515151516,
+                    "end": 108.18181818181819
+                },
+                {
+                    "id": 6,
+                    "text": "es",
+                    "start": 108.18181818181819,
+                    "end": 108.71212121212122
+                },
+                {
+                    "id": 7,
+                    "text": "como",
+                    "start": 108.71212121212122,
+                    "end": 109.24242424242425
+                },
+                {
+                    "id": 8,
+                    "text": "hago",
+                    "start": 109.24242424242425,
+                    "end": 109.77272727272727
+                },
+                {
+                    "id": 9,
+                    "text": "para...",
+                    "start": 109.77272727272727,
+                    "end": 110.3030303030303
+                },
+                {
+                    "id": 10,
+                    "text": "¡Ay,",
+                    "start": 110.3030303030303,
+                    "end": 110.83333333333333
+                },
+                {
+                    "id": 11,
+                    "text": "la",
+                    "start": 110.83333333333333,
+                    "end": 111.36363636363636
+                },
+                {
+                    "id": 12,
+                    "text": "concha!",
+                    "start": 111.36363636363636,
+                    "end": 111.89393939393939
+                },
+                {
+                    "id": 13,
+                    "text": "¡Ay,",
+                    "start": 111.89393939393939,
+                    "end": 112.42424242424242
+                },
+                {
+                    "id": 14,
+                    "text": "fuck!",
+                    "start": 112.42424242424242,
+                    "end": 112.95454545454545
+                },
+                {
+                    "id": 15,
+                    "text": "Le",
+                    "start": 112.95454545454545,
+                    "end": 113.48484848484848
+                },
+                {
+                    "id": 16,
+                    "text": "cierro",
+                    "start": 113.48484848484848,
+                    "end": 114.01515151515152
+                },
+                {
+                    "id": 17,
+                    "text": "la",
+                    "start": 114.01515151515152,
+                    "end": 114.54545454545455
+                },
+                {
+                    "id": 18,
+                    "text": "puerta",
+                    "start": 114.54545454545455,
+                    "end": 115.07575757575758
+                },
+                {
+                    "id": 19,
+                    "text": "en",
+                    "start": 115.07575757575758,
+                    "end": 115.60606060606061
+                },
+                {
+                    "id": 20,
+                    "text": "la",
+                    "start": 115.60606060606061,
+                    "end": 116.13636363636364
+                },
+                {
+                    "id": 21,
+                    "text": "cara",
+                    "start": 116.13636363636364,
+                    "end": 116.66666666666667
+                },
+                {
+                    "id": 22,
+                    "text": "del",
+                    "start": 116.66666666666667,
+                    "end": 117.19696969696969
+                },
+                {
+                    "id": 23,
+                    "text": "gordo.",
+                    "start": 117.19696969696969,
+                    "end": 117.72727272727272
+                },
+                {
+                    "id": 24,
+                    "text": "No",
+                    "start": 117.72727272727272,
+                    "end": 118.25757575757575
+                },
+                {
+                    "id": 25,
+                    "text": "me",
+                    "start": 118.25757575757575,
+                    "end": 118.78787878787878
+                },
+                {
+                    "id": 26,
+                    "text": "dejas.",
+                    "start": 118.78787878787878,
+                    "end": 119.31818181818181
+                },
+                {
+                    "id": 27,
+                    "text": "El",
+                    "start": 119.31818181818181,
+                    "end": 119.84848484848484
+                },
+                {
+                    "id": 28,
+                    "text": "grito",
+                    "start": 119.84848484848484,
+                    "end": 120.37878787878788
+                },
+                {
+                    "id": 29,
+                    "text": "que",
+                    "start": 120.37878787878788,
+                    "end": 120.9090909090909
+                },
+                {
+                    "id": 30,
+                    "text": "metia.",
+                    "start": 120.9090909090909,
+                    "end": 121.43939393939394
+                },
+                {
+                    "id": 31,
+                    "text": "No",
+                    "start": 121.43939393939394,
+                    "end": 121.96969696969697
+                },
+                {
+                    "id": 32,
+                    "text": "sé",
+                    "start": 121.96969696969697,
+                    "end": 122.5
+                },
+                {
+                    "id": 33,
+                    "text": "cómo",
+                    "start": 122.5,
+                    "end": 123.03030303030303
+                },
+                {
+                    "id": 34,
+                    "text": "hacer",
+                    "start": 123.03030303030303,
+                    "end": 123.56060606060606
+                },
+                {
+                    "id": 35,
+                    "text": "para",
+                    "start": 123.56060606060606,
+                    "end": 124.0909090909091
+                },
+                {
+                    "id": 36,
+                    "text": "acceder",
+                    "start": 124.0909090909091,
+                    "end": 124.62121212121212
+                },
+                {
+                    "id": 37,
+                    "text": "al",
+                    "start": 124.62121212121212,
+                    "end": 125.15151515151516
+                },
+                {
+                    "id": 38,
+                    "text": "ala.",
+                    "start": 125.15151515151516,
+                    "end": 125.68181818181819
+                },
+                {
+                    "id": 39,
+                    "text": "¿Cómo",
+                    "start": 125.68181818181819,
+                    "end": 126.21212121212122
+                },
+                {
+                    "id": 40,
+                    "text": "hago",
+                    "start": 126.21212121212122,
+                    "end": 126.74242424242425
+                },
+                {
+                    "id": 41,
+                    "text": "para",
+                    "start": 126.74242424242425,
+                    "end": 127.27272727272728
+                },
+                {
+                    "id": 42,
+                    "text": "acceder?",
+                    "start": 127.27272727272728,
+                    "end": 127.8030303030303
+                },
+                {
+                    "id": 43,
+                    "text": "Pulsera",
+                    "start": 127.8030303030303,
+                    "end": 128.33333333333334
+                },
+                {
+                    "id": 44,
+                    "text": "nivel",
+                    "start": 128.33333333333334,
+                    "end": 128.86363636363637
+                },
+                {
+                    "id": 45,
+                    "text": "1.",
+                    "start": 128.86363636363637,
+                    "end": 129.39393939393938
+                },
+                {
+                    "id": 46,
+                    "text": "Necesito",
+                    "start": 129.39393939393938,
+                    "end": 129.92424242424244
+                },
+                {
+                    "id": 47,
+                    "text": "avanzar",
+                    "start": 129.92424242424244,
+                    "end": 130.45454545454544
+                },
+                {
+                    "id": 48,
+                    "text": "de",
+                    "start": 130.45454545454544,
+                    "end": 130.9848484848485
+                },
+                {
+                    "id": 49,
+                    "text": "alguna",
+                    "start": 130.9848484848485,
+                    "end": 131.5151515151515
+                },
+                {
+                    "id": 50,
+                    "text": "manera.",
+                    "start": 131.5151515151515,
+                    "end": 132.04545454545453
+                },
+                {
+                    "id": 51,
+                    "text": "A",
+                    "start": 132.04545454545453,
+                    "end": 132.57575757575756
+                },
+                {
+                    "id": 52,
+                    "text": "la",
+                    "start": 132.57575757575756,
+                    "end": 133.1060606060606
+                },
+                {
+                    "id": 53,
+                    "text": "sala",
+                    "start": 133.1060606060606,
+                    "end": 133.63636363636363
+                },
+                {
+                    "id": 54,
+                    "text": "de",
+                    "start": 133.63636363636363,
+                    "end": 134.16666666666666
+                },
+                {
+                    "id": 55,
+                    "text": "conferencias,",
+                    "start": 134.16666666666666,
+                    "end": 134.6969696969697
+                },
+                {
+                    "id": 56,
+                    "text": "¿no?",
+                    "start": 134.6969696969697,
+                    "end": 135.22727272727272
+                },
+                {
+                    "id": 57,
+                    "text": "¿Pasa",
+                    "start": 135.22727272727272,
+                    "end": 135.75757575757575
+                },
+                {
+                    "id": 58,
+                    "text": "que",
+                    "start": 135.75757575757575,
+                    "end": 136.28787878787878
+                },
+                {
+                    "id": 59,
+                    "text": "a",
+                    "start": 136.28787878787878,
+                    "end": 136.8181818181818
+                },
+                {
+                    "id": 60,
+                    "text": "este",
+                    "start": 136.8181818181818,
+                    "end": 137.34848484848484
+                },
+                {
+                    "id": 61,
+                    "text": "tipo",
+                    "start": 137.34848484848484,
+                    "end": 137.87878787878788
+                },
+                {
+                    "id": 62,
+                    "text": "no",
+                    "start": 137.87878787878788,
+                    "end": 138.4090909090909
+                },
+                {
+                    "id": 63,
+                    "text": "lo",
+                    "start": 138.4090909090909,
+                    "end": 138.93939393939394
+                },
+                {
+                    "id": 64,
+                    "text": "puedo",
+                    "start": 138.93939393939394,
+                    "end": 139.46969696969697
+                },
+                {
+                    "id": 65,
+                    "text": "matar",
+                    "start": 139.46969696969697,
+                    "end": 140
+                }
+            ]
+        },
+        {
+            "start": 140.0,
+            "end": 175.0,
+            "reason": "Explicación de disociación y trauma",
+            "virality_score": 88,
+            "transcript": "esta imagen de este personaje es tan solo una máscara de un trasfondo mucho más oscuro y macabro. En psicología, existe un mecanismo de defensa llamado disociación. Cuando una persona, especialmente un niño, se enfrenta a un trauma o a un dolor que su mente no puede procesar, el cerebro literalmente lo que hace es desconectarlo de la realidad para intentar protegerlo. El niño crea un mundo de fantasía donde el monstruo no es su padre real, sino un villano de cuento, donde él no es un nene indefenso, sino un ratoncito. La tía Alice está extrañamente callada. Es como si estuviera preocupada por algo.",
+            "social_title": "El SECRETO OSCURO de este personaje que te vuela la cabeza 🤯",
+            "social_desc": "Che, mirá este clip donde te explico cómo funciona la disociación, un mecanismo de defensa re loco que usa el cerebro cuando la cosa se pone fea. Es zarpado cómo un trauma puede crear un mundo de fantasía para protegernos. ¿Vos qué pensás? ¡Contame en los comentarios! 👇 #Disociacion #Psicologia #GamingArgentina #Leito4Gaming #TraumaInfantil #Misterio #Videojuegos",
+            "yt_title": "El MECANISMO SECRETO del cerebro para sobrevivir a un trauma 🧠 (Explicación Zarpada)",
+            "yt_desc": "En este clip les cuento sobre la disociación, un mecanismo de defensa psicológico re interesante que usa el cerebro, especialmente en los pibes, cuando se enfrentan a un trauma que no pueden procesar. Es una locura cómo crea un mundo de fantasía para protegerse. ¡Mirá el video completo para entenderlo mejor!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, disociacion, psicologia, trauma, mecanismo de defensa, explicacion, gaming, argentina, videojuegos, terror, misterio, salud mental, cerebro, mente, niños, fantasia, proteccion",
+            "id": "clip_5",
+            "ass_text": "¿Qué te han hecho? Vamos, vamos a casa. Volcinear, cara roja, nos llevarán los tos. Por favor, deja de castigar. Gusta rey catatónico, el padre. Acá tengo una tarjeta, eh. ¡Echizo! Ay, la con... No me la voy a venir esa, eh. ¿Qué estaba en el nejuegando en la...?",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 152.0,
+            "end": 187.0,
+            "reason": "Explica trauma y juego",
+            "virality_score": 75,
+            "transcript": "una persona, especialmente un niño, se enfrenta a un trauma o a un dolor que su mente no puede procesar. El cerebro literalmente lo que hace es desconectarlo de la realidad para intentar protegerlo. El niño crea un mundo de fantasía donde el monstruo no es su padre real, sino un villano de cuento, donde él no es un nene indefenso, sino un ratoncito de caricatura. El queso en mal estado, es decir, el nombre del juego, Bad Cheese, la mugre, los gritos que ves en la casa, estos gritos turbios que se",
+            "social_title": "La posta de Bad Cheese: ¿Un juego de terror o algo más profundo?",
+            "social_desc": "Che, me voló la cabeza la explicación de por qué este juego es tan zarpado. No es solo sustos, hay una historia re heavy detrás. ¿Vos qué pensás? ¡Contame en los comentarios! #BadCheese #TerrorPsicologico #GamingArgentina #Leito4Gaming",
+            "yt_title": "LA VERDAD OCULTA DE BAD CHEESE: ¡NO ES LO QUE PARECE!",
+            "yt_desc": "Acá les cuento la posta de lo que hay detrás de Bad Cheese. No es solo un juego de terror, hay una explicación psicológica re interesante sobre cómo un nene procesa un trauma. ¡Mirá el video completo para entender todo!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, BadCheese, TerrorPsicologico, IndieGame, GamingArgentina, ExplicacionJuegos, TraumaInfantil, PsicologiaGaming, StreamerArgentino, Gameplay, VideoJuegos",
+            "id": "clip_6",
+            "ass_text": "Me da un poco de miedo porque pudo entrar al... wtf? ¿Me morí por saltar una pared? ¿Qué a** pasó? No, no lo pudo querer, el chabón se murió. No me idea que la alarma era porque me estaba muriendo. Ah, a**. Necesito un doctor.",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 179.0,
+            "end": 223.0,
+            "reason": "La oscura historia detrás del juego",
+            "virality_score": 82,
+            "transcript": "Estado, es decir, el nombre del juego Bad Cheese, la mugre, los gritos que ves en la casa, estos gritos turbios que se escuchan, todo es una metáfora visual de la negligencia infantil. El protagonista en realidad no está atrapado en un corto de Disney de 1920. Está atrapado en un hogar disfuncional, usando los dibujos animados que mira en la tele como un filtro para no volverse loco. Me pring some fries from the kitchen. Fíjense en las mecánicas del juego, por ejemplo. Tu objetivo no es matar al monstruo ni escapar de la casa. Me acuerdo. Mis padres me pidieron que trajera unas patatas fritas de la cocina. Papacito. Ayuda a papá y tráele su medicina.",
+            "social_title": "¡La posta de Bad Cheese! ¿Qué onda este juego?",
+            "social_desc": "Che, les dejo este clip donde les cuento la posta de Bad Cheese. ¡La historia es re oscura y te deja pensando! ¿Ustedes qué opinan? ¡Comenten y compartan, che! #BadCheese #GamingArgentina #Leito4Gaming #JuegosIndie #HistoriaDeJuegos",
+            "yt_title": "¡LA VERDADERA HISTORIA DE BAD CHEESE TE VA A VOLAR LA CABEZA!",
+            "yt_desc": "En este clip les cuento la historia de Bad Cheese, un juego que parece de Disney pero es re turbio. La verdad es que me dejó pensando un montón. ¡Mirá cómo arranca la trama!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, BadCheese, JuegoIndie, HistoriaDeJuegos, GamingArgentina, StreamerArgentino, Gameplay, Videojuegos, TerrorPsicologico, NegligenciaInfantil, AnimacionVintage",
+            "id": "clip_7",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 229.0,
+            "end": 272.9,
+            "reason": "Explica la mecánica central del juego y la sensación de paranoia que genera, que es una parte crucial de la historia y la experiencia.",
+            "virality_score": 90,
+            "transcript": "La hipervigilancia, estar todo el tiempo leyendo el humor de los adultos para saber si hoy toca un día tranquilo o un día de furia. Esto, por ejemplo, se ve constantemente en el juego, que de hecho hay un momento que resume la perfección, esta pesadilla. Estás en tu cuarto, por ejemplo, en un momento intentando escapar de la realidad que vivís en el día a día, jugando a un juego en una consola, que hace referencia claramente a Tari por el nombre, llamado Creepong. Esto debía ser un momento de paz. Sin embargo, no lo es. Entre a jugar, estás paranoico, mirando de riojo hacia la puerta, cuidando de que tu papá no entre de golpe y de una sote que te deje en el piso.",
+            "social_title": "¡LA PARANOIA DE ESTE JUEGO ES REAL, BOLUDO!",
+            "social_desc": "Che, este juego te hace sentir una hipervigilancia zarpada, ¡como si tu viejo te fuera a caer de una! ¿Alguna vez se sintieron así jugando algo? ¡Cuenten acá abajo! #Leito4Gaming #GamingArgentina #TerrorPsicologico #Batchis #Miedo #Paranoia",
+            "yt_title": "¡ME DEJÓ RE LOCO! La VERDADERA PARANOIA de Batchis",
+            "yt_desc": "Miren esto, pibes. Este juego, Batchis, te mete una paranoia que te deja pensando. La sensación de estar siempre alerta, esperando que pase algo, es una locura. ¡Me dejó re manija! Si les gusta este tipo de análisis, suscríbanse al canal, che. ¡Se viene más contenido zarpado!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, Batchis, TerrorPsicologico, GamingArgentina, Miedo, Paranoia, AnalisisDeJuegos, IndieGame, Creepong, Hipervigilancia, Trauma, Videojuegos",
+            "id": "clip_13",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 287.0,
+            "end": 322.0,
+            "reason": "Miedo extremo, como FNAF",
+            "virality_score": 85,
+            "transcript": "Es la representación exacta del abuso infantil, la incapacidad de relajarte, incluso cuando estás jugando, porque el peligro vive bajo tu mismo techo. Techo, esta fue una de las peores escenas que tuve que jugar en el juego. Realmente a la primera que lo jugué, no pude terminar de jugar el videojuego porque estaba constantemente como si estuviera jugando al Five Nights at Freddy's, mirando hacia la puerta con miedo de que me aparezca un jumpscare en la cara y nada, que me haga gritar a la madrugada, que es cuando estaba jugando este juego. Sin embargo, hay un montón de momentos así. Por ejemplo, en un momento, era",
+            "social_title": "¡El juego que me hizo sentir como en FNAF! 😱",
+            "social_desc": "Che, les juro que este juego me dio un cagazo zarpado. Estaba re paranoico esperando un jumpscare, ¡como si estuviera jugando al Five Nights at Freddy's! ¿A ustedes les pasó algo así con algún juego? ¡Contame en los comentarios, boludo! 👇 #TerrorEnJuegos #Jumpscare #FNAF #GamingArgentina #Leito4Gaming",
+            "yt_title": "¡ME CAGUÉ TODO! 😨 Este juego es PEOR que FNAF",
+            "yt_desc": "Acá les cuento la experiencia de jugar una de las escenas más jodidas de este juego. La verdad, me dejó re paranoico, ¡parecía que estaba jugando al Five Nights at Freddy's de lo tenso que era! ¿Qué opinan ustedes?",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, terror, jumpscare, FNAF, FiveNightsAtFreddys, horror, gaming, Argentina, miedo, susto, videojuego, gameplay, gamer, sustos",
+            "id": "clip_8",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 303.0,
+            "end": 338.0,
+            "reason": "Miedo y explicación de monstruo",
+            "virality_score": 85,
+            "transcript": "No puede terminar de jugar el videojuego porque estaba constantemente como si estuviera jugando al Five Nights at Freddy's, mirando hacia la puerta con miedo de que me aparezca un jumpscare en la cara y nada, que me haga gritar a la madrugada, que es cuando estaba jugando este juego. Sin embargo, hay un montón de momentos así. Por ejemplo, en un momento, peleas contra una masa de tres cabezas. Esta es la clásica representación de los tres monos sabios. El que no ve... You don't exist for me.",
+            "social_title": "¡Este juego me tiene RE LOCO! 😱 ¿Es un FNAF o qué onda?",
+            "social_desc": "Che, este juego me tiene con un cagazo tremendo, boludo. Cada dos por tres miro la puerta como si me fuera a salir un jumpscare de la nada, ¡onda Five Nights at Freddy's! Y ni hablar de los bichos que aparecen, ¡mirá este de las tres cabezas! ¿Ustedes qué harían? #Leito4Gaming #Terror #GamingArgentina #Jumpscare #Miedo #FNAF #HorrorGame #Streamer",
+            "yt_title": "¡ME Pegué un CAGAZO JUGANDO ESTO! 😨 ¿Es el nuevo FNAF?",
+            "yt_desc": "Acá les dejo un pedacito de lo que fue jugar este juego de terror, boludo. Me tenía re paranoico, mirando la puerta a cada rato por si me saltaba un jumpscare, ¡igual que en el Five Nights at Freddy's! Y después aparece este bicho de tres cabezas que es una locura. ¿Qué opinan de este juego? #Leito4Gaming #Leito4GamingPlus #TerrorPsicologico #HorrorGames #GamingEnEspañol #JuegosDeMiedo #StreamerArgentino #Gameplay #Sustos #FNAFVibes #Monstruos #ArgentinaGaming",
+            "yt_tags": "Leito4Gaming,Leito4GamingPlus,terror,horror,jumpscare,miedo,gaming,argentina,streamer,gameplay,five nights at freddys,fnaf,monstruos,explicativo,sustos",
+            "id": "clip_9",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 378.0,
+            "end": 413.0,
+            "reason": "Historia macabra del juego",
+            "virality_score": 88,
+            "transcript": "juego y que el padre termina echando y ellas sin decir una palabra se van, o a los familiares que saben que el abuso está ocurriendo, pero eligen mirar a otro lado para mantener las apariencias. Este monstruo de tres cabezas simboliza y representa todo lo que el niño vive en el día a día con su padre y su familia. Y una cosa más macabra aún en el juego, es que cuando le hacés daño a este jefe, a este enemigo, le disparás con tus propias lágrimas. Lo más retorcido de todo esto, lo más enfermizo, es que cuando tus lágrimas los golpean, ellos no gritan de dolor.",
+            "social_title": "La historia más turbia de un juego que te deja helado, boludo!",
+            "social_desc": "Che, me quedé re loco con la historia de este juego. Es una locura lo que simboliza y cómo te hace sentir. ¿Ustedes qué piensan? ¡Dejen su comentario y compartan, che! #Leito4Gaming #GamingArgentina #HistoriaDeJuegos #JuegosIndie #TerrorPsicologico #GameStory #AnalisisDeJuegos",
+            "yt_title": "LA HISTORIA MÁS OSCURA DE UN JUEGO INDIE QUE TE VA A VOLAR LA CABEZA!",
+            "yt_desc": "En este clip les cuento la historia re turbia de un juego que me dejó pensando. La verdad, es re loco lo que simboliza y cómo te hace sentir. ¡Mirá el video completo en mi canal!",
+            "yt_tags": "Leito4Gaming,Leito4GamingPlus,juego indie,historia de juego,terror psicologico,analisis,gaming argentina,streamer,gameplay,curiosidades,secretos de juegos,simbolismo",
+            "id": "clip_10",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 428.0,
+            "end": 474.0,
+            "reason": "Explicación de lore y misterio",
+            "virality_score": 85,
+            "transcript": "punto de Kemic, que vale el comentario, si damos vuelta al nombre Kemic, se transforma en Mickey. Y es como una especie de parodia o mención al famoso ratón que creó Walt Disney hace varias décadas. Sin embargo, hay un fantasma además de todo esto que recorre toda la casa. Y es el hermano de Kemic. Aldon. Claramente, tal cual como dijimos antes, si lo damos vuelta, se forma Donald. Es decir, el pato famoso, compañero de Mickey en Disney. ¿Por qué la madre abandona la casa llorando de forma tan desgarradora? Me he dormido. Tengo que ver si mamá sigue en casa. Rápido.",
+            "social_title": "¡La VERDAD detrás de los nombres de este juego de TERROR! 🐭🦆",
+            "social_desc": "¡Che, boludos! ¿Sabían que los nombres de este juego de terror están re conectados con Disney? 🤯 Me voló la cabeza cuando lo descubrí. ¿Qué onda con la mamá? ¡Dejame tu teoría en los comentarios! 👇 #Terror #Gaming #Misterio #Disney #Teorías #Leito4Gaming #JuegosDeTerror",
+            "yt_title": "ESTE JUEGO DE TERROR ES UNA PARODIA DE DISNEY?! 🤯 (Teoría LOCA)",
+            "yt_desc": "En este clip les cuento una teoría zarpada sobre los nombres de los personajes de este juego de terror y su conexión con Disney. ¡Es re loco! Después, arrancamos a buscar a la mamá. ¿Qué creen que pasó?",
+            "yt_tags": "Leito4Gaming,Leito4GamingPlus,terror,gaming,disney,mickey,donald,teoria,lore,misterio,juegoindie,horror,creepypasta,explicacion,curiosidades",
+            "id": "clip_11",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 440.0,
+            "end": 486.0,
+            "reason": "Misterio del juego, lore",
+            "virality_score": 90,
+            "transcript": "Sin embargo, hay un fantasma además de todo esto que recorre toda la casa. Y es el hermano de Kemic, Aldon. Claramente, tal cual como dijimos antes, si lo damos vuelta, se forma Donald. Es decir, el pato famoso, compañero de Mickey en Disney. ¿Por qué la madre abandona la casa llorando de forma tan desgarradora al principio del juego? ¿Quién es esta sombra que acecha atrás en el cuadro cuando vemos su imagen? ¿Qué pasó con Aldon, el hermano? Bueno, el juego te deja",
+            "social_title": "¿DONALD ES EL FANTASMA DE ESTE JUEGO DE TERROR? 😱",
+            "social_desc": "¡Che, boludos! Me voló la cabeza esta teoría del juego. ¿Qué onda con Aldon y Donald? ¿Y la madre que llora? ¡Contame qué pensás vos en los comentarios! 👇 #TeoriasDeJuegos #TerrorIndie #MisterioGamer #Leito4Gaming #GamingArgentina",
+            "yt_title": "LA TEORÍA MÁS LOCA DE ESTE JUEGO DE TERROR (¿Donald es el villano?)",
+            "yt_desc": "En este clip, les cuento una teoría re zarpada sobre el fantasma de este juego de terror. ¿Será que el hermano de Kemic, Aldon, es en realidad Donald, el pato de Disney? ¡Y encima, la madre llorando al principio! ¡Qué quilombo!",
+            "yt_tags": "Leito4Gaming,Leito4GamingPlus,TeoriasDeJuegos,JuegosDeTerror,HorrorIndie,MickeyMouse,DonaldDuck,LoreGaming,MisteriosDeJuegos,GamingArgentina,StreamerArgentino,Gameplay",
+            "id": "clip_12",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 498.2,
+            "end": 546.0,
+            "reason": "Muestra el mensaje de esperanza del juego y el giro impactante que revela la base real de la historia.",
+            "virality_score": 95,
+            "transcript": "A pesar de toda la oscuridad, el final de Batchis deja un mensaje de esperanza. En la última escena, K-Mik se mira al espejo y si bien al principio se ve triste, cubierto de queso podrido, desanimado, que representa la culpa, la mugre y el trauma que su padre le tiró encima a esta pobre criatura, al final de la escena el reflejo cambia, se ve limpio, se ve feliz, indicando que K-Mik logró liberarse y dejar todo esto atrás. Y acá es donde el juego te da una última trompada, la mandíbula. Y volvés a jugar Batchis una segunda vez. El juego empieza a mostrarte todas las fotos reales, fotos del padre, de la madre, de las tías, del desarrollador del juego.",
+            "social_title": "¡EL FINAL DE ESTE JUEGO ME VOLÓ LA CABEZA! 🤯",
+            "social_desc": "No saben el cagazo que me dio este giro, che. De la esperanza a la realidad de una piña. ¿Qué les parece este tipo de finales que te dejan pensando? ¡Los leo! #Leito4Gaming #GamingArgentina #Batchis #GiroInesperado #HistoriaReal #Impactante #Videojuegos",
+            "yt_title": "¡EL FINAL MÁS IMPACTANTE QUE VI EN AÑOS! (No vas a creerlo)",
+            "yt_desc": "Pibes, este juego es una locura. Cuando pensé que todo terminaba bien, ¡me metió una trompada en la mandíbula! El giro final te deja helado y te hace ver todo de otra manera. ¡Es zarpado! Si quieren ver más juegos con historias así de potentes, ¡suscríbanse y dejen un like, que me re ayuda!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, Batchis, FinalInesperado, GiroDeTrama, HistoriaReal, TraumaInfantil, GamingArgentina, IndieGame, Reflexion, Videojuegos, Miedo, Impactante",
+            "id": "clip_14",
+            "ass_text": "Hola, amiguito. Te voy a dar las... No, se la tomó. What the fuck a la felicidad? ¿Puedes ver? ¡Oh! La cara del nene. ¿Por qué me mires así? Me da miedo. ¿Viste, alce que hace ahí? Hola. Oh, no. Uy, se la rompió la cabeza. Uy, hermano. Intentare volver a colocarle la cabeza. Indolenten. ¡Uy! ¡Ah, no! ¡Uy, se le cayó!",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 546.0,
+            "end": 592.6,
+            "reason": "Revela la conexión personal del desarrollador con la historia y la profunda reflexión que el juego genera sobre la realidad de muchos niños.",
+            "virality_score": 92,
+            "transcript": "Incluso el desarrollador confesó en entrevistas que esta historia es suya, es su propia infancia, el K-Mik y este juego fue su forma de sacarse ese queso podrido de encima. El creador usó los gráficos de los años 20 para contarnos que no importa que tan oscuro sea el monstruo que vivía en tu casa, puedes romper el ciclo y podés así finalmente limpiar el espejo. En mi opinión, Batchis no es un juego muy divertido, dura poco no es tan de terror y es bastante tosco en sus mecánicas, pero es un juego que te deja pensando, no porque el monstruo de miedo sino porque lamentablemente sabemos que este juego es la realidad de muchísimos niños que estén allá afuera.",
+            "social_title": "¡ESTE JUEGO ES LA VIDA REAL DE MUCHOS PIBES! 💔",
+            "social_desc": "Che, la historia detrás de Batchis es re fuerte. El desarrollador usó el juego para contar su propia infancia. Me dejó pensando una banda. ¿Qué opinan de los juegos que tocan temas así de delicados? ¡Comenten, boludos! #Leito4Gaming #GamingArgentina #Batchis #HistoriaReal #TraumaInfantil #Reflexion #VideojuegosConMensaje #NoEstasSolo",
+            "yt_title": "¡LA HISTORIA REAL DETRÁS DE ESTE JUEGO TE VA A ROMPER EL ALMA!",
+            "yt_desc": "Pibes, este clip es clave para entender la profundidad de Batchis. El desarrollador usó su propia historia para crear esta joya. Es un juego que te deja pensando, no por el terror, sino por la cruda realidad que representa para muchos. ¡Es una locura! Si valoran este tipo de contenido, ¡suscríbanse y activen la campanita para no perderse nada!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, Batchis, HistoriaReal, TraumaInfantil, Reflexion, GamingArgentina, IndieGame, MensajeSocial, AbusoInfantil, RomperElCiclo, Videojuegos, Analisis",
+            "id": "clip_15",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        }
+    ],
+    "completed_proposals": [
+        {
+            "start": 55.862261763440856,
+            "end": 92.799716,
+            "reason": "Explica premisa juego terror",
+            "virality_score": 75,
+            "transcript": "ratoncitos, ni de queso en mal estado, sino que estamos hablando de cómo la mente de un niño intenta sobrevivir al infierno de su propia casa. La premisa de Bad Cheese es simple y claustrofóbica. Tu mamá se fue y te quedás solo en casa con tu papá. Y tu papá, bueno, no está de muy buen humor. El juego te pone en una rutina de terror doméstico. Tenés que hacer los quehaceres de la casa, limpiar, ordenar.",
+            "social_title": "La historia detrás de este juego de terror doméstico es RE LOCA 😱",
+            "social_desc": "Che, les cuento la premisa de este juego que me tiene re manija. Un pibito solo con un papá medio chapa... ¿Qué onda? ¿Ustedes qué harían? ¡Contame en los comentarios! #BadCheese #TerrorDomestico #GamingArgentina #Leito4Gaming",
+            "yt_title": "LA PREMISA DE ESTE JUEGO DE TERROR ES UNA LOCURA! 🤯",
+            "yt_desc": "Acá les dejo un pedacito donde explico de qué va este juego que me tiene re enganchado. Un nene, un papá medio turbio y una casa que es un infierno. ¡Mirá cómo arranca esta historia!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, terror, horror, gaming, argentina, gameplay, indiegame, badcheese, historia, explicacion, sustos, miedo",
+            "id": "clip_1",
+            "ass_text": "Y la hombre cara roja. Boludo, posta, la hombre cara roja. Uy, boludo, venezca, los fríos. A ver, es un juego de terror. Yo no sé si la ambientación chota, mala, es la que me da el terror. Me parece que le sumó. Este es el regalo del señor cara roja. No puede ser. Es lo que el muñeco, boludo.",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "La",
+                    "start": 55.862261763440856,
+                    "end": 55.96226176344086
+                },
+                {
+                    "id": 1,
+                    "text": "permisa",
+                    "start": 55.96226176344086,
+                    "end": 56.28226176344086
+                },
+                {
+                    "id": 2,
+                    "text": "de",
+                    "start": 56.28226176344086,
+                    "end": 56.42226176344086
+                },
+                {
+                    "id": 3,
+                    "text": "Bad",
+                    "start": 56.42226176344086,
+                    "end": 56.56226176344086
+                },
+                {
+                    "id": 4,
+                    "text": "Cheese",
+                    "start": 56.56226176344086,
+                    "end": 56.88226176344086
+                },
+                {
+                    "id": 5,
+                    "text": "es",
+                    "start": 56.88226176344086,
+                    "end": 57.322261763440856
+                },
+                {
+                    "id": 6,
+                    "text": "simple",
+                    "start": 57.322261763440856,
+                    "end": 57.80226176344085
+                },
+                {
+                    "id": 7,
+                    "text": "y",
+                    "start": 57.80226176344085,
+                    "end": 58.10226176344086
+                },
+                {
+                    "id": 8,
+                    "text": "claustrofóbica.",
+                    "start": 58.10226176344086,
+                    "end": 58.902261763440855
+                },
+                {
+                    "id": 9,
+                    "text": "Tu",
+                    "start": 59.42226176344086,
+                    "end": 59.52226176344085
+                },
+                {
+                    "id": 10,
+                    "text": "mamá",
+                    "start": 59.52226176344085,
+                    "end": 59.762261763440854
+                },
+                {
+                    "id": 11,
+                    "text": "se",
+                    "start": 59.762261763440854,
+                    "end": 59.862261763440856
+                },
+                {
+                    "id": 12,
+                    "text": "fue",
+                    "start": 59.862261763440856,
+                    "end": 60.042261763440855
+                },
+                {
+                    "id": 13,
+                    "text": "y",
+                    "start": 60.042261763440855,
+                    "end": 60.34226176344086
+                },
+                {
+                    "id": 14,
+                    "text": "te",
+                    "start": 60.34226176344086,
+                    "end": 60.46226176344086
+                },
+                {
+                    "id": 15,
+                    "text": "quedas",
+                    "start": 60.46226176344086,
+                    "end": 60.70226176344086
+                },
+                {
+                    "id": 16,
+                    "text": "solo",
+                    "start": 60.70226176344086,
+                    "end": 61.042261763440855
+                },
+                {
+                    "id": 17,
+                    "text": "en",
+                    "start": 61.042261763440855,
+                    "end": 61.24226176344086
+                },
+                {
+                    "id": 18,
+                    "text": "casa",
+                    "start": 61.24226176344086,
+                    "end": 61.442261763440854
+                },
+                {
+                    "id": 19,
+                    "text": "con",
+                    "start": 61.442261763440854,
+                    "end": 61.64226176344086
+                },
+                {
+                    "id": 20,
+                    "text": "tu",
+                    "start": 61.64226176344086,
+                    "end": 61.762261763440854
+                },
+                {
+                    "id": 21,
+                    "text": "papá.",
+                    "start": 61.762261763440854,
+                    "end": 62.042261763440855
+                },
+                {
+                    "id": 22,
+                    "text": "Y",
+                    "start": 65.94226176344087,
+                    "end": 66.46226176344086
+                },
+                {
+                    "id": 23,
+                    "text": "tu",
+                    "start": 66.46226176344086,
+                    "end": 66.98226176344086
+                },
+                {
+                    "id": 24,
+                    "text": "papá,",
+                    "start": 66.98226176344086,
+                    "end": 67.46226176344085
+                },
+                {
+                    "id": 25,
+                    "text": "bueno,",
+                    "start": 67.72226176344086,
+                    "end": 67.88226176344085
+                },
+                {
+                    "id": 26,
+                    "text": "no",
+                    "start": 68.42226176344086,
+                    "end": 68.54226176344085
+                },
+                {
+                    "id": 27,
+                    "text": "está",
+                    "start": 68.54226176344085,
+                    "end": 68.82226176344085
+                },
+                {
+                    "id": 28,
+                    "text": "de",
+                    "start": 68.82226176344085,
+                    "end": 69.00226176344086
+                },
+                {
+                    "id": 29,
+                    "text": "muy",
+                    "start": 69.00226176344086,
+                    "end": 69.20226176344086
+                },
+                {
+                    "id": 30,
+                    "text": "buen",
+                    "start": 69.20226176344086,
+                    "end": 69.44226176344085
+                },
+                {
+                    "id": 31,
+                    "text": "humor.",
+                    "start": 69.44226176344085,
+                    "end": 69.68226176344086
+                },
+                {
+                    "id": 32,
+                    "text": "El",
+                    "start": 70.34226176344086,
+                    "end": 70.86226176344086
+                },
+                {
+                    "id": 33,
+                    "text": "juego",
+                    "start": 70.86226176344086,
+                    "end": 71.02226176344085
+                },
+                {
+                    "id": 34,
+                    "text": "te",
+                    "start": 71.02226176344085,
+                    "end": 71.22226176344086
+                },
+                {
+                    "id": 35,
+                    "text": "pone",
+                    "start": 71.22226176344086,
+                    "end": 71.56226176344086
+                },
+                {
+                    "id": 36,
+                    "text": "en",
+                    "start": 71.56226176344086,
+                    "end": 71.76226176344086
+                },
+                {
+                    "id": 37,
+                    "text": "una",
+                    "start": 71.76226176344086,
+                    "end": 71.90226176344086
+                },
+                {
+                    "id": 38,
+                    "text": "rutina",
+                    "start": 71.90226176344086,
+                    "end": 72.34226176344086
+                },
+                {
+                    "id": 39,
+                    "text": "de",
+                    "start": 72.34226176344086,
+                    "end": 72.50226176344086
+                },
+                {
+                    "id": 40,
+                    "text": "terror",
+                    "start": 72.50226176344086,
+                    "end": 72.76226176344085
+                },
+                {
+                    "id": 41,
+                    "text": "doméstico.",
+                    "start": 72.76226176344085,
+                    "end": 73.38226176344085
+                },
+                {
+                    "id": 42,
+                    "text": "Tenés",
+                    "start": 73.78226176344086,
+                    "end": 74.00226176344086
+                },
+                {
+                    "id": 43,
+                    "text": "que",
+                    "start": 74.00226176344086,
+                    "end": 74.06226176344086
+                },
+                {
+                    "id": 44,
+                    "text": "hacer",
+                    "start": 74.06226176344086,
+                    "end": 74.28226176344086
+                },
+                {
+                    "id": 45,
+                    "text": "los",
+                    "start": 74.28226176344086,
+                    "end": 74.44226176344085
+                },
+                {
+                    "id": 46,
+                    "text": "quehaceres",
+                    "start": 74.44226176344085,
+                    "end": 74.82226176344085
+                },
+                {
+                    "id": 47,
+                    "text": "de",
+                    "start": 74.82226176344085,
+                    "end": 74.94226176344085
+                },
+                {
+                    "id": 48,
+                    "text": "la",
+                    "start": 74.94226176344085,
+                    "end": 75.04226176344085
+                },
+                {
+                    "id": 49,
+                    "text": "casa,",
+                    "start": 75.04226176344085,
+                    "end": 75.30226176344085
+                },
+                {
+                    "id": 50,
+                    "text": "limpiar,",
+                    "start": 75.74226176344085,
+                    "end": 76.28226176344086
+                },
+                {
+                    "id": 51,
+                    "text": "ordenar,",
+                    "start": 76.54226176344085,
+                    "end": 77.04226176344085
+                },
+                {
+                    "id": 52,
+                    "text": "buscar",
+                    "start": 77.44226176344085,
+                    "end": 77.64226176344086
+                },
+                {
+                    "id": 53,
+                    "text": "cosas,",
+                    "start": 77.64226176344086,
+                    "end": 78.04226176344085
+                },
+                {
+                    "id": 54,
+                    "text": "todo",
+                    "start": 78.66226176344085,
+                    "end": 78.84226176344086
+                },
+                {
+                    "id": 55,
+                    "text": "esto",
+                    "start": 78.84226176344086,
+                    "end": 79.18226176344086
+                },
+                {
+                    "id": 56,
+                    "text": "mientras",
+                    "start": 79.18226176344086,
+                    "end": 79.44226176344085
+                },
+                {
+                    "id": 57,
+                    "text": "caminas",
+                    "start": 79.44226176344085,
+                    "end": 80.02226176344085
+                },
+                {
+                    "id": 58,
+                    "text": "en",
+                    "start": 80.02226176344085,
+                    "end": 80.42226176344086
+                },
+                {
+                    "id": 59,
+                    "text": "puntitas",
+                    "start": 80.42226176344086,
+                    "end": 80.82226176344085
+                },
+                {
+                    "id": 60,
+                    "text": "de",
+                    "start": 80.82226176344085,
+                    "end": 80.98226176344086
+                },
+                {
+                    "id": 61,
+                    "text": "pie,",
+                    "start": 80.98226176344086,
+                    "end": 81.26226176344085
+                },
+                {
+                    "id": 62,
+                    "text": "tratando",
+                    "start": 81.40226176344086,
+                    "end": 81.74226176344085
+                },
+                {
+                    "id": 63,
+                    "text": "de",
+                    "start": 81.74226176344085,
+                    "end": 81.90226176344086
+                },
+                {
+                    "id": 64,
+                    "text": "no",
+                    "start": 81.90226176344086,
+                    "end": 82.00226176344086
+                },
+                {
+                    "id": 65,
+                    "text": "hacer",
+                    "start": 82.00226176344086,
+                    "end": 82.20226176344086
+                },
+                {
+                    "id": 66,
+                    "text": "mucho",
+                    "start": 82.20226176344086,
+                    "end": 82.44226176344085
+                },
+                {
+                    "id": 67,
+                    "text": "ruido,",
+                    "start": 82.44226176344085,
+                    "end": 83.16226176344085
+                },
+                {
+                    "id": 68,
+                    "text": "por",
+                    "start": 83.16226176344085,
+                    "end": 83.50226176344086
+                },
+                {
+                    "id": 69,
+                    "text": "una",
+                    "start": 83.50226176344086,
+                    "end": 83.66226176344085
+                },
+                {
+                    "id": 70,
+                    "text": "casa",
+                    "start": 83.66226176344085,
+                    "end": 83.92226176344086
+                },
+                {
+                    "id": 71,
+                    "text": "que",
+                    "start": 83.92226176344086,
+                    "end": 84.26226176344085
+                },
+                {
+                    "id": 72,
+                    "text": "se",
+                    "start": 84.26226176344085,
+                    "end": 84.74226176344085
+                },
+                {
+                    "id": 73,
+                    "text": "siente",
+                    "start": 84.74226176344085,
+                    "end": 85.02226176344085
+                },
+                {
+                    "id": 74,
+                    "text": "como",
+                    "start": 85.02226176344085,
+                    "end": 85.28226176344086
+                },
+                {
+                    "id": 75,
+                    "text": "una",
+                    "start": 85.28226176344086,
+                    "end": 85.44226176344085
+                },
+                {
+                    "id": 76,
+                    "text": "trampa",
+                    "start": 85.44226176344085,
+                    "end": 85.82226176344085
+                },
+                {
+                    "id": 77,
+                    "text": "gigante.",
+                    "start": 85.82226176344085,
+                    "end": 86.48226176344086
+                }
+            ],
+            "export_name": "35_Gourmet/Bad_Cheese_explica_premisa_juego_2",
+            "is_published": true
+        },
+        {
+            "start": 55.85806451612903,
+            "end": 93.09677419354838,
+            "reason": "Premisa de terror doméstico",
+            "virality_score": 85,
+            "transcript": "La la la la la la la la la... La premisa de Bad Cheese es simple y claustrofóbica. Tu mamá se fue y te quedás solo en casa con tu papá. Bad Cheese, where are you? Y tu papá, bueno, no está de muy buen humor. El juego te pone en una rutina de terror doméstico. Tenés que hacer los quehaceres de la casa, limpiar, ordenar, buscar cosas, todo esto mientras caminás en puntitas de pie, tratando de no hacer mucho ruido, por una casa que se siente como una trampa gigante.",
+            "social_title": "¡Este juego te deja solo con tu viejo en modo pesadilla! 😱",
+            "social_desc": "Che, me contaron de este juego y la premisa ya me dio un cagazo. ¡Imaginate estar solo con tu viejo en esta casa que es una trampa! ¿Ustedes se animarían a jugarlo, boludos? ¡Contame en los comentarios! 👇 #BadCheese #TerrorDomestico #GamingArgentina #Miedo #Leito4Gaming #JuegosDeTerror",
+            "yt_title": "¡LA PREMISA DE ESTE JUEGO ES RE LOCA Y TE VA A DAR CAGAZO! 😱",
+            "yt_desc": "Acá les cuento un poco de qué va Bad Cheese, un juego que te mete en una rutina de terror doméstico con tu viejo. ¡La casa es una trampa y tenés que andar en puntitas de pie! ¡Una locura!",
+            "yt_tags": "Leito4Gaming, Leito4GamingPlus, BadCheese, TerrorDomestico, GamingArgentina, JuegosDeTerror, HorrorGame, IndieGame, Gameplay, Miedo, Claustrofobia, PapáEnfadado, RutinaDeTerror, StreamerArgentino",
+            "id": "clip_2",
+            "ass_text": "Y la hombre cara roja. Boludo, es posta, la hombre cara roja. Boludo, ven, escala frío. A ver, es un juego de terror. Yo no sé si la ambientación chota, mala, es la que me da el terror, me parece que le sumó. Oh, este es el regalo de un señor cara roja. No puede ser. Es lo que el muñeco, boludo. Hola, señorron, habla muñeco.",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "La",
+                    "start": 55.85806451612903,
+                    "end": 55.93806451612903
+                },
+                {
+                    "id": 1,
+                    "text": "permisa",
+                    "start": 55.93806451612903,
+                    "end": 56.29806451612903
+                },
+                {
+                    "id": 2,
+                    "text": "de",
+                    "start": 56.29806451612903,
+                    "end": 56.43806451612903
+                },
+                {
+                    "id": 3,
+                    "text": "Bad",
+                    "start": 56.43806451612903,
+                    "end": 56.558064516129036
+                },
+                {
+                    "id": 4,
+                    "text": "Cheese",
+                    "start": 56.558064516129036,
+                    "end": 56.87806451612904
+                },
+                {
+                    "id": 5,
+                    "text": "es",
+                    "start": 56.87806451612904,
+                    "end": 57.318064516129034
+                },
+                {
+                    "id": 6,
+                    "text": "simple",
+                    "start": 57.318064516129034,
+                    "end": 57.79806451612903
+                },
+                {
+                    "id": 7,
+                    "text": "y",
+                    "start": 57.79806451612903,
+                    "end": 58.098064516129035
+                },
+                {
+                    "id": 8,
+                    "text": "claustrofóbica.",
+                    "start": 58.098064516129035,
+                    "end": 58.89806451612903
+                },
+                {
+                    "id": 9,
+                    "text": "Tu",
+                    "start": 59.37806451612904,
+                    "end": 59.53806451612903
+                },
+                {
+                    "id": 10,
+                    "text": "mamá",
+                    "start": 59.53806451612903,
+                    "end": 59.75806451612903
+                },
+                {
+                    "id": 11,
+                    "text": "se",
+                    "start": 59.75806451612903,
+                    "end": 59.85806451612903
+                },
+                {
+                    "id": 12,
+                    "text": "fue",
+                    "start": 59.85806451612903,
+                    "end": 60.03806451612903
+                },
+                {
+                    "id": 13,
+                    "text": "y",
+                    "start": 60.03806451612903,
+                    "end": 60.33806451612904
+                },
+                {
+                    "id": 14,
+                    "text": "te",
+                    "start": 60.33806451612904,
+                    "end": 60.458064516129035
+                },
+                {
+                    "id": 15,
+                    "text": "quedas",
+                    "start": 60.458064516129035,
+                    "end": 60.71806451612903
+                },
+                {
+                    "id": 16,
+                    "text": "solo",
+                    "start": 60.71806451612903,
+                    "end": 61.03806451612903
+                },
+                {
+                    "id": 17,
+                    "text": "en",
+                    "start": 61.03806451612903,
+                    "end": 61.238064516129036
+                },
+                {
+                    "id": 18,
+                    "text": "casa",
+                    "start": 61.238064516129036,
+                    "end": 61.43806451612903
+                },
+                {
+                    "id": 19,
+                    "text": "con",
+                    "start": 61.43806451612903,
+                    "end": 61.638064516129035
+                },
+                {
+                    "id": 20,
+                    "text": "tu",
+                    "start": 61.638064516129035,
+                    "end": 61.75806451612903
+                },
+                {
+                    "id": 21,
+                    "text": "papá.",
+                    "start": 61.75806451612903,
+                    "end": 62.678064516129034
+                },
+                {
+                    "id": 22,
+                    "text": "Y",
+                    "start": 65.93806451612903,
+                    "end": 66.45806451612903
+                },
+                {
+                    "id": 23,
+                    "text": "tu",
+                    "start": 66.45806451612903,
+                    "end": 66.97806451612904
+                },
+                {
+                    "id": 24,
+                    "text": "papá,",
+                    "start": 66.97806451612904,
+                    "end": 67.37806451612903
+                },
+                {
+                    "id": 25,
+                    "text": "bueno,",
+                    "start": 67.75806451612904,
+                    "end": 67.89806451612904
+                },
+                {
+                    "id": 26,
+                    "text": "no",
+                    "start": 68.41806451612904,
+                    "end": 68.55806451612904
+                },
+                {
+                    "id": 27,
+                    "text": "está",
+                    "start": 68.55806451612904,
+                    "end": 68.81806451612903
+                },
+                {
+                    "id": 28,
+                    "text": "de",
+                    "start": 68.81806451612903,
+                    "end": 68.99806451612903
+                },
+                {
+                    "id": 29,
+                    "text": "muy",
+                    "start": 68.99806451612903,
+                    "end": 69.21806451612903
+                },
+                {
+                    "id": 30,
+                    "text": "buen",
+                    "start": 69.21806451612903,
+                    "end": 69.43806451612903
+                },
+                {
+                    "id": 31,
+                    "text": "humor.",
+                    "start": 69.43806451612903,
+                    "end": 69.67806451612904
+                },
+                {
+                    "id": 32,
+                    "text": "El",
+                    "start": 70.33806451612904,
+                    "end": 70.85806451612903
+                },
+                {
+                    "id": 33,
+                    "text": "juego",
+                    "start": 70.85806451612903,
+                    "end": 71.01806451612903
+                },
+                {
+                    "id": 34,
+                    "text": "te",
+                    "start": 71.01806451612903,
+                    "end": 71.21806451612903
+                },
+                {
+                    "id": 35,
+                    "text": "pone",
+                    "start": 71.21806451612903,
+                    "end": 71.55806451612904
+                },
+                {
+                    "id": 36,
+                    "text": "en",
+                    "start": 71.55806451612904,
+                    "end": 71.75806451612904
+                },
+                {
+                    "id": 37,
+                    "text": "una",
+                    "start": 71.75806451612904,
+                    "end": 71.89806451612904
+                },
+                {
+                    "id": 38,
+                    "text": "rutina",
+                    "start": 71.89806451612904,
+                    "end": 72.33806451612904
+                },
+                {
+                    "id": 39,
+                    "text": "de",
+                    "start": 72.33806451612904,
+                    "end": 72.49806451612903
+                },
+                {
+                    "id": 40,
+                    "text": "terror",
+                    "start": 72.49806451612903,
+                    "end": 72.75806451612902
+                },
+                {
+                    "id": 41,
+                    "text": "doméstico.",
+                    "start": 72.75806451612902,
+                    "end": 73.37806451612903
+                },
+                {
+                    "id": 42,
+                    "text": "Tenés",
+                    "start": 73.79806451612903,
+                    "end": 74.01806451612903
+                },
+                {
+                    "id": 43,
+                    "text": "que",
+                    "start": 74.01806451612903,
+                    "end": 74.07806451612903
+                },
+                {
+                    "id": 44,
+                    "text": "hacer",
+                    "start": 74.07806451612903,
+                    "end": 74.29806451612903
+                },
+                {
+                    "id": 45,
+                    "text": "los",
+                    "start": 74.29806451612903,
+                    "end": 74.43806451612903
+                },
+                {
+                    "id": 46,
+                    "text": "quehaceres",
+                    "start": 74.43806451612903,
+                    "end": 74.83806451612904
+                },
+                {
+                    "id": 47,
+                    "text": "de",
+                    "start": 74.83806451612904,
+                    "end": 74.93806451612903
+                },
+                {
+                    "id": 48,
+                    "text": "la",
+                    "start": 74.93806451612903,
+                    "end": 75.03806451612903
+                },
+                {
+                    "id": 49,
+                    "text": "casa,",
+                    "start": 75.03806451612903,
+                    "end": 75.29806451612903
+                },
+                {
+                    "id": 50,
+                    "text": "limpiar,",
+                    "start": 75.71806451612903,
+                    "end": 76.27806451612904
+                },
+                {
+                    "id": 51,
+                    "text": "ordenar,",
+                    "start": 76.55806451612904,
+                    "end": 77.05806451612904
+                },
+                {
+                    "id": 52,
+                    "text": "buscar",
+                    "start": 77.45806451612904,
+                    "end": 77.63806451612903
+                },
+                {
+                    "id": 53,
+                    "text": "cosas,",
+                    "start": 77.63806451612903,
+                    "end": 78.05806451612904
+                },
+                {
+                    "id": 54,
+                    "text": "todo",
+                    "start": 78.67806451612904,
+                    "end": 78.83806451612904
+                },
+                {
+                    "id": 55,
+                    "text": "esto",
+                    "start": 78.83806451612904,
+                    "end": 79.17806451612904
+                },
+                {
+                    "id": 56,
+                    "text": "mientras",
+                    "start": 79.17806451612904,
+                    "end": 79.43806451612903
+                },
+                {
+                    "id": 57,
+                    "text": "caminas",
+                    "start": 79.43806451612903,
+                    "end": 80.01806451612903
+                },
+                {
+                    "id": 58,
+                    "text": "en",
+                    "start": 80.01806451612903,
+                    "end": 80.41806451612904
+                },
+                {
+                    "id": 59,
+                    "text": "puntitas",
+                    "start": 80.41806451612904,
+                    "end": 80.81806451612903
+                },
+                {
+                    "id": 60,
+                    "text": "de",
+                    "start": 80.81806451612903,
+                    "end": 80.97806451612904
+                },
+                {
+                    "id": 61,
+                    "text": "pie,",
+                    "start": 80.97806451612904,
+                    "end": 81.25806451612902
+                },
+                {
+                    "id": 62,
+                    "text": "tratando",
+                    "start": 81.39806451612904,
+                    "end": 81.73806451612903
+                },
+                {
+                    "id": 63,
+                    "text": "de",
+                    "start": 81.73806451612903,
+                    "end": 81.91806451612904
+                },
+                {
+                    "id": 64,
+                    "text": "no",
+                    "start": 81.91806451612904,
+                    "end": 81.99806451612903
+                },
+                {
+                    "id": 65,
+                    "text": "hacer",
+                    "start": 81.99806451612903,
+                    "end": 82.19806451612904
+                },
+                {
+                    "id": 66,
+                    "text": "mucho",
+                    "start": 82.19806451612904,
+                    "end": 82.45806451612904
+                },
+                {
+                    "id": 67,
+                    "text": "ruido,",
+                    "start": 82.45806451612904,
+                    "end": 83.13806451612903
+                },
+                {
+                    "id": 68,
+                    "text": "por",
+                    "start": 83.13806451612903,
+                    "end": 83.49806451612903
+                },
+                {
+                    "id": 69,
+                    "text": "una",
+                    "start": 83.49806451612903,
+                    "end": 83.63806451612903
+                },
+                {
+                    "id": 70,
+                    "text": "casa",
+                    "start": 83.63806451612903,
+                    "end": 83.91806451612904
+                },
+                {
+                    "id": 71,
+                    "text": "que",
+                    "start": 83.91806451612904,
+                    "end": 84.25806451612902
+                },
+                {
+                    "id": 72,
+                    "text": "se",
+                    "start": 84.25806451612902,
+                    "end": 84.75806451612902
+                },
+                {
+                    "id": 73,
+                    "text": "siente",
+                    "start": 84.75806451612902,
+                    "end": 85.01806451612903
+                },
+                {
+                    "id": 74,
+                    "text": "como",
+                    "start": 85.01806451612903,
+                    "end": 85.29806451612903
+                },
+                {
+                    "id": 75,
+                    "text": "una",
+                    "start": 85.29806451612903,
+                    "end": 85.43806451612903
+                },
+                {
+                    "id": 76,
+                    "text": "trampa",
+                    "start": 85.43806451612903,
+                    "end": 85.81806451612903
+                },
+                {
+                    "id": 77,
+                    "text": "gigante.",
+                    "start": 85.81806451612903,
+                    "end": 86.49806451612903
+                }
+            ],
+            "export_name": "34_Gourmet/Bad_Cheese_premisa_de_terror_1",
+            "pub_yt": "2026-07-20",
+            "pub_ig": "2026-07-20",
+            "pub_tiktok": "2026-07-20",
+            "is_published": true
+        },
+        {
+            "start": 114.05594841827957,
+            "end": 170.9216944489247,
+            "reason": "Explicando lore y psicología",
+            "virality_score": 85,
+            "transcript": "monstruosa de rabia y violencia. Durante los primeros minutos del juego, tu instinto de supervivencia gamer se activa. Intentás identificar patrones y moverte por la casa de forma sigilosa para ir avanzando en el juego. Pero a medida que avanza el tiempo en la casa, el juego te va soltando algunas pistas que te dan a entender de que el ratoncito, esta imagen de este personaje, es tan solo una máscara de un trasfondo mucho más oscuro y macabro. En psicología, existe un mecanismo de defensa llamado disociación. Cuando una persona, especialmente un niño,",
+            "social_title": "¡El ratoncito no es lo que parece! 🐭😱",
+            "social_desc": "¡Che, mirá cómo este juego te engaña! Al principio creés que es una cosa, pero después te das cuenta que hay algo mucho más oscuro detrás. Y encima, te explico un toque de psicología. ¿Vos qué pensás? ¡Dejame tu comentario, boludo! #GamingArgentina #TerrorPsicologico #LoreDeJuegos #Disociacion",
+            "yt_title": "LA VERDAD OCULTA del RATONCITO del TERROR 😱 (y un poco de PSICOLOGÍA)",
+            "yt_desc": "En este clip les cuento cómo el juego te va llevando de a poquito a descubrir la posta detrás del personaje del ratoncito. No es lo que parece, ¡posta! Y de paso, les tiro un dato re interesante sobre un mecanismo de defensa psicológico. ¡Una locura!",
+            "yt_tags": "Leito4Gaming,Leito4GamingPlus,terror,psicología,disociación,lore,gaming,argentina,streamer,juegoindie,misterio,análisis,explicación",
+            "id": "clip_4",
+            "ass_text": "Uy se va a chupar el vino. ¿Se perdió eso? ¿Qué carajo está pasando? Uy boludo, qué fue eso? Me agarra una cosa que acaba de pasar. No lo sé, adivina. Bueno, de la botella, mi padre va a partir el trasero.",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "El",
+                    "start": 114.05594841827957,
+                    "end": 114.21594841827957
+                },
+                {
+                    "id": 1,
+                    "text": "padre",
+                    "start": 114.21594841827957,
+                    "end": 114.47594841827957
+                },
+                {
+                    "id": 2,
+                    "text": "deja",
+                    "start": 114.47594841827957,
+                    "end": 115.17594841827957
+                },
+                {
+                    "id": 3,
+                    "text": "de",
+                    "start": 115.17594841827957,
+                    "end": 115.33594841827957
+                },
+                {
+                    "id": 4,
+                    "text": "ser",
+                    "start": 115.33594841827957,
+                    "end": 115.43594841827957
+                },
+                {
+                    "id": 5,
+                    "text": "un",
+                    "start": 115.43594841827957,
+                    "end": 115.59594841827958
+                },
+                {
+                    "id": 6,
+                    "text": "simple",
+                    "start": 115.59594841827958,
+                    "end": 116.07594841827957
+                },
+                {
+                    "id": 7,
+                    "text": "dibujo",
+                    "start": 116.07594841827957,
+                    "end": 116.47594841827957
+                },
+                {
+                    "id": 8,
+                    "text": "animado",
+                    "start": 116.47594841827957,
+                    "end": 116.77594841827957
+                },
+                {
+                    "id": 9,
+                    "text": "enojado",
+                    "start": 116.77594841827957,
+                    "end": 117.29594841827956
+                },
+                {
+                    "id": 10,
+                    "text": "para",
+                    "start": 117.29594841827956,
+                    "end": 117.51594841827956
+                },
+                {
+                    "id": 11,
+                    "text": "convertirse",
+                    "start": 117.51594841827956,
+                    "end": 118.17594841827957
+                },
+                {
+                    "id": 12,
+                    "text": "en",
+                    "start": 118.17594841827957,
+                    "end": 118.31594841827958
+                },
+                {
+                    "id": 13,
+                    "text": "una",
+                    "start": 118.31594841827958,
+                    "end": 118.47594841827957
+                },
+                {
+                    "id": 14,
+                    "text": "masa",
+                    "start": 118.47594841827957,
+                    "end": 118.81594841827958
+                },
+                {
+                    "id": 15,
+                    "text": "monstruosa",
+                    "start": 118.81594841827958,
+                    "end": 119.65594841827956
+                },
+                {
+                    "id": 16,
+                    "text": "de",
+                    "start": 119.65594841827956,
+                    "end": 119.85594841827957
+                },
+                {
+                    "id": 17,
+                    "text": "rabia",
+                    "start": 119.85594841827957,
+                    "end": 120.37594841827956
+                },
+                {
+                    "id": 18,
+                    "text": "y",
+                    "start": 120.37594841827956,
+                    "end": 120.49594841827957
+                },
+                {
+                    "id": 19,
+                    "text": "violencia.",
+                    "start": 120.49594841827957,
+                    "end": 120.99594841827957
+                },
+                {
+                    "id": 20,
+                    "text": "Durante",
+                    "start": 122.19594841827957,
+                    "end": 122.67594841827957
+                },
+                {
+                    "id": 21,
+                    "text": "los",
+                    "start": 122.67594841827957,
+                    "end": 122.79594841827956
+                },
+                {
+                    "id": 22,
+                    "text": "primeros",
+                    "start": 122.79594841827956,
+                    "end": 123.11594841827957
+                },
+                {
+                    "id": 23,
+                    "text": "minutos",
+                    "start": 123.11594841827957,
+                    "end": 123.35594841827957
+                },
+                {
+                    "id": 24,
+                    "text": "del",
+                    "start": 123.35594841827957,
+                    "end": 123.57594841827957
+                },
+                {
+                    "id": 25,
+                    "text": "juego,",
+                    "start": 123.57594841827957,
+                    "end": 123.85594841827957
+                },
+                {
+                    "id": 26,
+                    "text": "tu",
+                    "start": 124.09594841827956,
+                    "end": 124.15594841827956
+                },
+                {
+                    "id": 27,
+                    "text": "instinto",
+                    "start": 124.15594841827956,
+                    "end": 124.59594841827956
+                },
+                {
+                    "id": 28,
+                    "text": "de",
+                    "start": 124.59594841827956,
+                    "end": 124.69594841827957
+                },
+                {
+                    "id": 29,
+                    "text": "supervivencia",
+                    "start": 124.69594841827957,
+                    "end": 125.39594841827957
+                },
+                {
+                    "id": 30,
+                    "text": "gamer",
+                    "start": 125.39594841827957,
+                    "end": 125.79594841827956
+                },
+                {
+                    "id": 31,
+                    "text": "se",
+                    "start": 125.79594841827956,
+                    "end": 126.11594841827957
+                },
+                {
+                    "id": 32,
+                    "text": "activa.",
+                    "start": 126.11594841827957,
+                    "end": 126.63594841827957
+                },
+                {
+                    "id": 33,
+                    "text": "Intentás",
+                    "start": 127.05594841827957,
+                    "end": 127.53594841827957
+                },
+                {
+                    "id": 34,
+                    "text": "identificar",
+                    "start": 127.53594841827957,
+                    "end": 128.19594841827956
+                },
+                {
+                    "id": 35,
+                    "text": "patrones",
+                    "start": 128.19594841827956,
+                    "end": 128.85594841827958
+                },
+                {
+                    "id": 36,
+                    "text": "y",
+                    "start": 128.85594841827958,
+                    "end": 129.03594841827956
+                },
+                {
+                    "id": 37,
+                    "text": "moverte",
+                    "start": 129.03594841827956,
+                    "end": 129.45594841827958
+                },
+                {
+                    "id": 38,
+                    "text": "por",
+                    "start": 129.45594841827958,
+                    "end": 129.65594841827956
+                },
+                {
+                    "id": 39,
+                    "text": "la",
+                    "start": 129.65594841827956,
+                    "end": 129.79594841827958
+                },
+                {
+                    "id": 40,
+                    "text": "casa",
+                    "start": 129.79594841827958,
+                    "end": 129.99594841827957
+                },
+                {
+                    "id": 41,
+                    "text": "de",
+                    "start": 129.99594841827957,
+                    "end": 130.13594841827955
+                },
+                {
+                    "id": 42,
+                    "text": "forma",
+                    "start": 130.13594841827955,
+                    "end": 130.35594841827958
+                },
+                {
+                    "id": 43,
+                    "text": "sigilosa",
+                    "start": 130.35594841827958,
+                    "end": 131.11594841827957
+                },
+                {
+                    "id": 44,
+                    "text": "para",
+                    "start": 131.11594841827957,
+                    "end": 131.35594841827958
+                },
+                {
+                    "id": 45,
+                    "text": "ir",
+                    "start": 131.35594841827958,
+                    "end": 131.49594841827957
+                },
+                {
+                    "id": 46,
+                    "text": "avanzando",
+                    "start": 131.49594841827957,
+                    "end": 132.13594841827955
+                },
+                {
+                    "id": 47,
+                    "text": "en",
+                    "start": 132.13594841827955,
+                    "end": 132.23594841827958
+                },
+                {
+                    "id": 48,
+                    "text": "el",
+                    "start": 132.23594841827958,
+                    "end": 132.31594841827956
+                },
+                {
+                    "id": 49,
+                    "text": "juego.",
+                    "start": 132.31594841827956,
+                    "end": 132.59594841827956
+                },
+                {
+                    "id": 50,
+                    "text": "Pero",
+                    "start": 133.25594841827956,
+                    "end": 133.4759484182796
+                },
+                {
+                    "id": 51,
+                    "text": "a",
+                    "start": 133.4759484182796,
+                    "end": 133.57594841827958
+                },
+                {
+                    "id": 52,
+                    "text": "medida",
+                    "start": 133.57594841827958,
+                    "end": 133.67594841827957
+                },
+                {
+                    "id": 53,
+                    "text": "que",
+                    "start": 133.67594841827957,
+                    "end": 133.87594841827956
+                },
+                {
+                    "id": 54,
+                    "text": "avanza",
+                    "start": 133.87594841827956,
+                    "end": 134.23594841827958
+                },
+                {
+                    "id": 55,
+                    "text": "el",
+                    "start": 134.23594841827958,
+                    "end": 134.43594841827957
+                },
+                {
+                    "id": 56,
+                    "text": "tiempo",
+                    "start": 134.43594841827957,
+                    "end": 134.85594841827958
+                },
+                {
+                    "id": 57,
+                    "text": "en",
+                    "start": 134.85594841827958,
+                    "end": 134.99594841827957
+                },
+                {
+                    "id": 58,
+                    "text": "la",
+                    "start": 134.99594841827957,
+                    "end": 135.09594841827956
+                },
+                {
+                    "id": 59,
+                    "text": "casa,",
+                    "start": 135.09594841827956,
+                    "end": 135.41594841827958
+                },
+                {
+                    "id": 60,
+                    "text": "el",
+                    "start": 135.65594841827956,
+                    "end": 135.69594841827956
+                },
+                {
+                    "id": 61,
+                    "text": "juego",
+                    "start": 135.69594841827956,
+                    "end": 135.89594841827957
+                },
+                {
+                    "id": 62,
+                    "text": "te",
+                    "start": 135.89594841827957,
+                    "end": 136.03594841827956
+                },
+                {
+                    "id": 63,
+                    "text": "va",
+                    "start": 136.03594841827956,
+                    "end": 136.11594841827957
+                },
+                {
+                    "id": 64,
+                    "text": "soltando",
+                    "start": 136.11594841827957,
+                    "end": 136.57594841827958
+                },
+                {
+                    "id": 65,
+                    "text": "algunas",
+                    "start": 136.57594841827958,
+                    "end": 136.89594841827957
+                },
+                {
+                    "id": 66,
+                    "text": "pistas",
+                    "start": 136.89594841827957,
+                    "end": 137.57594841827958
+                },
+                {
+                    "id": 67,
+                    "text": "que",
+                    "start": 137.57594841827958,
+                    "end": 138.03594841827956
+                },
+                {
+                    "id": 68,
+                    "text": "te",
+                    "start": 138.03594841827956,
+                    "end": 138.15594841827956
+                },
+                {
+                    "id": 69,
+                    "text": "van",
+                    "start": 138.15594841827956,
+                    "end": 138.25594841827956
+                },
+                {
+                    "id": 70,
+                    "text": "a",
+                    "start": 138.25594841827956,
+                    "end": 138.33594841827957
+                },
+                {
+                    "id": 71,
+                    "text": "entender",
+                    "start": 138.33594841827957,
+                    "end": 138.55594841827957
+                },
+                {
+                    "id": 72,
+                    "text": "de",
+                    "start": 138.55594841827957,
+                    "end": 138.83594841827957
+                },
+                {
+                    "id": 73,
+                    "text": "que",
+                    "start": 138.83594841827957,
+                    "end": 138.9759484182796
+                },
+                {
+                    "id": 74,
+                    "text": "el",
+                    "start": 138.9759484182796,
+                    "end": 139.23594841827958
+                },
+                {
+                    "id": 75,
+                    "text": "ratoncito,",
+                    "start": 139.23594841827958,
+                    "end": 139.9759484182796
+                },
+                {
+                    "id": 76,
+                    "text": "esta",
+                    "start": 140.11594841827957,
+                    "end": 140.27594841827957
+                },
+                {
+                    "id": 77,
+                    "text": "imagen",
+                    "start": 140.27594841827957,
+                    "end": 140.67594841827957
+                },
+                {
+                    "id": 78,
+                    "text": "de",
+                    "start": 140.67594841827957,
+                    "end": 140.91594841827958
+                },
+                {
+                    "id": 79,
+                    "text": "este",
+                    "start": 140.91594841827958,
+                    "end": 141.17594841827957
+                },
+                {
+                    "id": 80,
+                    "text": "personaje,",
+                    "start": 141.17594841827957,
+                    "end": 141.67594841827957
+                },
+                {
+                    "id": 81,
+                    "text": "es",
+                    "start": 141.67594841827957,
+                    "end": 142.49594841827957
+                },
+                {
+                    "id": 82,
+                    "text": "tan",
+                    "start": 142.49594841827957,
+                    "end": 142.63594841827955
+                },
+                {
+                    "id": 83,
+                    "text": "solo",
+                    "start": 142.63594841827955,
+                    "end": 142.83594841827957
+                },
+                {
+                    "id": 84,
+                    "text": "una",
+                    "start": 142.83594841827957,
+                    "end": 143.01594841827958
+                },
+                {
+                    "id": 85,
+                    "text": "máscara",
+                    "start": 143.01594841827958,
+                    "end": 143.39594841827957
+                },
+                {
+                    "id": 86,
+                    "text": "de",
+                    "start": 143.39594841827957,
+                    "end": 143.67594841827957
+                },
+                {
+                    "id": 87,
+                    "text": "un",
+                    "start": 143.67594841827957,
+                    "end": 143.87594841827956
+                },
+                {
+                    "id": 88,
+                    "text": "trasfondo",
+                    "start": 143.87594841827956,
+                    "end": 144.31594841827956
+                },
+                {
+                    "id": 89,
+                    "text": "mucho",
+                    "start": 144.31594841827956,
+                    "end": 144.73594841827958
+                },
+                {
+                    "id": 90,
+                    "text": "más",
+                    "start": 144.73594841827958,
+                    "end": 144.95594841827958
+                },
+                {
+                    "id": 91,
+                    "text": "osturo",
+                    "start": 144.95594841827958,
+                    "end": 145.37594841827956
+                },
+                {
+                    "id": 92,
+                    "text": "y",
+                    "start": 145.37594841827956,
+                    "end": 145.57594841827958
+                },
+                {
+                    "id": 93,
+                    "text": "macabro.",
+                    "start": 145.57594841827958,
+                    "end": 145.91594841827958
+                },
+                {
+                    "id": 94,
+                    "text": "En",
+                    "start": 147.07594841827958,
+                    "end": 147.61594841827957
+                },
+                {
+                    "id": 95,
+                    "text": "psicología,",
+                    "start": 147.61594841827957,
+                    "end": 148.11594841827957
+                },
+                {
+                    "id": 96,
+                    "text": "existe",
+                    "start": 148.4759484182796,
+                    "end": 148.67594841827957
+                },
+                {
+                    "id": 97,
+                    "text": "un",
+                    "start": 148.67594841827957,
+                    "end": 148.85594841827958
+                },
+                {
+                    "id": 98,
+                    "text": "mecanismo",
+                    "start": 148.85594841827958,
+                    "end": 149.35594841827958
+                },
+                {
+                    "id": 99,
+                    "text": "de",
+                    "start": 149.35594841827958,
+                    "end": 149.51594841827958
+                },
+                {
+                    "id": 100,
+                    "text": "defensa",
+                    "start": 149.51594841827958,
+                    "end": 149.87594841827956
+                },
+                {
+                    "id": 101,
+                    "text": "llamado",
+                    "start": 149.87594841827956,
+                    "end": 150.27594841827957
+                },
+                {
+                    "id": 102,
+                    "text": "disociación.",
+                    "start": 150.27594841827957,
+                    "end": 151.33594841827957
+                },
+                {
+                    "id": 103,
+                    "text": "Cuando",
+                    "start": 151.79594841827958,
+                    "end": 151.95594841827958
+                },
+                {
+                    "id": 104,
+                    "text": "una",
+                    "start": 151.95594841827958,
+                    "end": 152.13594841827955
+                },
+                {
+                    "id": 105,
+                    "text": "persona,",
+                    "start": 152.13594841827955,
+                    "end": 152.57594841827958
+                },
+                {
+                    "id": 106,
+                    "text": "especialmente",
+                    "start": 152.93594841827957,
+                    "end": 153.37594841827956
+                },
+                {
+                    "id": 107,
+                    "text": "un",
+                    "start": 153.37594841827956,
+                    "end": 153.89594841827957
+                },
+                {
+                    "id": 108,
+                    "text": "niño,",
+                    "start": 153.89594841827957,
+                    "end": 154.13594841827955
+                },
+                {
+                    "id": 109,
+                    "text": "se",
+                    "start": 154.61594841827957,
+                    "end": 154.73594841827958
+                },
+                {
+                    "id": 110,
+                    "text": "enfrenta",
+                    "start": 154.73594841827958,
+                    "end": 155.11594841827957
+                },
+                {
+                    "id": 111,
+                    "text": "a",
+                    "start": 155.11594841827957,
+                    "end": 155.17594841827957
+                },
+                {
+                    "id": 112,
+                    "text": "un",
+                    "start": 155.17594841827957,
+                    "end": 155.27594841827957
+                },
+                {
+                    "id": 113,
+                    "text": "trauma",
+                    "start": 155.27594841827957,
+                    "end": 155.53594841827956
+                },
+                {
+                    "id": 114,
+                    "text": "o",
+                    "start": 155.53594841827956,
+                    "end": 155.83594841827957
+                },
+                {
+                    "id": 115,
+                    "text": "a",
+                    "start": 155.83594841827957,
+                    "end": 155.89594841827957
+                },
+                {
+                    "id": 116,
+                    "text": "un",
+                    "start": 155.89594841827957,
+                    "end": 156.01594841827958
+                },
+                {
+                    "id": 117,
+                    "text": "dolor",
+                    "start": 156.01594841827958,
+                    "end": 156.25594841827956
+                },
+                {
+                    "id": 118,
+                    "text": "que",
+                    "start": 156.25594841827956,
+                    "end": 156.43594841827957
+                },
+                {
+                    "id": 119,
+                    "text": "su",
+                    "start": 156.43594841827957,
+                    "end": 156.63594841827955
+                },
+                {
+                    "id": 120,
+                    "text": "mente",
+                    "start": 156.63594841827955,
+                    "end": 156.95594841827958
+                },
+                {
+                    "id": 121,
+                    "text": "no",
+                    "start": 156.95594841827958,
+                    "end": 157.29594841827958
+                },
+                {
+                    "id": 122,
+                    "text": "puede",
+                    "start": 157.29594841827958,
+                    "end": 157.59594841827956
+                },
+                {
+                    "id": 123,
+                    "text": "procesar.",
+                    "start": 157.59594841827956,
+                    "end": 158.13594841827955
+                },
+                {
+                    "id": 124,
+                    "text": "El",
+                    "start": 158.51594841827958,
+                    "end": 158.65594841827956
+                },
+                {
+                    "id": 125,
+                    "text": "cerebro",
+                    "start": 158.65594841827956,
+                    "end": 159.03594841827956
+                },
+                {
+                    "id": 126,
+                    "text": "literalmente",
+                    "start": 159.03594841827956,
+                    "end": 160.03594841827956
+                },
+                {
+                    "id": 127,
+                    "text": "lo",
+                    "start": 160.03594841827956,
+                    "end": 160.25594841827956
+                },
+                {
+                    "id": 128,
+                    "text": "que",
+                    "start": 160.25594841827956,
+                    "end": 160.41594841827958
+                },
+                {
+                    "id": 129,
+                    "text": "hace",
+                    "start": 160.41594841827958,
+                    "end": 160.63594841827955
+                },
+                {
+                    "id": 130,
+                    "text": "es",
+                    "start": 160.63594841827955,
+                    "end": 160.89594841827957
+                },
+                {
+                    "id": 131,
+                    "text": "desconectarlo",
+                    "start": 160.89594841827957,
+                    "end": 161.95594841827958
+                },
+                {
+                    "id": 132,
+                    "text": "de",
+                    "start": 161.95594841827958,
+                    "end": 162.11594841827957
+                },
+                {
+                    "id": 133,
+                    "text": "la",
+                    "start": 162.11594841827957,
+                    "end": 162.21594841827957
+                },
+                {
+                    "id": 134,
+                    "text": "realidad",
+                    "start": 162.21594841827957,
+                    "end": 162.63594841827955
+                },
+                {
+                    "id": 135,
+                    "text": "para",
+                    "start": 162.63594841827955,
+                    "end": 163.17594841827957
+                },
+                {
+                    "id": 136,
+                    "text": "intentar",
+                    "start": 163.17594841827957,
+                    "end": 163.51594841827958
+                },
+                {
+                    "id": 137,
+                    "text": "protegerlo.",
+                    "start": 163.51594841827958,
+                    "end": 164.23594841827958
+                },
+                {
+                    "id": 138,
+                    "text": "El",
+                    "start": 164.79594841827958,
+                    "end": 164.9759484182796
+                },
+                {
+                    "id": 139,
+                    "text": "niño",
+                    "start": 164.9759484182796,
+                    "end": 165.19594841827956
+                },
+                {
+                    "id": 140,
+                    "text": "crea",
+                    "start": 165.19594841827956,
+                    "end": 165.59594841827956
+                },
+                {
+                    "id": 141,
+                    "text": "un",
+                    "start": 165.59594841827956,
+                    "end": 165.73594841827958
+                },
+                {
+                    "id": 142,
+                    "text": "mundo",
+                    "start": 165.73594841827958,
+                    "end": 165.9759484182796
+                },
+                {
+                    "id": 143,
+                    "text": "de",
+                    "start": 165.9759484182796,
+                    "end": 166.11594841827957
+                },
+                {
+                    "id": 144,
+                    "text": "fantasía",
+                    "start": 166.11594841827957,
+                    "end": 166.79594841827958
+                },
+                {
+                    "id": 145,
+                    "text": "donde",
+                    "start": 166.79594841827958,
+                    "end": 167.05594841827957
+                },
+                {
+                    "id": 146,
+                    "text": "el",
+                    "start": 167.05594841827957,
+                    "end": 167.31594841827956
+                },
+                {
+                    "id": 147,
+                    "text": "monstruo",
+                    "start": 167.31594841827956,
+                    "end": 167.93594841827957
+                },
+                {
+                    "id": 148,
+                    "text": "no",
+                    "start": 167.93594841827957,
+                    "end": 168.13594841827955
+                },
+                {
+                    "id": 149,
+                    "text": "es",
+                    "start": 168.13594841827955,
+                    "end": 168.27594841827957
+                },
+                {
+                    "id": 150,
+                    "text": "tu",
+                    "start": 168.27594841827957,
+                    "end": 168.37594841827956
+                },
+                {
+                    "id": 151,
+                    "text": "padre",
+                    "start": 168.37594841827956,
+                    "end": 168.55594841827957
+                },
+                {
+                    "id": 152,
+                    "text": "real,",
+                    "start": 168.55594841827957,
+                    "end": 168.93594841827957
+                },
+                {
+                    "id": 153,
+                    "text": "sino",
+                    "start": 169.29594841827958,
+                    "end": 169.53594841827956
+                },
+                {
+                    "id": 154,
+                    "text": "un",
+                    "start": 169.53594841827956,
+                    "end": 169.67594841827957
+                },
+                {
+                    "id": 155,
+                    "text": "villano",
+                    "start": 169.67594841827957,
+                    "end": 169.95594841827958
+                },
+                {
+                    "id": 156,
+                    "text": "de",
+                    "start": 169.95594841827958,
+                    "end": 170.11594841827957
+                },
+                {
+                    "id": 157,
+                    "text": "cuento.",
+                    "start": 170.11594841827957,
+                    "end": 170.43594841827957
+                }
+            ],
+            "export_name": "31_Gourmet/Bad_Cheese_explicando_lore_y_1"
+        }
+    ],
+    "completed_ranges": [
+        {
+            "start": 55.862261763440856,
+            "end": 92.799716
+        },
+        {
+            "start": 55.85806451612903,
+            "end": 93.09677419354838
+        },
+        {
+            "start": 114.05594841827957,
+            "end": 170.9216944489247
+        }
+    ]
+}

@@ -1,0 +1,38 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial Black,95,&H00FF33CC,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,12,0,5,10,10,10,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:01.57,0:00:02.01,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}No,
+Dialogue: 0,0:00:02.17,0:00:02.41,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no,
+Dialogue: 0,0:00:02.55,0:00:02.93,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no,
+Dialogue: 0,0:00:02.93,0:00:03.35,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no,
+Dialogue: 0,0:00:03.35,0:00:04.01,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no.
+Dialogue: 0,0:00:04.67,0:00:05.11,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Uy,
+Dialogue: 0,0:00:05.23,0:00:05.45,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no.
+Dialogue: 0,0:00:13.23,0:00:13.67,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Va
+Dialogue: 0,0:00:13.67,0:00:13.85,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}a
+Dialogue: 0,0:00:13.85,0:00:13.85,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}aparecer
+Dialogue: 0,0:00:13.85,0:00:14.03,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}por
+Dialogue: 0,0:00:14.03,0:00:14.21,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}atrás,
+Dialogue: 0,0:00:14.41,0:00:14.41,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no.
+Dialogue: 0,0:00:14.45,0:00:14.61,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Uy,
+Dialogue: 0,0:00:14.67,0:00:14.75,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}está
+Dialogue: 0,0:00:14.75,0:00:14.97,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}abriendo
+Dialogue: 0,0:00:14.97,0:00:15.11,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}la
+Dialogue: 0,0:00:15.11,0:00:15.41,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}puerta,
+Dialogue: 0,0:00:15.59,0:00:15.79,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}mirá.
+Dialogue: 0,0:00:19.61,0:00:20.05,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}No,
+Dialogue: 0,0:00:20.81,0:00:21.13,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no,
+Dialogue: 0,0:00:21.31,0:00:21.87,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}hermano,
+Dialogue: 0,0:00:21.87,0:00:22.27,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}no.
+Dialogue: 0,0:00:25.83,0:00:26.27,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Tremendo,
+Dialogue: 0,0:00:26.43,0:00:26.55,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Kevin.
+Dialogue: 0,0:00:28.61,0:00:29.29,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}Tremendo,
+Dialogue: 0,0:00:29.35,0:00:29.73,Default,,0,0,0,,{\pos(553,637)}{\fscx0\fscy0\t(0,100,\fscx120\fscy120)\t(100,200,\fscx100\fscy100)}viejo.

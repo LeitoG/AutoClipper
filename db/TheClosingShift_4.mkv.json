@@ -1,0 +1,3654 @@
+{
+    "video": "TheClosingShift_4.mkv",
+    "proposals": [
+        {
+            "start": 192.5,
+            "end": 211.5,
+            "reason": "La conversaci\u00f3n m\u00e1s turbia en una cafeter\u00eda.",
+            "virality_score": 88,
+            "transcript": "Mira la de atr\u00e1s, tiene una cara turbia la de atr\u00e1s. Quiero un Salted Caramel Mocha, que son deliciosos, \u00bfeh? Y pienso que te va a encantar, Senpai. Ah, est\u00e1 con la jefa. Okay, vamos a probar ese entonces. Un Salted Caramel Mocha. Y yo quiero un Dark Mocha Chip, \u00bfeh? Un Chilapuchino. Okay.",
+            "social_title": "El pedido m\u00e1s raro en la cafeter\u00eda del terror",
+            "social_desc": "Cuando solo quieres un caf\u00e9 pero los maniqu\u00edes te atienden. #gamingterror #humor #indiehorror #clipsdetwitch #fyp",
+            "id": "ai_78e1",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 262.0,
+            "end": 264.5,
+            "reason": "Grito de susto por maniqu\u00edes.",
+            "virality_score": 95,
+            "transcript": "\u00a1Ah! Estaba tomando fotos del del caf\u00e9.",
+            "social_title": "El susto que me dieron las maniqu\u00edes",
+            "social_desc": "No me esperaba para nada este jumpscare. Casi se me sale el coraz\u00f3n. #jumpscare #gamingterror #susto #horrorgaming #gamer",
+            "id": "ai_a4ec",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 980.0,
+            "end": 994.0,
+            "reason": "Streamer reacciona a una misteriosa figura.",
+            "virality_score": 88,
+            "transcript": "No deber\u00eda haber nadie en el techo. Podr\u00eda ser el investigador, tal vez est\u00e1 chequeando eso, pero el investigador fue otro d\u00eda. \u00bfVolvi\u00f3 el investigador? Podr\u00eda haber sido mi imaginaci\u00f3n, dice la buena Machiko.",
+            "social_title": "Hay alguien en el techo...",
+            "social_desc": "Estaba tranquilo hasta que escuch\u00e9 ruidos arriba. \u00bfQui\u00e9n podr\u00e1 ser? #terror #gaming #misterio #horrorgaming #susto",
+            "id": "ai_c22a",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        },
+        {
+            "start": 1171.5,
+            "end": 1190.0,
+            "reason": "Reacci\u00f3n exagerada y graciosa al robar.",
+            "virality_score": 93,
+            "transcript": "\u00bfQu\u00e9 hacer, boludo? \u00a1Me llevo todo! \u00a1No te vas a robar nada! \u00bfPor qu\u00e9 se pod\u00eda llevar todo? A m\u00ed, agarro la plata. \u00bfPero qu\u00e9 est\u00e1 pasando?",
+            "social_title": "Cuando te dicen que cierres la tienda...",
+            "social_desc": "Mi primer d\u00eda de trabajo y ya estoy desvalijando el local. #gaming #humor #bugs #funnygaming #clipsdetwitch",
+            "id": "ai_4efb",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            }
+        }
+    ],
+    "completed_ranges": [
+        {
+            "start": 708.5,
+            "end": 718.0
+        },
+        {
+            "start": 363.5,
+            "end": 381.0
+        },
+        {
+            "start": 954.5,
+            "end": 1012.266129032258
+        },
+        {
+            "start": 1355.7491935483872,
+            "end": 1401.223387096774
+        },
+        {
+            "start": 1795.220678,
+            "end": 1825.484722
+        },
+        {
+            "start": 1514.81286,
+            "end": 1559.447496
+        },
+        {
+            "start": 1134.0,
+            "end": 1176.630910255914
+        },
+        {
+            "start": 1103.6454645376343,
+            "end": 1139.2643853306452
+        }
+    ],
+    "completed_proposals": [
+        {
+            "start": 708.5,
+            "end": 718.0,
+            "reason": "Reacci\u00f3n a cliente con cochecito vac\u00edo.",
+            "virality_score": 92,
+            "transcript": "Pero no tiene beb\u00e9 adentro. What the fuck? Y no me habl\u00f3. \u00a1Que ven\u00eda con un carrito sin beb\u00e9! Se\u00f1ora, \u00bfqu\u00e9 le pasa?",
+            "social_title": "La clienta m\u00e1s rara de la cafeter\u00eda",
+            "social_desc": "Me visita una se\u00f1ora con un carrito de beb\u00e9... pero sin beb\u00e9. #gaming #terror #humor #bug #clipsdetwitch",
+            "id": "ai_dfd6",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "pero",
+                    "start": 708.0978494623656,
+                    "end": 708.6778494623657
+                },
+                {
+                    "id": 1,
+                    "text": "no",
+                    "start": 708.6778494623657,
+                    "end": 708.7978494623657
+                },
+                {
+                    "id": 2,
+                    "text": "tiene",
+                    "start": 708.7978494623657,
+                    "end": 709.1578494623656
+                },
+                {
+                    "id": 3,
+                    "text": "beb\u00e9",
+                    "start": 709.1578494623656,
+                    "end": 709.3978494623656
+                },
+                {
+                    "id": 4,
+                    "text": "adentro,",
+                    "start": 709.3978494623656,
+                    "end": 709.9178494623657
+                },
+                {
+                    "id": 5,
+                    "text": "wtf",
+                    "start": 709.9178494623657,
+                    "end": 711.2178494623656
+                },
+                {
+                    "id": 6,
+                    "text": "ah",
+                    "start": 715.2978494623657,
+                    "end": 715.8978494623656
+                },
+                {
+                    "id": 7,
+                    "text": "y",
+                    "start": 715.8978494623656,
+                    "end": 716.3178494623656
+                },
+                {
+                    "id": 8,
+                    "text": "no",
+                    "start": 716.3178494623656,
+                    "end": 716.4378494623656
+                },
+                {
+                    "id": 9,
+                    "text": "me",
+                    "start": 716.4378494623656,
+                    "end": 716.5578494623657
+                },
+                {
+                    "id": 10,
+                    "text": "hablo,",
+                    "start": 716.5578494623657,
+                    "end": 716.7778494623656
+                },
+                {
+                    "id": 11,
+                    "text": "que",
+                    "start": 717.2378494623656,
+                    "end": 717.8778494623656
+                },
+                {
+                    "id": 12,
+                    "text": "vienes",
+                    "start": 717.8778494623656,
+                    "end": 718.0578494623657
+                },
+                {
+                    "id": 13,
+                    "text": "con",
+                    "start": 718.0578494623657,
+                    "end": 718.1978494623656
+                },
+                {
+                    "id": 14,
+                    "text": "un",
+                    "start": 718.1978494623656,
+                    "end": 718.3378494623656
+                },
+                {
+                    "id": 15,
+                    "text": "carrito",
+                    "start": 718.3378494623656,
+                    "end": 718.6378494623656
+                },
+                {
+                    "id": 16,
+                    "text": "sin",
+                    "start": 718.6378494623656,
+                    "end": 718.8578494623656
+                },
+                {
+                    "id": 17,
+                    "text": "beb\u00e9,",
+                    "start": 718.8578494623656,
+                    "end": 719.2978494623657
+                },
+                {
+                    "id": 18,
+                    "text": "se\u00f1ora,",
+                    "start": 719.9578494623656,
+                    "end": 720.5778494623656
+                },
+                {
+                    "id": 19,
+                    "text": "que",
+                    "start": 720.8578494623656,
+                    "end": 720.9978494623656
+                },
+                {
+                    "id": 20,
+                    "text": "le",
+                    "start": 720.9978494623656,
+                    "end": 721.1378494623656
+                },
+                {
+                    "id": 21,
+                    "text": "pasa",
+                    "start": 721.1378494623656,
+                    "end": 721.6578494623656
+                },
+                {
+                    "id": 22,
+                    "text": "salte",
+                    "start": 723.8978494623656,
+                    "end": 724.4978494623656
+                },
+                {
+                    "id": 23,
+                    "text": "el",
+                    "start": 724.4978494623656,
+                    "end": 724.5978494623656
+                },
+                {
+                    "id": 24,
+                    "text": "caramel",
+                    "start": 724.5978494623656,
+                    "end": 724.7578494623656
+                },
+                {
+                    "id": 25,
+                    "text": "moca,",
+                    "start": 724.7578494623656,
+                    "end": 725.2578494623656
+                },
+                {
+                    "id": 26,
+                    "text": "ok",
+                    "start": 725.6378494623656,
+                    "end": 725.9578494623656
+                },
+                {
+                    "id": 27,
+                    "text": "ya",
+                    "start": 725.9578494623656,
+                    "end": 726.1578494623656
+                },
+                {
+                    "id": 28,
+                    "text": "creo",
+                    "start": 726.1578494623656,
+                    "end": 726.2578494623656
+                },
+                {
+                    "id": 29,
+                    "text": "que",
+                    "start": 726.2578494623656,
+                    "end": 726.3778494623656
+                },
+                {
+                    "id": 30,
+                    "text": "me",
+                    "start": 726.3778494623656,
+                    "end": 726.4578494623656
+                },
+                {
+                    "id": 31,
+                    "text": "aprend\u00ed",
+                    "start": 726.4578494623656,
+                    "end": 726.7978494623657
+                },
+                {
+                    "id": 32,
+                    "text": "a",
+                    "start": 726.7978494623657,
+                    "end": 726.8978494623656
+                },
+                {
+                    "id": 33,
+                    "text": "hacerlo,",
+                    "start": 726.8978494623656,
+                    "end": 727.1778494623657
+                },
+                {
+                    "id": 34,
+                    "text": "eh",
+                    "start": 727.2378494623656,
+                    "end": 727.7378494623656
+                },
+                {
+                    "id": 35,
+                    "text": "viene",
+                    "start": 730.3978494623656,
+                    "end": 730.9978494623656
+                },
+                {
+                    "id": 36,
+                    "text": "con",
+                    "start": 730.9978494623656,
+                    "end": 731.1978494623656
+                },
+                {
+                    "id": 37,
+                    "text": "leche,",
+                    "start": 731.1978494623656,
+                    "end": 731.5378494623657
+                },
+                {
+                    "id": 38,
+                    "text": "viene",
+                    "start": 732.2578494623656,
+                    "end": 732.5578494623657
+                },
+                {
+                    "id": 39,
+                    "text": "con",
+                    "start": 732.5578494623657,
+                    "end": 733.1178494623656
+                },
+                {
+                    "id": 40,
+                    "text": "cirup",
+                    "start": 733.1178494623656,
+                    "end": 733.7778494623656
+                },
+                {
+                    "id": 41,
+                    "text": "de",
+                    "start": 733.7778494623656,
+                    "end": 733.8978494623656
+                },
+                {
+                    "id": 42,
+                    "text": "caramelo,",
+                    "start": 733.8978494623656,
+                    "end": 734.4378494623656
+                },
+                {
+                    "id": 43,
+                    "text": "haz",
+                    "start": 734.6978494623656,
+                    "end": 735.4578494623656
+                },
+                {
+                    "id": 44,
+                    "text": "el",
+                    "start": 735.4578494623656,
+                    "end": 735.6178494623656
+                },
+                {
+                    "id": 45,
+                    "text": "cirup",
+                    "start": 735.6178494623656,
+                    "end": 736.2178494623656
+                },
+                {
+                    "id": 46,
+                    "text": "y",
+                    "start": 736.8778494623656,
+                    "end": 737.4778494623656
+                },
+                {
+                    "id": 47,
+                    "text": "le",
+                    "start": 737.4778494623656,
+                    "end": 737.8178494623656
+                },
+                {
+                    "id": 48,
+                    "text": "pon\u00edamos",
+                    "start": 737.8178494623656,
+                    "end": 738.3378494623656
+                },
+                {
+                    "id": 49,
+                    "text": "leche",
+                    "start": 738.3378494623656,
+                    "end": 740.1978494623656
+                },
+                {
+                    "id": 50,
+                    "text": "caliente,",
+                    "start": 740.1978494623656,
+                    "end": 740.7778494623656
+                },
+                {
+                    "id": 51,
+                    "text": "tuki,",
+                    "start": 741.0978494623656,
+                    "end": 742.5178494623656
+                },
+                {
+                    "id": 52,
+                    "text": "mira",
+                    "start": 743.1178494623656,
+                    "end": 743.2578494623656
+                },
+                {
+                    "id": 53,
+                    "text": "me",
+                    "start": 743.2578494623656,
+                    "end": 743.5778494623656
+                },
+                {
+                    "id": 54,
+                    "text": "lo",
+                    "start": 743.5778494623656,
+                    "end": 743.6578494623657
+                },
+                {
+                    "id": 55,
+                    "text": "hago",
+                    "start": 743.6578494623657,
+                    "end": 743.7578494623656
+                },
+                {
+                    "id": 56,
+                    "text": "de",
+                    "start": 743.7578494623656,
+                    "end": 743.8178494623656
+                },
+                {
+                    "id": 57,
+                    "text": "memoria,",
+                    "start": 743.8178494623656,
+                    "end": 744.1178494623656
+                },
+                {
+                    "id": 58,
+                    "text": "eh",
+                    "start": 744.1778494623657,
+                    "end": 744.4778494623656
+                },
+                {
+                    "id": 59,
+                    "text": "leche",
+                    "start": 747.3378494623656,
+                    "end": 747.9378494623656
+                },
+                {
+                    "id": 60,
+                    "text": "caliente",
+                    "start": 747.9378494623656,
+                    "end": 748.5378494623656
+                },
+                {
+                    "id": 61,
+                    "text": "no,",
+                    "start": 750.8778494623656,
+                    "end": 751.4778494623656
+                },
+                {
+                    "id": 62,
+                    "text": "me",
+                    "start": 751.5978494623656,
+                    "end": 751.7378494623656
+                },
+                {
+                    "id": 63,
+                    "text": "falta",
+                    "start": 751.7378494623656,
+                    "end": 751.9178494623657
+                },
+                {
+                    "id": 64,
+                    "text": "el",
+                    "start": 751.9178494623657,
+                    "end": 752.0778494623656
+                },
+                {
+                    "id": 65,
+                    "text": "chocolate,",
+                    "start": 752.0778494623656,
+                    "end": 752.3178494623656
+                },
+                {
+                    "id": 66,
+                    "text": "boluca",
+                    "start": 752.5178494623656,
+                    "end": 752.8178494623656
+                },
+                {
+                    "id": 67,
+                    "text": "de",
+                    "start": 752.8178494623656,
+                    "end": 753.0178494623656
+                },
+                {
+                    "id": 68,
+                    "text": "chocolate,",
+                    "start": 753.0178494623656,
+                    "end": 753.3778494623656
+                },
+                {
+                    "id": 69,
+                    "text": "boludo,",
+                    "start": 753.5378494623656,
+                    "end": 754.0978494623656
+                },
+                {
+                    "id": 70,
+                    "text": "chocolate",
+                    "start": 754.0978494623656,
+                    "end": 755.1378494623656
+                },
+                {
+                    "id": 71,
+                    "text": "sauce,",
+                    "start": 755.1378494623656,
+                    "end": 755.4978494623656
+                },
+                {
+                    "id": 72,
+                    "text": "menos",
+                    "start": 755.6778494623657,
+                    "end": 755.9778494623656
+                },
+                {
+                    "id": 73,
+                    "text": "mal,",
+                    "start": 755.9778494623656,
+                    "end": 756.2378494623656
+                },
+                {
+                    "id": 74,
+                    "text": "eh,",
+                    "start": 756.2778494623656,
+                    "end": 756.6978494623656
+                },
+                {
+                    "id": 75,
+                    "text": "lo",
+                    "start": 757.0978494623656,
+                    "end": 757.3778494623656
+                },
+                {
+                    "id": 76,
+                    "text": "dem\u00e1s",
+                    "start": 757.3778494623656,
+                    "end": 757.5178494623656
+                },
+                {
+                    "id": 77,
+                    "text": "estaba",
+                    "start": 757.5178494623656,
+                    "end": 757.7178494623656
+                },
+                {
+                    "id": 78,
+                    "text": "bien,",
+                    "start": 757.7178494623656,
+                    "end": 758.2378494623656
+                },
+                {
+                    "id": 79,
+                    "text": "me",
+                    "start": 758.4978494623656,
+                    "end": 759.6978494623656
+                },
+                {
+                    "id": 80,
+                    "text": "falta",
+                    "start": 759.6978494623656,
+                    "end": 759.9978494623656
+                },
+                {
+                    "id": 81,
+                    "text": "la",
+                    "start": 759.9978494623656,
+                    "end": 760.9578494623656
+                },
+                {
+                    "id": 82,
+                    "text": "salsa",
+                    "start": 760.9578494623656,
+                    "end": 761.0778494623656
+                },
+                {
+                    "id": 83,
+                    "text": "de",
+                    "start": 761.0778494623656,
+                    "end": 761.2178494623656
+                },
+                {
+                    "id": 84,
+                    "text": "chocolate,",
+                    "start": 761.2178494623656,
+                    "end": 761.4778494623656
+                },
+                {
+                    "id": 85,
+                    "text": "ahora",
+                    "start": 761.8578494623656,
+                    "end": 762.5978494623656
+                },
+                {
+                    "id": 86,
+                    "text": "s\u00ed,",
+                    "start": 762.5978494623656,
+                    "end": 762.9378494623656
+                },
+                {
+                    "id": 87,
+                    "text": "menos",
+                    "start": 763.6778494623657,
+                    "end": 763.9578494623656
+                },
+                {
+                    "id": 88,
+                    "text": "mal",
+                    "start": 763.9578494623656,
+                    "end": 764.0778494623656
+                },
+                {
+                    "id": 89,
+                    "text": "que",
+                    "start": 764.0778494623656,
+                    "end": 764.1778494623657
+                },
+                {
+                    "id": 90,
+                    "text": "me",
+                    "start": 764.1778494623657,
+                    "end": 764.2578494623656
+                },
+                {
+                    "id": 91,
+                    "text": "fije,",
+                    "start": 764.2578494623656,
+                    "end": 764.4578494623656
+                },
+                {
+                    "id": 92,
+                    "text": "boludo",
+                    "start": 764.6178494623656,
+                    "end": 765.0178494623656
+                },
+                {
+                    "id": 93,
+                    "text": "se\u00f1ora,",
+                    "start": 765.6578494623657,
+                    "end": 766.0578494623657
+                },
+                {
+                    "id": 94,
+                    "text": "para",
+                    "start": 766.4578494623656,
+                    "end": 766.5578494623657
+                },
+                {
+                    "id": 95,
+                    "text": "usted",
+                    "start": 766.5578494623657,
+                    "end": 766.7578494623656
+                },
+                {
+                    "id": 96,
+                    "text": "y",
+                    "start": 766.7578494623656,
+                    "end": 766.8778494623656
+                },
+                {
+                    "id": 97,
+                    "text": "su",
+                    "start": 766.8778494623656,
+                    "end": 766.9978494623656
+                },
+                {
+                    "id": 98,
+                    "text": "beb\u00e9",
+                    "start": 766.9978494623656,
+                    "end": 767.3378494623656
+                }
+            ],
+            "feedback": "up",
+            "pub_yt": "2026-06-20",
+            "pub_ig": "2026-06-20",
+            "pub_tiktok": "2026-06-20",
+            "is_published": true
+        },
+        {
+            "start": 363.5,
+            "end": 381.0,
+            "reason": "La confusi\u00f3n con el pedido y el ambiente terror\u00edfico.",
+            "virality_score": 86,
+            "transcript": "Okay, quieren dos latte, tres latte, amigo, tres, ah no, dos latte, se hab\u00eda bugeado, \u00bfno? No. S\u00ed, tres latte van a pedir. Un salted caramel mocha y un chocolate chip cappuccino. Vamos con los latte primero. Mira la m\u00fasica de Sims que le metieron, eh.",
+            "social_title": "Cuando los clientes son maniqu\u00edes",
+            "social_desc": "Pens\u00f3 que el juego estaba bugeado, pero era algo peor. #gamingterror #auron #indiehorror #sustos #mannequin",
+            "id": "ai_495e",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "Ok,",
+                    "start": 363.5,
+                    "end": 363.58
+                },
+                {
+                    "id": 1,
+                    "text": "quieren",
+                    "start": 363.82,
+                    "end": 363.82
+                },
+                {
+                    "id": 2,
+                    "text": "dos",
+                    "start": 363.82,
+                    "end": 363.98
+                },
+                {
+                    "id": 3,
+                    "text": "late,",
+                    "start": 363.98,
+                    "end": 364.3
+                },
+                {
+                    "id": 4,
+                    "text": "TRE",
+                    "start": 364.72,
+                    "end": 364.96
+                },
+                {
+                    "id": 5,
+                    "text": "LATE",
+                    "start": 364.96,
+                    "end": 365.48
+                },
+                {
+                    "id": 6,
+                    "text": "AMIGO,",
+                    "start": 365.48,
+                    "end": 366.06
+                },
+                {
+                    "id": 7,
+                    "text": "TRE...",
+                    "start": 366.22,
+                    "end": 366.76
+                },
+                {
+                    "id": 8,
+                    "text": "ah",
+                    "start": 366.76,
+                    "end": 366.94
+                },
+                {
+                    "id": 9,
+                    "text": "no,",
+                    "start": 366.94,
+                    "end": 367.08
+                },
+                {
+                    "id": 10,
+                    "text": "dos",
+                    "start": 367.26,
+                    "end": 367.38
+                },
+                {
+                    "id": 11,
+                    "text": "late,",
+                    "start": 367.38,
+                    "end": 367.6
+                },
+                {
+                    "id": 12,
+                    "text": "se",
+                    "start": 367.66,
+                    "end": 367.72
+                },
+                {
+                    "id": 13,
+                    "text": "hab\u00eda",
+                    "start": 367.72,
+                    "end": 367.82
+                },
+                {
+                    "id": 14,
+                    "text": "apugado",
+                    "start": 367.82,
+                    "end": 368.14
+                },
+                {
+                    "id": 15,
+                    "text": "\u00bfno?",
+                    "start": 368.14,
+                    "end": 368.32
+                },
+                {
+                    "id": 16,
+                    "text": "No.",
+                    "start": 369.44,
+                    "end": 369.88
+                },
+                {
+                    "id": 17,
+                    "text": "S\u00ed,",
+                    "start": 370.56,
+                    "end": 371
+                },
+                {
+                    "id": 18,
+                    "text": "tres",
+                    "start": 371.26,
+                    "end": 371.4
+                },
+                {
+                    "id": 19,
+                    "text": "late",
+                    "start": 371.4,
+                    "end": 371.66
+                },
+                {
+                    "id": 20,
+                    "text": "van",
+                    "start": 371.66,
+                    "end": 371.78
+                },
+                {
+                    "id": 21,
+                    "text": "a",
+                    "start": 371.78,
+                    "end": 371.88
+                },
+                {
+                    "id": 22,
+                    "text": "pedir.",
+                    "start": 371.88,
+                    "end": 372.08
+                },
+                {
+                    "id": 23,
+                    "text": "Un",
+                    "start": 373.5,
+                    "end": 373.68
+                },
+                {
+                    "id": 24,
+                    "text": "salte",
+                    "start": 373.68,
+                    "end": 373.98
+                },
+                {
+                    "id": 25,
+                    "text": "caramel",
+                    "start": 373.98,
+                    "end": 374.2
+                },
+                {
+                    "id": 26,
+                    "text": "moca",
+                    "start": 374.2,
+                    "end": 374.68
+                },
+                {
+                    "id": 27,
+                    "text": "y",
+                    "start": 374.68,
+                    "end": 374.84
+                },
+                {
+                    "id": 28,
+                    "text": "un",
+                    "start": 374.84,
+                    "end": 374.98
+                },
+                {
+                    "id": 29,
+                    "text": "chocolate",
+                    "start": 374.98,
+                    "end": 375.28
+                },
+                {
+                    "id": 30,
+                    "text": "chica",
+                    "start": 375.28,
+                    "end": 375.62
+                },
+                {
+                    "id": 31,
+                    "text": "puchino.",
+                    "start": 375.62,
+                    "end": 376.24
+                },
+                {
+                    "id": 32,
+                    "text": "Vamos",
+                    "start": 376.6,
+                    "end": 376.98
+                },
+                {
+                    "id": 33,
+                    "text": "con",
+                    "start": 376.98,
+                    "end": 377.16
+                },
+                {
+                    "id": 34,
+                    "text": "los",
+                    "start": 377.16,
+                    "end": 377.28
+                },
+                {
+                    "id": 35,
+                    "text": "late",
+                    "start": 377.28,
+                    "end": 377.56
+                },
+                {
+                    "id": 36,
+                    "text": "primero.",
+                    "start": 377.56,
+                    "end": 377.84
+                },
+                {
+                    "id": 37,
+                    "text": "Mira",
+                    "start": 378.9,
+                    "end": 379.18
+                },
+                {
+                    "id": 38,
+                    "text": "la",
+                    "start": 379.18,
+                    "end": 379.28
+                },
+                {
+                    "id": 39,
+                    "text": "m\u00fasica",
+                    "start": 379.28,
+                    "end": 379.68
+                },
+                {
+                    "id": 40,
+                    "text": "de",
+                    "start": 379.68,
+                    "end": 379.92
+                },
+                {
+                    "id": 41,
+                    "text": "sims",
+                    "start": 379.92,
+                    "end": 380.26
+                },
+                {
+                    "id": 42,
+                    "text": "que",
+                    "start": 380.26,
+                    "end": 380.36
+                },
+                {
+                    "id": 43,
+                    "text": "le",
+                    "start": 380.36,
+                    "end": 380.44
+                },
+                {
+                    "id": 44,
+                    "text": "metieron",
+                    "start": 380.44,
+                    "end": 380.8
+                },
+                {
+                    "id": 45,
+                    "text": "\u00bfeh?",
+                    "start": 380.8,
+                    "end": 380.98
+                },
+                {
+                    "id": 46,
+                    "text": "Vamos",
+                    "start": 382.08,
+                    "end": 382.32
+                },
+                {
+                    "id": 47,
+                    "text": "con",
+                    "start": 382.32,
+                    "end": 382.46
+                },
+                {
+                    "id": 48,
+                    "text": "los",
+                    "start": 382.46,
+                    "end": 382.56
+                },
+                {
+                    "id": 49,
+                    "text": "late,",
+                    "start": 382.56,
+                    "end": 382.92
+                },
+                {
+                    "id": 50,
+                    "text": "Tuki.",
+                    "start": 383.1,
+                    "end": 383.3
+                },
+                {
+                    "id": 51,
+                    "text": "Vamos",
+                    "start": 383.98,
+                    "end": 384.12
+                },
+                {
+                    "id": 52,
+                    "text": "a",
+                    "start": 384.12,
+                    "end": 384.26
+                },
+                {
+                    "id": 53,
+                    "text": "hacerle",
+                    "start": 384.26,
+                    "end": 384.4
+                },
+                {
+                    "id": 54,
+                    "text": "doble",
+                    "start": 384.4,
+                    "end": 384.58
+                },
+                {
+                    "id": 55,
+                    "text": "late.",
+                    "start": 384.58,
+                    "end": 384.84
+                },
+                {
+                    "id": 56,
+                    "text": "Tuki.",
+                    "start": 387.92,
+                    "end": 388.36
+                },
+                {
+                    "id": 57,
+                    "text": "Mira,",
+                    "start": 390.46,
+                    "end": 390.9
+                },
+                {
+                    "id": 58,
+                    "text": "agarra",
+                    "start": 391.12,
+                    "end": 391.34
+                },
+                {
+                    "id": 59,
+                    "text": "una",
+                    "start": 391.34,
+                    "end": 391.42
+                },
+                {
+                    "id": 60,
+                    "text": "leche",
+                    "start": 391.42,
+                    "end": 391.62
+                },
+                {
+                    "id": 61,
+                    "text": "con",
+                    "start": 391.62,
+                    "end": 391.78
+                },
+                {
+                    "id": 62,
+                    "text": "la",
+                    "start": 391.78,
+                    "end": 391.88
+                },
+                {
+                    "id": 63,
+                    "text": "cosa",
+                    "start": 391.88,
+                    "end": 392.02
+                },
+                {
+                    "id": 64,
+                    "text": "cerrada",
+                    "start": 392.02,
+                    "end": 392.38
+                },
+                {
+                    "id": 65,
+                    "text": "\u00bfeh?",
+                    "start": 392.38,
+                    "end": 392.54
+                },
+                {
+                    "id": 66,
+                    "text": "P\u00faate",
+                    "start": 392.54,
+                    "end": 393.48
+                },
+                {
+                    "id": 67,
+                    "text": "esa.",
+                    "start": 393.48,
+                    "end": 394.7
+                },
+                {
+                    "id": 68,
+                    "text": "\u00bfLe",
+                    "start": 401.54,
+                    "end": 402.42
+                },
+                {
+                    "id": 69,
+                    "text": "puse",
+                    "start": 402.42,
+                    "end": 402.62
+                },
+                {
+                    "id": 70,
+                    "text": "steam",
+                    "start": 402.62,
+                    "end": 402.9
+                },
+                {
+                    "id": 71,
+                    "text": "milk?",
+                    "start": 402.9,
+                    "end": 403.18
+                },
+                {
+                    "id": 72,
+                    "text": "Agarra",
+                    "start": 404.28,
+                    "end": 404.65999999999997
+                },
+                {
+                    "id": 73,
+                    "text": "la",
+                    "start": 404.65999999999997,
+                    "end": 404.74
+                },
+                {
+                    "id": 74,
+                    "text": "steam",
+                    "start": 404.74,
+                    "end": 404.86
+                },
+                {
+                    "id": 75,
+                    "text": "milk.",
+                    "start": 404.86,
+                    "end": 405.56
+                },
+                {
+                    "id": 76,
+                    "text": "Tuki.",
+                    "start": 409.38,
+                    "end": 410.78
+                },
+                {
+                    "id": 77,
+                    "text": "Hot",
+                    "start": 415.5,
+                    "end": 416.2
+                },
+                {
+                    "id": 78,
+                    "text": "cup.",
+                    "start": 416.2,
+                    "end": 416.4
+                },
+                {
+                    "id": 79,
+                    "text": "Marchan",
+                    "start": 417.46,
+                    "end": 418.6
+                },
+                {
+                    "id": 80,
+                    "text": "dos",
+                    "start": 418.6,
+                    "end": 418.7
+                },
+                {
+                    "id": 81,
+                    "text": "late,",
+                    "start": 418.7,
+                    "end": 418.88
+                },
+                {
+                    "id": 82,
+                    "text": "viejo.",
+                    "start": 419.04,
+                    "end": 419.28
+                },
+                {
+                    "id": 83,
+                    "text": "Late,",
+                    "start": 419.28,
+                    "end": 420.78
+                },
+                {
+                    "id": 84,
+                    "text": "tome",
+                    "start": 421.3,
+                    "end": 421.58
+                },
+                {
+                    "id": 85,
+                    "text": "se\u00f1ora.",
+                    "start": 421.58,
+                    "end": 421.84000000000003
+                }
+            ],
+            "feedback": "up",
+            "is_published": true
+        },
+        {
+            "start": 954.5,
+            "end": 1012.266129032258,
+            "reason": "Susto inesperado en un simulador de caf\u00e9.",
+            "virality_score": 89,
+            "transcript": "\u00a1Ey! Est\u00e1s reparando la antena del negocio a esta hora?",
+            "social_title": "El susto m\u00e1s random en un juego de caf\u00e9",
+            "social_desc": "Atendiendo la cafeter\u00eda de noche y pasa esto. \ud83d\ude31 #gaming #terror #humor #sustos #bugs",
+            "id": "ai_b230",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "Hey!",
+                    "start": 954.891129032258,
+                    "end": 955.311129032258
+                },
+                {
+                    "id": 1,
+                    "text": "\u00bfEst\u00e1s",
+                    "start": 958.431129032258,
+                    "end": 958.9711290322581
+                },
+                {
+                    "id": 2,
+                    "text": "reparando",
+                    "start": 958.9711290322581,
+                    "end": 959.451129032258
+                },
+                {
+                    "id": 3,
+                    "text": "la",
+                    "start": 959.451129032258,
+                    "end": 959.6111290322581
+                },
+                {
+                    "id": 4,
+                    "text": "antena",
+                    "start": 959.6111290322581,
+                    "end": 960.171129032258
+                },
+                {
+                    "id": 5,
+                    "text": "del",
+                    "start": 960.171129032258,
+                    "end": 960.3711290322581
+                },
+                {
+                    "id": 6,
+                    "text": "negocio",
+                    "start": 960.3711290322581,
+                    "end": 960.951129032258
+                },
+                {
+                    "id": 7,
+                    "text": "a",
+                    "start": 960.951129032258,
+                    "end": 961.0911290322581
+                },
+                {
+                    "id": 8,
+                    "text": "esta",
+                    "start": 961.0911290322581,
+                    "end": 961.3311290322581
+                },
+                {
+                    "id": 9,
+                    "text": "hora?",
+                    "start": 961.3311290322581,
+                    "end": 961.6111290322581
+                },
+                {
+                    "id": 10,
+                    "text": "Antena,",
+                    "start": 963.1311290322581,
+                    "end": 963.691129032258
+                },
+                {
+                    "id": 11,
+                    "text": "\u00bfqu\u00e9",
+                    "start": 963.8311290322581,
+                    "end": 963.911129032258
+                },
+                {
+                    "id": 12,
+                    "text": "le",
+                    "start": 963.911129032258,
+                    "end": 964.011129032258
+                },
+                {
+                    "id": 13,
+                    "text": "pasa,",
+                    "start": 964.011129032258,
+                    "end": 964.291129032258
+                },
+                {
+                    "id": 14,
+                    "text": "se\u00f1ora?",
+                    "start": 964.411129032258,
+                    "end": 964.5911290322581
+                },
+                {
+                    "id": 15,
+                    "text": "\u00bfQu\u00e9",
+                    "start": 964.811129032258,
+                    "end": 965.271129032258
+                },
+                {
+                    "id": 16,
+                    "text": "flasheo?",
+                    "start": 965.271129032258,
+                    "end": 966.3311290322581
+                },
+                {
+                    "id": 17,
+                    "text": "No,",
+                    "start": 967.531129032258,
+                    "end": 967.8711290322581
+                },
+                {
+                    "id": 18,
+                    "text": "se\u00f1ora.",
+                    "start": 967.9711290322581,
+                    "end": 968.191129032258
+                },
+                {
+                    "id": 19,
+                    "text": "\u00bfPor",
+                    "start": 969.2111290322581,
+                    "end": 969.6311290322581
+                },
+                {
+                    "id": 20,
+                    "text": "qu\u00e9?",
+                    "start": 969.6311290322581,
+                    "end": 969.811129032258
+                },
+                {
+                    "id": 21,
+                    "text": "\u00bfV\u00eda",
+                    "start": 971.771129032258,
+                    "end": 972.151129032258
+                },
+                {
+                    "id": 22,
+                    "text": "alguien",
+                    "start": 972.151129032258,
+                    "end": 972.411129032258
+                },
+                {
+                    "id": 23,
+                    "text": "en",
+                    "start": 972.411129032258,
+                    "end": 972.571129032258
+                },
+                {
+                    "id": 24,
+                    "text": "el",
+                    "start": 972.571129032258,
+                    "end": 972.7311290322581
+                },
+                {
+                    "id": 25,
+                    "text": "tejado,",
+                    "start": 972.7311290322581,
+                    "end": 973.151129032258
+                },
+                {
+                    "id": 26,
+                    "text": "en",
+                    "start": 973.2311290322581,
+                    "end": 973.311129032258
+                },
+                {
+                    "id": 27,
+                    "text": "el",
+                    "start": 973.311129032258,
+                    "end": 973.451129032258
+                },
+                {
+                    "id": 28,
+                    "text": "techo?",
+                    "start": 973.451129032258,
+                    "end": 973.811129032258
+                },
+                {
+                    "id": 29,
+                    "text": "\u00bfNo",
+                    "start": 979.271129032258,
+                    "end": 979.8311290322581
+                },
+                {
+                    "id": 30,
+                    "text": "deber\u00eda",
+                    "start": 979.8311290322581,
+                    "end": 980.391129032258
+                },
+                {
+                    "id": 31,
+                    "text": "haber",
+                    "start": 980.391129032258,
+                    "end": 980.551129032258
+                },
+                {
+                    "id": 32,
+                    "text": "nadie",
+                    "start": 980.551129032258,
+                    "end": 980.791129032258
+                },
+                {
+                    "id": 33,
+                    "text": "en",
+                    "start": 980.791129032258,
+                    "end": 980.9711290322581
+                },
+                {
+                    "id": 34,
+                    "text": "el",
+                    "start": 980.9711290322581,
+                    "end": 981.071129032258
+                },
+                {
+                    "id": 35,
+                    "text": "techo?",
+                    "start": 981.071129032258,
+                    "end": 981.411129032258
+                },
+                {
+                    "id": 36,
+                    "text": "\u00bfPodr\u00eda",
+                    "start": 983.431129032258,
+                    "end": 983.791129032258
+                },
+                {
+                    "id": 37,
+                    "text": "ser",
+                    "start": 983.791129032258,
+                    "end": 983.9911290322581
+                },
+                {
+                    "id": 38,
+                    "text": "el",
+                    "start": 983.9911290322581,
+                    "end": 984.0911290322581
+                },
+                {
+                    "id": 39,
+                    "text": "investigador?",
+                    "start": 984.0911290322581,
+                    "end": 984.671129032258
+                },
+                {
+                    "id": 40,
+                    "text": "Tal",
+                    "start": 984.8711290322581,
+                    "end": 985.031129032258
+                },
+                {
+                    "id": 41,
+                    "text": "vez",
+                    "start": 985.031129032258,
+                    "end": 985.1311290322581
+                },
+                {
+                    "id": 42,
+                    "text": "est\u00e1",
+                    "start": 985.1311290322581,
+                    "end": 985.311129032258
+                },
+                {
+                    "id": 43,
+                    "text": "chequeando",
+                    "start": 985.311129032258,
+                    "end": 985.7511290322581
+                },
+                {
+                    "id": 44,
+                    "text": "eso,",
+                    "start": 985.7511290322581,
+                    "end": 985.911129032258
+                },
+                {
+                    "id": 45,
+                    "text": "pero",
+                    "start": 986.031129032258,
+                    "end": 986.031129032258
+                },
+                {
+                    "id": 46,
+                    "text": "si",
+                    "start": 986.031129032258,
+                    "end": 986.171129032258
+                },
+                {
+                    "id": 47,
+                    "text": "el",
+                    "start": 986.171129032258,
+                    "end": 986.271129032258
+                },
+                {
+                    "id": 48,
+                    "text": "investigador",
+                    "start": 986.271129032258,
+                    "end": 986.671129032258
+                },
+                {
+                    "id": 49,
+                    "text": "fue",
+                    "start": 986.671129032258,
+                    "end": 986.8311290322581
+                },
+                {
+                    "id": 50,
+                    "text": "otro",
+                    "start": 986.8311290322581,
+                    "end": 986.9911290322581
+                },
+                {
+                    "id": 51,
+                    "text": "d\u00eda,",
+                    "start": 986.9911290322581,
+                    "end": 987.2111290322581
+                },
+                {
+                    "id": 52,
+                    "text": "\u00bfqu\u00e9?",
+                    "start": 987.291129032258,
+                    "end": 987.3511290322581
+                },
+                {
+                    "id": 53,
+                    "text": "\u00bfVolvi\u00f3",
+                    "start": 988.511129032258,
+                    "end": 988.8711290322581
+                },
+                {
+                    "id": 54,
+                    "text": "el",
+                    "start": 988.8711290322581,
+                    "end": 988.9711290322581
+                },
+                {
+                    "id": 55,
+                    "text": "investigador?",
+                    "start": 988.9711290322581,
+                    "end": 989.451129032258
+                },
+                {
+                    "id": 56,
+                    "text": "\u00bfPodr\u00eda",
+                    "start": 992.071129032258,
+                    "end": 992.431129032258
+                },
+                {
+                    "id": 57,
+                    "text": "haber",
+                    "start": 992.431129032258,
+                    "end": 992.551129032258
+                },
+                {
+                    "id": 58,
+                    "text": "sido",
+                    "start": 992.551129032258,
+                    "end": 992.671129032258
+                },
+                {
+                    "id": 59,
+                    "text": "mi",
+                    "start": 992.671129032258,
+                    "end": 992.791129032258
+                },
+                {
+                    "id": 60,
+                    "text": "imaginaci\u00f3n,",
+                    "start": 992.791129032258,
+                    "end": 993.3311290322581
+                },
+                {
+                    "id": 61,
+                    "text": "dice",
+                    "start": 993.451129032258,
+                    "end": 993.551129032258
+                },
+                {
+                    "id": 62,
+                    "text": "la",
+                    "start": 993.551129032258,
+                    "end": 993.7311290322581
+                },
+                {
+                    "id": 63,
+                    "text": "buena",
+                    "start": 993.7311290322581,
+                    "end": 993.9911290322581
+                },
+                {
+                    "id": 64,
+                    "text": "machico?",
+                    "start": 993.9911290322581,
+                    "end": 994.7111290322581
+                },
+                {
+                    "id": 65,
+                    "text": "De",
+                    "start": 996.0911290322581,
+                    "end": 996.451129032258
+                },
+                {
+                    "id": 66,
+                    "text": "todas",
+                    "start": 996.451129032258,
+                    "end": 996.571129032258
+                },
+                {
+                    "id": 67,
+                    "text": "maneras.",
+                    "start": 996.571129032258,
+                    "end": 996.9911290322581
+                },
+                {
+                    "id": 68,
+                    "text": "Gracias",
+                    "start": 998.071129032258,
+                    "end": 998.431129032258
+                },
+                {
+                    "id": 69,
+                    "text": "por",
+                    "start": 998.431129032258,
+                    "end": 998.6111290322581
+                },
+                {
+                    "id": 70,
+                    "text": "la",
+                    "start": 998.6111290322581,
+                    "end": 998.7111290322581
+                },
+                {
+                    "id": 71,
+                    "text": "bebida.",
+                    "start": 998.7111290322581,
+                    "end": 999.031129032258
+                },
+                {
+                    "id": 72,
+                    "text": "Me",
+                    "start": 1000.9911290322581,
+                    "end": 1001.3511290322581
+                },
+                {
+                    "id": 73,
+                    "text": "voy.",
+                    "start": 1001.3511290322581,
+                    "end": 1001.551129032258
+                },
+                {
+                    "id": 74,
+                    "text": "Bueno,",
+                    "start": 1002.191129032258,
+                    "end": 1002.3511290322581
+                },
+                {
+                    "id": 75,
+                    "text": "el",
+                    "start": 1002.411129032258,
+                    "end": 1002.4711290322581
+                },
+                {
+                    "id": 76,
+                    "text": "eno",
+                    "start": 1002.4711290322581,
+                    "end": 1002.571129032258
+                },
+                {
+                    "id": 77,
+                    "text": "dijo,",
+                    "start": 1002.571129032258,
+                    "end": 1002.791129032258
+                },
+                {
+                    "id": 78,
+                    "text": "ni",
+                    "start": 1002.9711290322581,
+                    "end": 1003.071129032258
+                },
+                {
+                    "id": 79,
+                    "text": "gracias,",
+                    "start": 1003.071129032258,
+                    "end": 1003.531129032258
+                },
+                {
+                    "id": 80,
+                    "text": "dijo.",
+                    "start": 1003.691129032258,
+                    "end": 1003.8711290322581
+                },
+                {
+                    "id": 81,
+                    "text": "\u00bfDe",
+                    "start": 1004.311129032258,
+                    "end": 1004.391129032258
+                },
+                {
+                    "id": 82,
+                    "text": "drink",
+                    "start": 1004.391129032258,
+                    "end": 1005.031129032258
+                },
+                {
+                    "id": 83,
+                    "text": "please?",
+                    "start": 1005.031129032258,
+                    "end": 1005.431129032258
+                },
+                {
+                    "id": 84,
+                    "text": "\u00bfTe",
+                    "start": 1006.3511290322581,
+                    "end": 1006.571129032258
+                },
+                {
+                    "id": 85,
+                    "text": "la",
+                    "start": 1006.571129032258,
+                    "end": 1006.651129032258
+                },
+                {
+                    "id": 86,
+                    "text": "hab\u00eda",
+                    "start": 1006.651129032258,
+                    "end": 1006.7511290322581
+                },
+                {
+                    "id": 87,
+                    "text": "dado,",
+                    "start": 1006.7511290322581,
+                    "end": 1006.951129032258
+                },
+                {
+                    "id": 88,
+                    "text": "vieja?",
+                    "start": 1007.031129032258,
+                    "end": 1007.311129032258
+                },
+                {
+                    "id": 89,
+                    "text": "\u00bfPara",
+                    "start": 1007.931129032258,
+                    "end": 1008.051129032258
+                },
+                {
+                    "id": 90,
+                    "text": "qu\u00e9",
+                    "start": 1008.051129032258,
+                    "end": 1008.151129032258
+                },
+                {
+                    "id": 91,
+                    "text": "preguntas?",
+                    "start": 1008.151129032258,
+                    "end": 1008.4911290322581
+                },
+                {
+                    "id": 92,
+                    "text": "\u00bfChe,",
+                    "start": 1008.7111290322581,
+                    "end": 1008.7511290322581
+                },
+                {
+                    "id": 93,
+                    "text": "me",
+                    "start": 1008.811129032258,
+                    "end": 1008.8711290322581
+                },
+                {
+                    "id": 94,
+                    "text": "voy",
+                    "start": 1008.8711290322581,
+                    "end": 1008.9711290322581
+                },
+                {
+                    "id": 95,
+                    "text": "a",
+                    "start": 1008.9711290322581,
+                    "end": 1009.0911290322581
+                },
+                {
+                    "id": 96,
+                    "text": "pagar",
+                    "start": 1009.0911290322581,
+                    "end": 1009.151129032258
+                },
+                {
+                    "id": 97,
+                    "text": "el",
+                    "start": 1009.151129032258,
+                    "end": 1009.391129032258
+                },
+                {
+                    "id": 98,
+                    "text": "techo?",
+                    "start": 1009.391129032258,
+                    "end": 1009.671129032258
+                }
+            ],
+            "feedback": "up",
+            "is_published": true
+        },
+        {
+            "start": 1355.7491935483872,
+            "end": 1401.223387096774,
+            "reason": "Susto repentino con una reacci\u00f3n muy graciosa.",
+            "virality_score": 96,
+            "transcript": "\u00a1Ay, boludo, me mat\u00f3 de nuevo! \u00bfPero qu\u00e9 hago? \u00bfLe cierro la puerta? No s\u00e9 qu\u00e9 hacer. \u00bfQu\u00e9 dec\u00eds, Kevin?",
+            "social_title": "ME ESTABA ESPERANDO AFUERA",
+            "social_desc": "Cuando el juego te asusta tanto que ya no sabes ni qu\u00e9 hacer. #gaming #terror #jumpscare #sustos #humor",
+            "id": "ai_b987",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "\u00bfO",
+                    "start": 1356.4691935483872,
+                    "end": 1356.9691935483872
+                },
+                {
+                    "id": 1,
+                    "text": "que",
+                    "start": 1356.9691935483872,
+                    "end": 1357.0091935483872
+                },
+                {
+                    "id": 2,
+                    "text": "estas",
+                    "start": 1357.0091935483872,
+                    "end": 1357.1491935483873
+                },
+                {
+                    "id": 3,
+                    "text": "cerrado",
+                    "start": 1357.1491935483873,
+                    "end": 1357.4891935483872
+                },
+                {
+                    "id": 4,
+                    "text": "esto?",
+                    "start": 1357.4891935483872,
+                    "end": 1357.6691935483873
+                },
+                {
+                    "id": 5,
+                    "text": "Estoy",
+                    "start": 1357.7291935483872,
+                    "end": 1357.8091935483872
+                },
+                {
+                    "id": 6,
+                    "text": "aqui",
+                    "start": 1357.8091935483872,
+                    "end": 1357.9291935483873
+                },
+                {
+                    "id": 7,
+                    "text": "por",
+                    "start": 1357.9291935483873,
+                    "end": 1358.0491935483872
+                },
+                {
+                    "id": 8,
+                    "text": "atr\u00e1s.",
+                    "start": 1358.0491935483872,
+                    "end": 1358.3291935483871
+                },
+                {
+                    "id": 9,
+                    "text": "\u00bfO",
+                    "start": 1360.7691935483872,
+                    "end": 1361.2691935483872
+                },
+                {
+                    "id": 10,
+                    "text": "que",
+                    "start": 1361.2691935483872,
+                    "end": 1361.3291935483871
+                },
+                {
+                    "id": 11,
+                    "text": "por",
+                    "start": 1361.3291935483871,
+                    "end": 1361.5691935483871
+                },
+                {
+                    "id": 12,
+                    "text": "atr\u00e1s?",
+                    "start": 1361.5691935483871,
+                    "end": 1361.9091935483873
+                },
+                {
+                    "id": 13,
+                    "text": "Me",
+                    "start": 1362.2491935483872,
+                    "end": 1362.3291935483871
+                },
+                {
+                    "id": 14,
+                    "text": "voy",
+                    "start": 1362.3291935483871,
+                    "end": 1362.369193548387
+                },
+                {
+                    "id": 15,
+                    "text": "a",
+                    "start": 1362.369193548387,
+                    "end": 1362.4291935483873
+                },
+                {
+                    "id": 16,
+                    "text": "matar",
+                    "start": 1362.4291935483873,
+                    "end": 1362.6891935483873
+                },
+                {
+                    "id": 17,
+                    "text": "boludo.",
+                    "start": 1362.6891935483873,
+                    "end": 1363.109193548387
+                },
+                {
+                    "id": 18,
+                    "text": "Voy",
+                    "start": 1363.369193548387,
+                    "end": 1363.5491935483872
+                },
+                {
+                    "id": 19,
+                    "text": "con",
+                    "start": 1363.5491935483872,
+                    "end": 1364.7691935483872
+                },
+                {
+                    "id": 20,
+                    "text": "el",
+                    "start": 1364.7691935483872,
+                    "end": 1364.869193548387
+                },
+                {
+                    "id": 21,
+                    "text": "palo",
+                    "start": 1364.869193548387,
+                    "end": 1365.0891935483871
+                },
+                {
+                    "id": 22,
+                    "text": "viejo.",
+                    "start": 1365.0891935483871,
+                    "end": 1365.3091935483872
+                },
+                {
+                    "id": 23,
+                    "text": "Me",
+                    "start": 1369.4291935483873,
+                    "end": 1369.9291935483873
+                },
+                {
+                    "id": 24,
+                    "text": "voy",
+                    "start": 1369.9291935483873,
+                    "end": 1369.9691935483872
+                },
+                {
+                    "id": 25,
+                    "text": "a",
+                    "start": 1369.9691935483872,
+                    "end": 1370.0091935483872
+                },
+                {
+                    "id": 26,
+                    "text": "matar",
+                    "start": 1370.0091935483872,
+                    "end": 1370.1691935483873
+                },
+                {
+                    "id": 27,
+                    "text": "boludo.",
+                    "start": 1370.1691935483873,
+                    "end": 1370.4891935483872
+                },
+                {
+                    "id": 28,
+                    "text": "\u00bfNo",
+                    "start": 1382.5291935483872,
+                    "end": 1383.0291935483872
+                },
+                {
+                    "id": 29,
+                    "text": "puedo",
+                    "start": 1383.0291935483872,
+                    "end": 1383.5291935483872
+                },
+                {
+                    "id": 30,
+                    "text": "reaccionar?",
+                    "start": 1383.5291935483872,
+                    "end": 1383.9291935483873
+                },
+                {
+                    "id": 31,
+                    "text": "\u00bfQue",
+                    "start": 1386.4491935483873,
+                    "end": 1387.6491935483873
+                },
+                {
+                    "id": 32,
+                    "text": "me",
+                    "start": 1387.6491935483873,
+                    "end": 1387.7291935483872
+                },
+                {
+                    "id": 33,
+                    "text": "esta",
+                    "start": 1387.7291935483872,
+                    "end": 1387.9091935483873
+                },
+                {
+                    "id": 34,
+                    "text": "haciendo",
+                    "start": 1387.9091935483873,
+                    "end": 1388.2891935483872
+                },
+                {
+                    "id": 35,
+                    "text": "boludo?",
+                    "start": 1388.2891935483872,
+                    "end": 1388.6891935483873
+                },
+                {
+                    "id": 36,
+                    "text": "Nooo",
+                    "start": 1393.6491935483873,
+                    "end": 1394.2491935483872
+                },
+                {
+                    "id": 37,
+                    "text": "me",
+                    "start": 1394.2491935483872,
+                    "end": 1394.3291935483871
+                },
+                {
+                    "id": 38,
+                    "text": "matoo.",
+                    "start": 1394.3291935483871,
+                    "end": 1394.9291935483873
+                },
+                {
+                    "id": 39,
+                    "text": "Me",
+                    "start": 1396.5091935483872,
+                    "end": 1397.7091935483872
+                },
+                {
+                    "id": 40,
+                    "text": "matoo.",
+                    "start": 1397.7091935483872,
+                    "end": 1398.1691935483873
+                }
+            ],
+            "feedback": "up",
+            "pub_yt": "2026-07-02",
+            "pub_ig": "2026-07-02",
+            "pub_tiktok": "2026-07-02",
+            "is_published": true
+        },
+        {
+            "start": 1795.220678,
+            "end": 1825.484722,
+            "reason": "Reacci\u00f3n a un momento muy duro.",
+            "virality_score": 85,
+            "transcript": "No, hermano, no. Tremendo, Kevin. Tremendo, viejo. Uy, qu\u00e9 duro, boludo. Estaba re enfermo el tipo.",
+            "social_title": "Su reacci\u00f3n lo dice todo \ud83d\ude28",
+            "social_desc": "Qued\u00f3 en shock despu\u00e9s de esta escena. #gaming #terror #reaccion #gamerentiktok #momentos",
+            "id": "ai_de7d",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "No,",
+                    "start": 1796.7806779999999,
+                    "end": 1797.220678
+                },
+                {
+                    "id": 1,
+                    "text": "no,",
+                    "start": 1797.380678,
+                    "end": 1797.620678
+                },
+                {
+                    "id": 2,
+                    "text": "no,",
+                    "start": 1797.7606779999999,
+                    "end": 1798.140678
+                },
+                {
+                    "id": 3,
+                    "text": "no,",
+                    "start": 1798.140678,
+                    "end": 1798.5606779999998
+                },
+                {
+                    "id": 4,
+                    "text": "no.",
+                    "start": 1798.5606779999998,
+                    "end": 1799.220678
+                },
+                {
+                    "id": 5,
+                    "text": "Uy,",
+                    "start": 1799.880678,
+                    "end": 1800.3206779999998
+                },
+                {
+                    "id": 6,
+                    "text": "no.",
+                    "start": 1800.440678,
+                    "end": 1800.660678
+                },
+                {
+                    "id": 7,
+                    "text": "Va",
+                    "start": 1808.440678,
+                    "end": 1808.880678
+                },
+                {
+                    "id": 8,
+                    "text": "a",
+                    "start": 1808.880678,
+                    "end": 1809.0606779999998
+                },
+                {
+                    "id": 9,
+                    "text": "aparecer",
+                    "start": 1809.0606779999998,
+                    "end": 1809.0606779999998
+                },
+                {
+                    "id": 10,
+                    "text": "por",
+                    "start": 1809.0606779999998,
+                    "end": 1809.240678
+                },
+                {
+                    "id": 11,
+                    "text": "atr\u00e1s,",
+                    "start": 1809.240678,
+                    "end": 1809.420678
+                },
+                {
+                    "id": 12,
+                    "text": "no.",
+                    "start": 1809.620678,
+                    "end": 1809.620678
+                },
+                {
+                    "id": 13,
+                    "text": "Uy,",
+                    "start": 1809.660678,
+                    "end": 1809.8206779999998
+                },
+                {
+                    "id": 14,
+                    "text": "est\u00e1",
+                    "start": 1809.880678,
+                    "end": 1809.960678
+                },
+                {
+                    "id": 15,
+                    "text": "abriendo",
+                    "start": 1809.960678,
+                    "end": 1810.180678
+                },
+                {
+                    "id": 16,
+                    "text": "la",
+                    "start": 1810.180678,
+                    "end": 1810.3206779999998
+                },
+                {
+                    "id": 17,
+                    "text": "puerta,",
+                    "start": 1810.3206779999998,
+                    "end": 1810.620678
+                },
+                {
+                    "id": 18,
+                    "text": "mir\u00e1.",
+                    "start": 1810.8006779999998,
+                    "end": 1811.0006779999999
+                },
+                {
+                    "id": 19,
+                    "text": "No,",
+                    "start": 1814.8206779999998,
+                    "end": 1815.2606779999999
+                },
+                {
+                    "id": 20,
+                    "text": "no,",
+                    "start": 1816.0206779999999,
+                    "end": 1816.3406779999998
+                },
+                {
+                    "id": 21,
+                    "text": "hermano,",
+                    "start": 1816.5206779999999,
+                    "end": 1817.0806779999998
+                },
+                {
+                    "id": 22,
+                    "text": "no.",
+                    "start": 1817.0806779999998,
+                    "end": 1817.480678
+                },
+                {
+                    "id": 23,
+                    "text": "Tremendo,",
+                    "start": 1821.0406779999998,
+                    "end": 1821.480678
+                },
+                {
+                    "id": 24,
+                    "text": "Kevin.",
+                    "start": 1821.640678,
+                    "end": 1821.7606779999999
+                },
+                {
+                    "id": 25,
+                    "text": "Tremendo,",
+                    "start": 1823.8206779999998,
+                    "end": 1824.5006779999999
+                },
+                {
+                    "id": 26,
+                    "text": "viejo.",
+                    "start": 1824.5606779999998,
+                    "end": 1824.940678
+                }
+            ],
+            "feedback": "up",
+            "export_name": "7_TheClosingShift_4_Final__7",
+            "is_published": true
+        },
+        {
+            "start": 1514.81286,
+            "end": 1559.447496,
+            "reason": "Una historia de terror con giro.",
+            "virality_score": 88,
+            "transcript": "Mat\u00e9 a un hombre. Una vez que agarr\u00e9 el ladrillo, el hombre me mir\u00f3 a m\u00ed. Si no lo soltaba, ten\u00eda miedo que se me meta y me mate. El hombre se ve\u00eda terrible, no lo conoc\u00eda. \u00bfPor qu\u00e9 lo hizo? No tuve alternativa, no quer\u00eda matarlo. Estaba asustado. Corr\u00ed hacia la polic\u00eda, le dije todo lo que hab\u00eda pasado. La polic\u00eda me llev\u00f3 de nuevo a la escena y el hombre no estaba ah\u00ed. No hab\u00eda nadie.",
+            "social_title": "Confes\u00e9 un asesinato, pero el cuerpo desapareci\u00f3.",
+            "social_desc": "Este juego me est\u00e1 volviendo loco. \u00bfQu\u00e9 har\u00edas en esta situaci\u00f3n? #gamingterror #misterio #videojuegos #historiadeterror #gamer",
+            "id": "ai_27b2",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "Vamos",
+                    "start": 1514.81286,
+                    "end": 1514.93286
+                },
+                {
+                    "id": 1,
+                    "text": "por",
+                    "start": 1514.93286,
+                    "end": 1514.93286
+                },
+                {
+                    "id": 2,
+                    "text": "el",
+                    "start": 1514.93286,
+                    "end": 1515.03286
+                },
+                {
+                    "id": 3,
+                    "text": "techo,",
+                    "start": 1515.03286,
+                    "end": 1515.27286
+                },
+                {
+                    "id": 4,
+                    "text": "vamos",
+                    "start": 1515.29286,
+                    "end": 1515.39286
+                },
+                {
+                    "id": 5,
+                    "text": "con",
+                    "start": 1515.39286,
+                    "end": 1515.57286
+                },
+                {
+                    "id": 6,
+                    "text": "esa,",
+                    "start": 1515.57286,
+                    "end": 1515.75286
+                },
+                {
+                    "id": 7,
+                    "text": "vamos",
+                    "start": 1515.87286,
+                    "end": 1515.99286
+                },
+                {
+                    "id": 8,
+                    "text": "a",
+                    "start": 1515.99286,
+                    "end": 1516.09286
+                },
+                {
+                    "id": 9,
+                    "text": "salir",
+                    "start": 1516.09286,
+                    "end": 1516.17286
+                },
+                {
+                    "id": 10,
+                    "text": "por",
+                    "start": 1516.17286,
+                    "end": 1516.25286
+                },
+                {
+                    "id": 11,
+                    "text": "el",
+                    "start": 1516.25286,
+                    "end": 1516.35286
+                },
+                {
+                    "id": 12,
+                    "text": "techo.",
+                    "start": 1516.35286,
+                    "end": 1516.81286
+                },
+                {
+                    "id": 13,
+                    "text": "Y",
+                    "start": 1520.67286,
+                    "end": 1520.91286
+                },
+                {
+                    "id": 14,
+                    "text": "pero",
+                    "start": 1520.91286,
+                    "end": 1521.01286
+                },
+                {
+                    "id": 15,
+                    "text": "ahora",
+                    "start": 1521.01286,
+                    "end": 1521.09286
+                },
+                {
+                    "id": 16,
+                    "text": "no",
+                    "start": 1521.09286,
+                    "end": 1521.21286
+                },
+                {
+                    "id": 17,
+                    "text": "tengo",
+                    "start": 1521.21286,
+                    "end": 1521.33286
+                },
+                {
+                    "id": 18,
+                    "text": "escalera.",
+                    "start": 1521.33286,
+                    "end": 1521.69286
+                },
+                {
+                    "id": 19,
+                    "text": "No",
+                    "start": 1524.17286,
+                    "end": 1524.41286
+                },
+                {
+                    "id": 20,
+                    "text": "me",
+                    "start": 1524.41286,
+                    "end": 1524.47286
+                },
+                {
+                    "id": 21,
+                    "text": "puedo",
+                    "start": 1524.47286,
+                    "end": 1524.59286
+                },
+                {
+                    "id": 22,
+                    "text": "ir,",
+                    "start": 1524.59286,
+                    "end": 1524.77286
+                },
+                {
+                    "id": 23,
+                    "text": "boludo,",
+                    "start": 1524.85286,
+                    "end": 1525.01286
+                },
+                {
+                    "id": 24,
+                    "text": "no",
+                    "start": 1525.09286,
+                    "end": 1525.21286
+                },
+                {
+                    "id": 25,
+                    "text": "tengo",
+                    "start": 1525.21286,
+                    "end": 1525.33286
+                },
+                {
+                    "id": 26,
+                    "text": "escalera.",
+                    "start": 1525.33286,
+                    "end": 1525.63286
+                },
+                {
+                    "id": 27,
+                    "text": "No,",
+                    "start": 1531.83286,
+                    "end": 1532.07286
+                },
+                {
+                    "id": 28,
+                    "text": "mat\u00f3",
+                    "start": 1532.07286,
+                    "end": 1532.31286
+                },
+                {
+                    "id": 29,
+                    "text": "al",
+                    "start": 1532.31286,
+                    "end": 1532.39286
+                },
+                {
+                    "id": 30,
+                    "text": "investigador.",
+                    "start": 1532.39286,
+                    "end": 1532.99286
+                },
+                {
+                    "id": 31,
+                    "text": "Ah\u00ed,",
+                    "start": 1539.55286,
+                    "end": 1539.79286
+                },
+                {
+                    "id": 32,
+                    "text": "el",
+                    "start": 1539.85286,
+                    "end": 1539.95286
+                },
+                {
+                    "id": 33,
+                    "text": "chabon,",
+                    "start": 1539.95286,
+                    "end": 1540.07286
+                },
+                {
+                    "id": 34,
+                    "text": "mira.",
+                    "start": 1540.23286,
+                    "end": 1540.25286
+                },
+                {
+                    "id": 35,
+                    "text": "Uuuuh,",
+                    "start": 1548.23286,
+                    "end": 1548.63286
+                },
+                {
+                    "id": 36,
+                    "text": "en",
+                    "start": 1548.87286,
+                    "end": 1549.13286
+                },
+                {
+                    "id": 37,
+                    "text": "tu",
+                    "start": 1549.13286,
+                    "end": 1549.23286
+                },
+                {
+                    "id": 38,
+                    "text": "cara,",
+                    "start": 1549.23286,
+                    "end": 1549.51286
+                },
+                {
+                    "id": 39,
+                    "text": "amigo.",
+                    "start": 1549.65286,
+                    "end": 1549.81286
+                },
+                {
+                    "id": 40,
+                    "text": "Tremendo.",
+                    "start": 1550.99286,
+                    "end": 1551.39286
+                },
+                {
+                    "id": 41,
+                    "text": "Uuuh,",
+                    "start": 1554.83286,
+                    "end": 1555.23286
+                },
+                {
+                    "id": 42,
+                    "text": "la",
+                    "start": 1555.23286,
+                    "end": 1555.29286
+                },
+                {
+                    "id": 43,
+                    "text": "qued\u00f3,",
+                    "start": 1555.29286,
+                    "end": 1555.61286
+                },
+                {
+                    "id": 44,
+                    "text": "eh.",
+                    "start": 1555.75286,
+                    "end": 1555.77286
+                },
+                {
+                    "id": 45,
+                    "text": "Olv\u00eddate,",
+                    "start": 1555.85286,
+                    "end": 1556.17286
+                },
+                {
+                    "id": 46,
+                    "text": "tiene",
+                    "start": 1556.31286,
+                    "end": 1556.39286
+                },
+                {
+                    "id": 47,
+                    "text": "un",
+                    "start": 1556.39286,
+                    "end": 1556.51286
+                },
+                {
+                    "id": 48,
+                    "text": "cascote",
+                    "start": 1556.51286,
+                    "end": 1556.81286
+                },
+                {
+                    "id": 49,
+                    "text": "de",
+                    "start": 1556.81286,
+                    "end": 1557.01286
+                },
+                {
+                    "id": 50,
+                    "text": "arriba.",
+                    "start": 1557.01286,
+                    "end": 1557.21286
+                },
+                {
+                    "id": 51,
+                    "text": "Nos",
+                    "start": 1557.71286,
+                    "end": 1557.89286
+                },
+                {
+                    "id": 52,
+                    "text": "vimos",
+                    "start": 1557.89286,
+                    "end": 1557.95286
+                },
+                {
+                    "id": 53,
+                    "text": "en",
+                    "start": 1557.95286,
+                    "end": 1558.11286
+                },
+                {
+                    "id": 54,
+                    "text": "Disney.",
+                    "start": 1558.6359571636362,
+                    "end": 1559.447496
+                }
+            ],
+            "feedback": "up",
+            "export_name": "8_TheClosingShift_4_cascote_entuCara__8",
+            "pub_yt": "2026-06-25",
+            "pub_ig": "2026-06-25",
+            "pub_tiktok": "2026-06-25",
+            "is_published": true
+        },
+        {
+            "start": 1134.0,
+            "end": 1176.630910255914,
+            "reason": "Confunde un esc\u00e1ner con una pistola.",
+            "virality_score": 85,
+            "transcript": "Oh shit, oh shit. \u00a1Mira, una pistola! \u00bfQu\u00e9 es esto que tengo en la mano? \u00bfEs una pistola? No entiendo qu\u00e9 es.",
+            "social_title": "La pistola m\u00e1s rara que he visto",
+            "social_desc": "El p\u00e1nico me hizo confundir un esc\u00e1ner con un arma. #gaming #humor #fail #terror",
+            "id": "ai_b915",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "oh",
+                    "start": 1134,
+                    "end": 1134.64
+                },
+                {
+                    "id": 1,
+                    "text": "shit,",
+                    "start": 1134.64,
+                    "end": 1134.9
+                },
+                {
+                    "id": 2,
+                    "text": "oh",
+                    "start": 1134.96,
+                    "end": 1135.12
+                },
+                {
+                    "id": 3,
+                    "text": "shit",
+                    "start": 1135.12,
+                    "end": 1135.52
+                },
+                {
+                    "id": 4,
+                    "text": "una",
+                    "start": 1137.18,
+                    "end": 1137.74
+                },
+                {
+                    "id": 5,
+                    "text": "pistola",
+                    "start": 1137.74,
+                    "end": 1138.22
+                },
+                {
+                    "id": 6,
+                    "text": "que",
+                    "start": 1140.32,
+                    "end": 1140.88
+                },
+                {
+                    "id": 7,
+                    "text": "es,",
+                    "start": 1140.88,
+                    "end": 1140.9
+                },
+                {
+                    "id": 8,
+                    "text": "que",
+                    "start": 1140.9,
+                    "end": 1142.06
+                },
+                {
+                    "id": 9,
+                    "text": "es",
+                    "start": 1142.06,
+                    "end": 1142.14
+                },
+                {
+                    "id": 10,
+                    "text": "esto",
+                    "start": 1142.14,
+                    "end": 1142.3
+                },
+                {
+                    "id": 11,
+                    "text": "que",
+                    "start": 1142.3,
+                    "end": 1142.4
+                },
+                {
+                    "id": 12,
+                    "text": "tengo",
+                    "start": 1142.4,
+                    "end": 1142.58
+                },
+                {
+                    "id": 13,
+                    "text": "en",
+                    "start": 1142.58,
+                    "end": 1142.64
+                },
+                {
+                    "id": 14,
+                    "text": "la",
+                    "start": 1142.64,
+                    "end": 1142.72
+                },
+                {
+                    "id": 15,
+                    "text": "mano,",
+                    "start": 1142.72,
+                    "end": 1142.96
+                },
+                {
+                    "id": 16,
+                    "text": "es",
+                    "start": 1143.02,
+                    "end": 1143.08
+                },
+                {
+                    "id": 17,
+                    "text": "una",
+                    "start": 1143.08,
+                    "end": 1143.18
+                },
+                {
+                    "id": 18,
+                    "text": "pistola?",
+                    "start": 1143.18,
+                    "end": 1143.64
+                },
+                {
+                    "id": 19,
+                    "text": "no",
+                    "start": 1145.24,
+                    "end": 1145.8
+                },
+                {
+                    "id": 20,
+                    "text": "entiendo",
+                    "start": 1145.8,
+                    "end": 1146.3
+                },
+                {
+                    "id": 21,
+                    "text": "que",
+                    "start": 1146.3,
+                    "end": 1146.58
+                },
+                {
+                    "id": 22,
+                    "text": "es",
+                    "start": 1146.58,
+                    "end": 1147.1
+                },
+                {
+                    "id": 23,
+                    "text": "que",
+                    "start": 1148.88,
+                    "end": 1149.44
+                },
+                {
+                    "id": 24,
+                    "text": "me",
+                    "start": 1149.44,
+                    "end": 1149.56
+                },
+                {
+                    "id": 25,
+                    "text": "marca",
+                    "start": 1149.56,
+                    "end": 1149.82
+                },
+                {
+                    "id": 26,
+                    "text": "ah\u00ed",
+                    "start": 1149.82,
+                    "end": 1150.2
+                },
+                {
+                    "id": 27,
+                    "text": "close",
+                    "start": 1150.84,
+                    "end": 1151.4
+                },
+                {
+                    "id": 28,
+                    "text": "de",
+                    "start": 1151.4,
+                    "end": 1151.68
+                },
+                {
+                    "id": 29,
+                    "text": "store",
+                    "start": 1151.68,
+                    "end": 1152.04
+                },
+                {
+                    "id": 30,
+                    "text": "no",
+                    "start": 1159.9,
+                    "end": 1160.46
+                },
+                {
+                    "id": 31,
+                    "text": "quiero",
+                    "start": 1160.46,
+                    "end": 1160.58
+                },
+                {
+                    "id": 32,
+                    "text": "dejarme",
+                    "start": 1160.58,
+                    "end": 1161
+                },
+                {
+                    "id": 33,
+                    "text": "arrar",
+                    "start": 1161,
+                    "end": 1161.12
+                },
+                {
+                    "id": 34,
+                    "text": "el",
+                    "start": 1161.12,
+                    "end": 1161.3
+                },
+                {
+                    "id": 35,
+                    "text": "patricelf,",
+                    "start": 1161.3,
+                    "end": 1161.9
+                },
+                {
+                    "id": 36,
+                    "text": "pero",
+                    "start": 1162.28,
+                    "end": 1162.46
+                },
+                {
+                    "id": 37,
+                    "text": "no",
+                    "start": 1162.46,
+                    "end": 1162.56
+                },
+                {
+                    "id": 38,
+                    "text": "es",
+                    "start": 1162.56,
+                    "end": 1162.7
+                },
+                {
+                    "id": 39,
+                    "text": "scanner,",
+                    "start": 1162.7,
+                    "end": 1163.02
+                },
+                {
+                    "id": 40,
+                    "text": "hay",
+                    "start": 1163.2,
+                    "end": 1163.32
+                },
+                {
+                    "id": 41,
+                    "text": "para",
+                    "start": 1163.32,
+                    "end": 1163.5
+                },
+                {
+                    "id": 42,
+                    "text": "escanear",
+                    "start": 1163.5,
+                    "end": 1163.96
+                },
+                {
+                    "id": 43,
+                    "text": "esto",
+                    "start": 1163.96,
+                    "end": 1164.62
+                },
+                {
+                    "id": 44,
+                    "text": "close",
+                    "start": 1168.2,
+                    "end": 1168.48
+                },
+                {
+                    "id": 45,
+                    "text": "de",
+                    "start": 1168.48,
+                    "end": 1168.72
+                },
+                {
+                    "id": 46,
+                    "text": "store",
+                    "start": 1168.72,
+                    "end": 1169.12
+                },
+                {
+                    "id": 47,
+                    "text": "no",
+                    "start": 1170.6,
+                    "end": 1171.16
+                },
+                {
+                    "id": 48,
+                    "text": "hay",
+                    "start": 1171.16,
+                    "end": 1171.26
+                },
+                {
+                    "id": 49,
+                    "text": "que",
+                    "start": 1171.26,
+                    "end": 1171.26
+                },
+                {
+                    "id": 50,
+                    "text": "hacer",
+                    "start": 1171.26,
+                    "end": 1171.52
+                },
+                {
+                    "id": 51,
+                    "text": "boludo",
+                    "start": 1171.52,
+                    "end": 1172.2
+                },
+                {
+                    "id": 52,
+                    "text": "me",
+                    "start": 1173.36,
+                    "end": 1173.92
+                },
+                {
+                    "id": 53,
+                    "text": "llevo",
+                    "start": 1173.92,
+                    "end": 1174.22
+                },
+                {
+                    "id": 54,
+                    "text": "todo",
+                    "start": 1174.22,
+                    "end": 1174.44
+                }
+            ],
+            "feedback": "up",
+            "export_name": "10_TheClosingShift_4_confunde_un_esc_ner_con_una_pistola__9",
+            "is_published": true
+        },
+        {
+            "start": 1103.6454645376343,
+            "end": 1139.2643853306452,
+            "reason": "Grito de terror al descubrirlo.",
+            "virality_score": 95,
+            "transcript": "No, no, no, no, no, no, no. \u00a1No, no, no!",
+            "social_title": "El grito que se escuch\u00f3 hasta en Marte",
+            "social_desc": "Cuando el juego se pone demasiado personal... \ud83d\ude31 #gamingterror #jumpscare #sustos #horrorgaming #gamer",
+            "id": "ai_0d60",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "words": [
+                {
+                    "id": 0,
+                    "text": "necesito",
+                    "start": 1103.6454645376343,
+                    "end": 1104.7454645376342
+                },
+                {
+                    "id": 1,
+                    "text": "cerrar",
+                    "start": 1104.7454645376342,
+                    "end": 1105.0454645376344
+                },
+                {
+                    "id": 2,
+                    "text": "el",
+                    "start": 1105.0454645376344,
+                    "end": 1105.1654645376343
+                },
+                {
+                    "id": 3,
+                    "text": "negocio,",
+                    "start": 1105.1654645376343,
+                    "end": 1105.6054645376344
+                },
+                {
+                    "id": 4,
+                    "text": "r\u00e1pido",
+                    "start": 1105.9854645376342,
+                    "end": 1106.5454645376344
+                },
+                {
+                    "id": 5,
+                    "text": "no",
+                    "start": 1108.7054645376343,
+                    "end": 1109.4654645376343
+                },
+                {
+                    "id": 6,
+                    "text": "parties",
+                    "start": 1110.8854645376343,
+                    "end": 1111.6454645376343
+                },
+                {
+                    "id": 7,
+                    "text": "son",
+                    "start": 1112.9254645376343,
+                    "end": 1113.6854645376343
+                },
+                {
+                    "id": 8,
+                    "text": "fotograf\u00edas",
+                    "start": 1113.6854645376343,
+                    "end": 1114.3654645376344
+                },
+                {
+                    "id": 9,
+                    "text": "m\u00edas?",
+                    "start": 1114.3654645376344,
+                    "end": 1114.9254645376343
+                },
+                {
+                    "id": 10,
+                    "text": "no",
+                    "start": 1115.3854645376343,
+                    "end": 1115.5854645376344
+                },
+                {
+                    "id": 11,
+                    "text": "no",
+                    "start": 1115.5854645376344,
+                    "end": 1115.9654645376343
+                },
+                {
+                    "id": 12,
+                    "text": "no",
+                    "start": 1115.9654645376343,
+                    "end": 1116.4454645376343
+                },
+                {
+                    "id": 13,
+                    "text": "no",
+                    "start": 1116.4454645376343,
+                    "end": 1116.6054645376344
+                },
+                {
+                    "id": 14,
+                    "text": "no",
+                    "start": 1116.6054645376344,
+                    "end": 1116.9054645376343
+                },
+                {
+                    "id": 15,
+                    "text": "no",
+                    "start": 1116.9054645376343,
+                    "end": 1117.1654645376343
+                },
+                {
+                    "id": 16,
+                    "text": "no",
+                    "start": 1118.4454645376343,
+                    "end": 1119.2054645376343
+                },
+                {
+                    "id": 17,
+                    "text": "no",
+                    "start": 1119.2054645376343,
+                    "end": 1119.3454645376344
+                },
+                {
+                    "id": 18,
+                    "text": "no",
+                    "start": 1119.3454645376344,
+                    "end": 1119.4854645376342
+                },
+                {
+                    "id": 19,
+                    "text": "unlock",
+                    "start": 1122.5854645376344,
+                    "end": 1123.3454645376344
+                },
+                {
+                    "id": 20,
+                    "text": "the",
+                    "start": 1123.3454645376344,
+                    "end": 1124.1054645376344
+                },
+                {
+                    "id": 21,
+                    "text": "door",
+                    "start": 1124.1054645376344,
+                    "end": 1124.4054645376343
+                },
+                {
+                    "id": 22,
+                    "text": "que",
+                    "start": 1124.4054645376343,
+                    "end": 1124.9854645376342
+                },
+                {
+                    "id": 23,
+                    "text": "door",
+                    "start": 1124.9854645376342,
+                    "end": 1125.2254645376343
+                },
+                {
+                    "id": 24,
+                    "text": "si",
+                    "start": 1125.2254645376343,
+                    "end": 1125.4054645376343
+                },
+                {
+                    "id": 25,
+                    "text": "no",
+                    "start": 1125.4054645376343,
+                    "end": 1125.5054645376342
+                },
+                {
+                    "id": 26,
+                    "text": "veo",
+                    "start": 1125.5054645376342,
+                    "end": 1125.6254645376343
+                },
+                {
+                    "id": 27,
+                    "text": "pero",
+                    "start": 1126.5454645376344,
+                    "end": 1127.3054645376344
+                },
+                {
+                    "id": 28,
+                    "text": "si",
+                    "start": 1127.3054645376344,
+                    "end": 1127.4054645376343
+                },
+                {
+                    "id": 29,
+                    "text": "no",
+                    "start": 1127.4054645376343,
+                    "end": 1127.6054645376344
+                },
+                {
+                    "id": 30,
+                    "text": "veo",
+                    "start": 1127.6054645376344,
+                    "end": 1127.7454645376342
+                },
+                {
+                    "id": 31,
+                    "text": "nada",
+                    "start": 1127.7454645376342,
+                    "end": 1127.9654645376343
+                },
+                {
+                    "id": 32,
+                    "text": "hombre",
+                    "start": 1127.9654645376343,
+                    "end": 1128.3454645376344
+                },
+                {
+                    "id": 33,
+                    "text": "y",
+                    "start": 1128.3454645376344,
+                    "end": 1129.2854645376344
+                },
+                {
+                    "id": 34,
+                    "text": "si",
+                    "start": 1129.2854645376344,
+                    "end": 1129.5054645376342
+                },
+                {
+                    "id": 35,
+                    "text": "oh",
+                    "start": 1133.6454645376343,
+                    "end": 1134.6854645376343
+                },
+                {
+                    "id": 36,
+                    "text": "shit",
+                    "start": 1134.6854645376343,
+                    "end": 1134.9054645376343
+                },
+                {
+                    "id": 37,
+                    "text": "oh",
+                    "start": 1134.9054645376343,
+                    "end": 1135.1454645376343
+                },
+                {
+                    "id": 38,
+                    "text": "shit",
+                    "start": 1135.1454645376343,
+                    "end": 1135.8454645376344
+                },
+                {
+                    "id": 39,
+                    "text": "una",
+                    "start": 1137.0654645376344,
+                    "end": 1137.7654645376342
+                },
+                {
+                    "id": 40,
+                    "text": "pistola",
+                    "start": 1137.7654645376342,
+                    "end": 1138.2054645376343
+                }
+            ],
+            "feedback": "up",
+            "export_name": "11_TheClosingShift_4_FotografiasMias_10",
+            "is_published": true
+        }
+    ],
+    "rejected_proposals": [
+        {
+            "start": 1889.5,
+            "end": 1897.5,
+            "reason": "Susto perfectamente sincronizado con su ausencia.",
+            "virality_score": 96,
+            "transcript": "Voy a pasar un segundo al ba\u00f1o y vengo, che. [RUIDO FUERTE]",
+            "social_title": "El juego sabe cu\u00e1ndo asustar",
+            "social_desc": "Se va un segundo al ba\u00f1o y pasa esto. El timing perfecto. #gaming #terror #susto #afk #timing",
+            "id": "ai_85a4",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "feedback": "down"
+        },
+        {
+            "start": 1304.0,
+            "end": 1313.0,
+            "reason": "Susto repentino y grito \u00e9pico.",
+            "virality_score": 96,
+            "transcript": "\u00a1Ay, co\u00f1o de la madre! What the fuck, \u00bfqu\u00e9 le pasa al se\u00f1or?",
+            "social_title": "El susto de su vida cerrando la tienda",
+            "social_desc": "Casi le da un infarto en el trabajo. #jumpscare #terror #gaming #susto",
+            "id": "ai_29e6",
+            "ass_text": "",
+            "template": "face_game",
+            "cropState": {
+                "splitY": 960,
+                "face": {
+                    "x": 58,
+                    "y": 808,
+                    "w": 384,
+                    "h": 216
+                },
+                "game": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "full": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 1920,
+                    "h": 1080
+                },
+                "subs": {
+                    "x": 530,
+                    "y": 744,
+                    "w": 860,
+                    "h": 336
+                }
+            },
+            "feedback": "down"
+        }
+    ]
+}
