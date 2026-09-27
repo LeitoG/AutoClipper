@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 <script>
+        function saveAudioPreset() {
+            let vv = document.getElementById('vol-voz') ? document.getElementById('vol-voz').value : '1.0';
+            let vj = document.getElementById('vol-juego') ? document.getElementById('vol-juego').value : '1.0';
+            localStorage.setItem('default_vol_voz', vv);
+            localStorage.setItem('default_vol_juego', vj);
+            alert("Configuracion de audio guardada como predeterminada.");
+        }
+
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     document.body.innerHTML = "<div style='color:red; font-size:30px; padding:50px; background:white; z-index:99999; position:absolute;'>" + msg + " at line " + lineNo + "</div>" + document.body.innerHTML;
     return false;
@@ -565,7 +573,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     </div>
                 </div>
 
-                <button class="btn" style="background: var(--bg-hover); width:100%; margin-top:10px;" onclick="generateAudioPreview()">Generar Previsualizacion</button>
+                <button class="btn" style="background: var(--bg-hover); width:100%; margin-top:10px; border: 1px dashed var(--accent-primary); color: var(--accent-primary);" onclick="saveAudioPreset()"> Guardar Configuracion</button>
                 
                 <div id="audio-preview-container" style="display:none; margin-top:15px; padding:10px; background:#111; border-radius:8px;">
                     <audio id="audio-preview-player" controls style="width:100%; height:30px;"></audio>
@@ -763,6 +771,14 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     </div>
 
     <script>
+        function saveAudioPreset() {
+            let vv = document.getElementById('vol-voz') ? document.getElementById('vol-voz').value : '1.0';
+            let vj = document.getElementById('vol-juego') ? document.getElementById('vol-juego').value : '1.0';
+            localStorage.setItem('default_vol_voz', vv);
+            localStorage.setItem('default_vol_juego', vj);
+            alert("Configuracion de audio guardada como predeterminada.");
+        }
+
         window.onload = async () => {
             try {
                 const cfg = await fetch('/config').then(r => r.json());
@@ -2266,6 +2282,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             };
             let isNewClip = !completedClipsData.find(c => c.id === currentClip.id);
             if (isNewClip) {
+                const volVozStr = localStorage.getItem('default_vol_voz');
+                if (volVozStr && document.getElementById('vol-voz')) document.getElementById('vol-voz').value = volVozStr;
+                const volJuegoStr = localStorage.getItem('default_vol_juego');
+                if (volJuegoStr && document.getElementById('vol-juego')) document.getElementById('vol-juego').value = volJuegoStr;
+                updateAudioVolumes();
+                
                 const lastCropStr = localStorage.getItem('lastUsedCrop');
                 if (lastCropStr) {
                     try { defaultCrop = JSON.parse(lastCropStr); } catch(e) {}
@@ -3350,7 +3372,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 id: s.id, name: s.name, server_path: s.server_path, url: s.url,
                 x: s.x, y: s.y, w: s.w, h: s.h, type: s.type, duration: s.duration || (s.end - s.start),
                 text: s.text, color: s.color, strokeColor: s.strokeColor, font: s.font,
-                animIn: s.animIn, animOut: s.animOut, track: s.track
+                animIn: s.animIn, animOut: s.animOut, track: s.track,
+                wordColors: s.wordColors
             }));
             localStorage.setItem('savedStickers', JSON.stringify(data));
         }
@@ -3697,9 +3720,18 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 let textControls = '';
                 if (s.type === 'text') {
                     textControls = `
-                        <div style="margin-top: 5px; display:flex; flex-direction:column; gap: 5px;">
+                        <div style="margin-top: 5px; display:flex; flex-direction:column; gap: 8px;">
                             <textarea oninput="updateTextSticker('${s.id}', 'text', this.value)" style="width:100%; height:40px; padding:2px; font-size:11px; background:#111; color:#fff; border:1px solid #444; resize:vertical;" placeholder="Texto">${s.text || 'Texto'}</textarea>
-                            <div style="display:flex; gap: 5px;">
+                            <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; padding:5px; background:#1a1a1a; border-radius:4px; border:1px solid #333;">
+                                <div style="width:100%; font-size:10px; color:#888; margin-bottom:2px;">Colores por palabra:</div>
+                                ${(s.text || 'Texto').split(/\s+/).filter(w => w.length > 0).map((word, wIdx) => `
+                                    <div style="display:flex; flex-direction:column; align-items:center; background:#111; padding:2px; border-radius:3px; border:1px solid #444;">
+                                        <span style="font-size:9px; color:#ccc; max-width:50px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${word}">${word}</span>
+                                        <input type="color" value="${s.wordColors && s.wordColors[wIdx] ? s.wordColors[wIdx] : (s.color || '#ffffff')}" onchange="updateTextStickerWordColor('${s.id}', ${wIdx}, this.value)" style="width:20px; height:15px; padding:0; border:none; cursor:pointer;">
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="display:flex; gap: 5px; flex-wrap:wrap; align-items:center;">
                                 <label style="font-size:10px; color:#aaa;">Color:</label>
                                 <input type="color" value="${s.color || '#ffffff'}" onchange="updateTextSticker('${s.id}', 'color', this.value)" style="width:30px; height:15px; padding:0; border:none;">
                                 <label style="font-size:10px; color:#aaa;">Borde:</label>
@@ -3712,7 +3744,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                                     <option value="Montserrat" ${s.font === 'Montserrat' ? 'selected' : ''}>Montserrat</option>
                                 </select>
                             </div>
-                            <div style="display:flex; gap: 5px; align-items:center;">
+                            <div style="display:flex; gap: 5px; align-items:center; flex-wrap:wrap;">
                                 <label style="font-size:10px; color:#aaa;">In:</label>
                                 <select style="font-size:10px; background:#111; color:#fff; border:1px solid #444; padding:2px;" onchange="updateTextSticker('${s.id}', 'animIn', this.value)">
                                     <option value="none" ${s.animIn === 'none' ? 'selected' : ''}>Ninguna</option>
@@ -3736,19 +3768,24 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 
                 let currentDur = (s.end - s.start).toFixed(1);
                 container.innerHTML += `
-                    <div style="background:#222; padding:5px 10px; border-radius:4px; margin-bottom: 4px; display:flex; flex-direction:column; gap:5px;">
-                        <span style="color:#ccc; font-size:11px; white-space:normal; word-break:break-all;">${s.name}</span>
-                        <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
-                            <label style="font-size:10px; color:#aaa; margin:0;">Dur (s):</label>
-                            <input type="number" step="0.1" min="0.1" value="${currentDur}" onchange="updateStickerDuration('${s.id}', this.value)" style="width:45px; height:18px; font-size:10px; background:#111; color:#fff; border:1px solid #444; text-align:center;">
-                            <select style="font-size:10px; background:#111; color:#fff; border:1px solid #444; padding:2px;" onchange="updateTextSticker('${s.id}', 'track', parseInt(this.value))">
-                                <option value="0" ${s.track === 0 ? 'selected' : ''}>Pista 1</option>
-                                <option value="1" ${s.track === 1 ? 'selected' : ''}>Pista 2</option>
-                                <option value="2" ${s.track === 2 ? 'selected' : ''}>Pista 3</option>
-                            </select>
-                            <button class="btn" style="background:#c94c4c; padding:2px 5px; font-size:10px; margin:0; min-width: 25px;" onclick="removeSticker('${s.id}')">X</button>
+                    <div style="background:#222; border-radius:4px; margin-bottom: 4px; display:flex; flex-direction:column; overflow:hidden;">
+                        <button onclick="let c = document.getElementById('sticker-config-${s.id}'); c.style.display = c.style.display === 'none' ? 'flex' : 'none';" style="background:#333; border:none; padding:8px 10px; color:#ccc; font-size:11px; text-align:left; cursor:pointer; font-weight:bold; word-break:break-all; display:flex; justify-content:space-between; align-items:center;">
+                            <span>${s.name}</span>
+                            <span style="font-size:10px; color:#888;">&#9660;</span>
+                        </button>
+                        <div id="sticker-config-${s.id}" style="display:none; flex-direction:column; gap:8px; padding:10px;">
+                            <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
+                                <label style="font-size:10px; color:#aaa; margin:0;">Dur (s):</label>
+                                <input type="number" step="0.1" min="0.1" value="${currentDur}" onchange="updateStickerDuration('${s.id}', this.value)" style="width:45px; height:18px; font-size:10px; background:#111; color:#fff; border:1px solid #444; text-align:center;">
+                                <select style="font-size:10px; background:#111; color:#fff; border:1px solid #444; padding:2px;" onchange="updateTextSticker('${s.id}', 'track', parseInt(this.value))">
+                                    <option value="0" ${s.track === 0 ? 'selected' : ''}>Pista 1</option>
+                                    <option value="1" ${s.track === 1 ? 'selected' : ''}>Pista 2</option>
+                                    <option value="2" ${s.track === 2 ? 'selected' : ''}>Pista 3</option>
+                                </select>
+                                <button class="btn" style="background:#c94c4c; padding:2px 5px; font-size:10px; margin:0; min-width: 25px;" onclick="removeSticker('${s.id}')">X</button>
+                            </div>
+                            ${textControls}
                         </div>
-                        ${textControls}
                     </div>
                 `;
             });
@@ -3953,7 +3990,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 font: s.font,
                 animIn: s.animIn,
                 animOut: s.animOut,
-                track: s.track
+                track: s.track,
+                wordColors: s.wordColors
             }));
             
             let presets = JSON.parse(localStorage.getItem('stickerPresets') || '{}');
@@ -4035,6 +4073,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         animIn: s.animIn,
                         animOut: s.animOut,
                         track: s.track || 0,
+                        wordColors: s.wordColors,
                         duration: s.duration,
                         videoElement: null,
                         imageElement: null
@@ -4101,7 +4140,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     let strokeCss = `-webkit-text-stroke: ${strkW}px ${s.strokeColor || '#000000'};`;
                     mediaHtml = `<div style="position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'${s.font || 'Arial'}', sans-serif; font-size: ${fSize}px; font-weight:bold; text-align:center; pointer-events:none; line-height: 1.1; white-space: pre-wrap; text-wrap: balance;">
                         <span style="position:absolute; ${strokeCss} color:transparent; z-index:1;">${s.text || 'Texto'}</span>
-                        <span style="position:absolute; color:${s.color || '#ffffff'}; z-index:2;">${s.text || 'Texto'}</span>
+                        <span style="position:absolute; z-index:2;">${(s.text || 'Texto').split(/(\s+)/).map((part, i, arr) => {
+                            if (part.trim() === '') return part;
+                            let wordIndex = arr.slice(0, i).filter(p => p.trim() !== '').length;
+                            let c = (s.wordColors && s.wordColors[wordIndex]) ? s.wordColors[wordIndex] : (s.color || '#ffffff');
+                            return `<span style="color:${c};">${part}</span>`;
+                        }).join('')}</span>
                     </div>`;
                 } else {
                     const imgSrc = s.url || s.dataUrl;
@@ -4914,6 +4958,14 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     </script>
 
     <script>
+        function saveAudioPreset() {
+            let vv = document.getElementById('vol-voz') ? document.getElementById('vol-voz').value : '1.0';
+            let vj = document.getElementById('vol-juego') ? document.getElementById('vol-juego').value : '1.0';
+            localStorage.setItem('default_vol_voz', vv);
+            localStorage.setItem('default_vol_juego', vj);
+            alert("Configuracion de audio guardada como predeterminada.");
+        }
+
         let audioCtx;
         let voiceGain, gameGain;
 

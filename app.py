@@ -22,4 +22,4 @@ if __name__ == '__main__':
         background_color='#0f172a'
     )
     
-    webview.start(private_mode=True)
+    webview.start()
