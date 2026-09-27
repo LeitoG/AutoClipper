@@ -1,6 +1,7 @@
 ﻿import webview
 import threading
 import uvicorn
+import os
 from backend import app
 
 def start_server():
@@ -20,4 +21,5 @@ if __name__ == '__main__':
         min_size=(1024, 768),
         background_color='#0f172a'
     )
-    webview.start()
+    # private_mode=True disables caching and persistent cookies completely!
+    webview.start(private_mode=True)
