@@ -68,7 +68,7 @@ ASS_DIR = os.path.join(DB_DIR, "subs_data")
 os.makedirs(ASS_DIR, exist_ok=True)
 
 TEMP_CLIPS_DIR = os.path.join(BASE_DIR, "temp_clips")
-HTML_FILE = os.path.join(BASE_DIR, "templates", "index.html")
+HTML_FILE = os.path.join(os.path.dirname(__file__), "templates", "index.html")
 FFMPEG_BIN = r"C:\Users\leone\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1.1-full_build\bin\ffmpeg.exe"
 
 os.makedirs(TEMP_CLIPS_DIR, exist_ok=True)
@@ -433,7 +433,7 @@ def get_clips(video_name: str = ""):
             
         proposals_raw = data.get("proposals", [])
         
-        # Filtro de Calidad SemÃ¡ntico
+        # Filtro de Calidad SemÃƒÂ¡ntico
         bad_words = ["notebook", "temperatura", "sobrecalentamiento", "pc"]
         proposals_filtered = []
         for clip in proposals_raw:
@@ -515,7 +515,7 @@ def generate_clips(req: GenerateClipsRequest):
             
         analysis_progress["status"] = "processing"
         analysis_progress["percent"] = 5
-        analysis_progress["message"] = "Iniciando anÃ¡lisis..."
+        analysis_progress["message"] = "Iniciando anÃƒÂ¡lisis..."
             
         # Recopilar zonas a excluir (clips ya generados o completados)
         exclusion_zones = []
@@ -580,7 +580,7 @@ def generate_clips(req: GenerateClipsRequest):
         
         if "volume" in req.search_modes:
             print("Iniciando Pipeline de Ahorro de Tokens Local-First...")
-            def prog_vol(pct, msg): progress_cb(int(pct/2), "MODO ACCIÃ“N: " + msg) if "semantic" in req.search_modes else progress_cb(pct, msg)
+            def prog_vol(pct, msg): progress_cb(int(pct/2), "MODO ACCIÃƒâ€œN: " + msg) if "semantic" in req.search_modes else progress_cb(pct, msg)
             nc, tin, tout = analyze_video_local_first(
                 video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_vol, exclusion_zones, incremental_save, req.max_clips
             )
@@ -591,7 +591,7 @@ def generate_clips(req: GenerateClipsRequest):
             for p in nc: exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
             
         if "semantic" in req.search_modes:
-            print("Iniciando Pipeline SemÃ¡ntico (Whisper + Gemini Texto)")
+            print("Iniciando Pipeline SemÃƒÂ¡ntico (Whisper + Gemini Texto)")
             def prog_sem(pct, msg): progress_cb(50 + int(pct/2), "MODO HISTORIA: " + msg) if "volume" in req.search_modes else progress_cb(pct, msg)
             nc, tin, tout = analyze_video_semantic(
                 video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_sem, exclusion_zones, incremental_save, req.max_clips
@@ -625,7 +625,7 @@ def generate_clips(req: GenerateClipsRequest):
             json.dump(costs_data, f, indent=4)
         
         if not all_new_clips:
-            return {"status": "error", "message": "No se encontraron clips viables o la IA rechazÃ³ los segmentos detectados."}
+            return {"status": "error", "message": "No se encontraron clips viables o la IA rechazÃƒÂ³ los segmentos detectados."}
             
         return {"status": "success", "message": f"{len(all_new_clips)} Clips generados exitosamente"}
     except Exception as e:
@@ -651,7 +651,7 @@ def add_manual_clip(req: AddManualClipRequest):
             "id": clip_id,
             "start": req.start,
             "end": req.end,
-            "reason": "Clip aÃ±adido manualmente",
+            "reason": "Clip aÃƒÂ±adido manualmente",
             "virality_score": 100,
             "transcript": "",
             "social_title": "Clip Manual",
@@ -675,7 +675,7 @@ def add_manual_clip(req: AddManualClipRequest):
             with open(analysis_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4)
                 
-        return {"status": "success", "message": "Clip manual aÃ±adido", "clip_id": clip_id}
+        return {"status": "success", "message": "Clip manual aÃƒÂ±adido", "clip_id": clip_id}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
@@ -872,7 +872,7 @@ def clip_feedback(req: ClipFeedbackRequest):
                         writer.writerow(['Clip ID', 'Razon original', 'Feedback'])
                     writer.writerow([req.clip_id, target_clip.get('reason', ''), req.feedback])
                 
-                # Guardar en JSON para InyecciÃ³n en IA
+                # Guardar en JSON para InyecciÃƒÂ³n en IA
                 fb_file_json = os.path.join(DB_DIR, "feedback_ia.json")
                 feedback_data = []
                 if os.path.exists(fb_file_json):
@@ -944,7 +944,7 @@ def update_clip(req: UpdateClipRequest):
             with open(analysis_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
                 
-        return {"status": "success", "message": "SubtÃ­tulos actualizados correctamente."}
+        return {"status": "success", "message": "SubtÃƒÂ­tulos actualizados correctamente."}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
@@ -996,7 +996,7 @@ def export_clip(req: ExportRequest):
         else:
             out_file = os.path.join(EXPORTS_DIR, f"{req.clip_id}_render.mp4")
         
-        # 1. Generar SubtÃ­tulos DinÃ¡micos (.ass)
+        # 1. Generar SubtÃƒÂ­tulos DinÃƒÂ¡micos (.ass)
         ass_path = os.path.join(ASS_DIR, f"subs_{req.clip_id}_auto.ass")
         def format_time(ms):
             h = ms // 3600000
@@ -1075,7 +1075,7 @@ def export_clip(req: ExportRequest):
                             f.write(f"Dialogue: 1,{format_time(s_ms)},{format_time(e_ms)},Default,,0,0,0,,{grad_tag}{anim_tag}{w['text']}\n")
                     rel_offset += (sc['end'] - sc['start'])
 
-            # AÃ±adir stickers de texto al archivo ASS
+            # AÃƒÂ±adir stickers de texto al archivo ASS
             if req.stickers:
                 for st in req.stickers:
                     if st.get("type") == "text":
@@ -1372,7 +1372,7 @@ def export_clip(req: ExportRequest):
             h_text_bottom = req.hook.get('textBottom', '').replace("'", "\\'").replace(":", "\\:")
             
             filter_parts.append(f"[0:v]trim=start={h_time:.6f}:end={h_time+0.1:.6f},trim=start_frame=0:end_frame=1,setpts=PTS-STARTPTS[hook_src]")
-            # Formatear usando la configuraciÃ³n capturada (o fallback a la primera escena)
+            # Formatear usando la configuraciÃƒÂ³n capturada (o fallback a la primera escena)
             hook_crop = req.hook.get("cropState")
             if not hook_crop:
                 hook_crop = req.scenes[0]["cropState"]
@@ -1501,7 +1501,7 @@ def export_clip(req: ExportRequest):
         else:
             filter_parts.append(f"[{current_a}]anull[a_concat]")
         
-        # Aplicar SubtÃ­tulos al video concatenado
+        # Aplicar SubtÃƒÂ­tulos al video concatenado
         filter_parts.append(f"[v_concat]subtitles='{ass_ff}'[v_subs]")
         
         current_v = "v_subs"
@@ -1621,7 +1621,7 @@ def transcribe_audio(req: TranscribeRequest):
             subprocess.run(cmd, check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
             if req.track > 1:
-                print(f"Advertencia: No se encontrÃ³ la Pista {req.track}. Cayendo de vuelta a la Pista 1 (0:a:0).")
+                print(f"Advertencia: No se encontrÃƒÂ³ la Pista {req.track}. Cayendo de vuelta a la Pista 1 (0:a:0).")
                 cmd[cmd.index("-map") + 1] = "0:a:0"
                 subprocess.run(cmd, check=True, capture_output=True)
             else:
@@ -1815,4 +1815,5 @@ def preview_audio_mix(req: AudioPreviewRequest):
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host='0.0.0.0', port=8000)
+
 
