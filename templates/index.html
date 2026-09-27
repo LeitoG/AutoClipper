@@ -1166,7 +1166,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         <div style="font-weight:bold; color:#007acc; font-size:18px; display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <input type="checkbox" class="merge-checkbox" data-clip-id="${clip.id}" style="width:16px; height:16px; cursor:pointer;" onclick="event.stopPropagation()">
-                                <span>${clip.id}</span>
+                                <span> <span style="font-size:12px; color:#aaa;"></span></span>
                             </div>
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbUpStyle}" onclick="giveFeedback('${clip.id}', 'up', event)" title="Buen clip"></span>
@@ -1209,7 +1209,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         el.className = 'clip-item';
                         el.style.opacity = '0.7';
                         el.innerHTML = `
-                            <div style="font-weight:bold; color:#28a745; font-size:16px;"> ${clip.id}</div>
+                            <div style="font-weight:bold; color:#28a745; font-size:16px;">  <span style="font-size:12px; color:#aaa;"></span></div>
                             <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
                             <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
                             <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar / Re-editar</button>
@@ -1231,7 +1231,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         el.className = 'clip-item';
                         el.style.opacity = '0.7';
                         el.innerHTML = `
-                            <div style="font-weight:bold; color:#f44336; font-size:16px;"> ${clip.id}</div>
+                            <div style="font-weight:bold; color:#f44336; font-size:16px;">  <span style="font-size:12px; color:#aaa;"></span></div>
                             <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
                             <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
                             <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar</button>
@@ -1675,9 +1675,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 if (currentClip && videoName) {
                     let vUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(videoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=1';
                     let jUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(videoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=2';
-                    document.getElementById('global-audio-voice').src = vUrl;
-                    document.getElementById('global-audio-game').src = jUrl;
-                    attachAudioSync(workspaceVideo, currentClip.start);
+                    let vAudio = document.getElementById('global-audio-voice');
+                    let jAudio = document.getElementById('global-audio-game');
+                    if (vAudio.getAttribute("data-loaded-clip") !== currentClip.id) {
+                        vAudio.src = vUrl;
+                        jAudio.src = jUrl;
+                        vAudio.setAttribute("data-loaded-clip", currentClip.id);
+                        attachAudioSync(workspaceVideo, currentClip.start);
+                    } else {
+                        let rel = workspaceVideo.currentTime - currentClip.start;
+                        if (rel >= 0) { vAudio.currentTime = rel; jAudio.currentTime = rel; }
+                    }
                 }
                 workspaceVideo.play();
             } else {
