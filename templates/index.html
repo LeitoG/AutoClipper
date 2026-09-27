@@ -1671,11 +1671,18 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         
         function togglePlayPauseWorkspace() {
             if(!workspaceVideo) return;
-            if(workspaceVideo.paused) document.getElementById('global-audio-voice').src = /get_clip_audio_track?video_name=&start=&end=&track_index=1;
-            document.getElementById('global-audio-game').src = /get_clip_audio_track?video_name=&start=&end=&track_index=2;
-            attachAudioSync(workspaceVideo, currentClip.start);
-            workspaceVideo.play();
-            else workspaceVideo.pause();
+            if(workspaceVideo.paused) {
+                if (currentClip && currentVideoName) {
+                    let vUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(currentVideoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=1';
+                    let jUrl = '/get_clip_audio_track?video_name=' + encodeURIComponent(currentVideoName) + '&start=' + currentClip.start + '&end=' + currentClip.end + '&track_index=2';
+                    document.getElementById('global-audio-voice').src = vUrl;
+                    document.getElementById('global-audio-game').src = jUrl;
+                    attachAudioSync(workspaceVideo, currentClip.start);
+                }
+                workspaceVideo.play();
+            } else {
+                workspaceVideo.pause();
+            }
         }
         
         function toggleVisibility(id, btn) {
@@ -2294,9 +2301,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             loadStickersState();
             loadSoundsState();
             
-            workspaceVideo.src = `/videos/${videoName}#t=${currentClip.start},${currentClip.end}`;
-            document.getElementById('global-audio-voice').src = /get_clip_audio_track?video_name=&start=&end=&track_index=1;
-            document.getElementById('global-audio-game').src = /get_clip_audio_track?video_name=&start=&end=&track_index=2;
+            workspaceVideo.src = window.location.origin + "/videos/" + encodeURIComponent(videoName) + "#t=" + currentClip.start + "," + currentClip.end;
+            let vUrl = "/get_clip_audio_track?video_name=" + encodeURIComponent(videoName) + "&start=" + currentClip.start + "&end=" + currentClip.end + "&track_index=1";
+            let jUrl = "/get_clip_audio_track?video_name=" + encodeURIComponent(videoName) + "&start=" + currentClip.start + "&end=" + currentClip.end + "&track_index=2";
+            document.getElementById('global-audio-voice').src = vUrl;
+            document.getElementById('global-audio-game').src = jUrl;
             attachAudioSync(workspaceVideo, currentClip.start);
             workspaceVideo.play();
             setTemplate('face_game');
