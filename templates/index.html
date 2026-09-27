@@ -1983,11 +1983,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 if (!state) return;
                 const el = document.getElementById(id);
                 if(!el) return;
-                el.style.left = ${state.x * scaleX}px;
-                el.style.top = ${state.y * scaleY}px;
-                el.style.width = ${state.w * scaleX}px;
-                el.style.height = ${state.h * scaleY}px;
+                el.style.left = `${state.x * scaleX}px`;
+                el.style.top = `${state.y * scaleY}px`;
+                el.style.width = `${state.w * scaleX}px`;
+                el.style.height = `${state.h * scaleY}px`;
             };
+            
             try {
                 let s = editorScenes[activeSceneId];
                 if (s && s.cropState) {
