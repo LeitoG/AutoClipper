@@ -1,15 +1,14 @@
-import webview
+﻿import webview
 import threading
 import uvicorn
 import random
 
 from backend import app
 
-# Port aleatorio para evadir cualquier cache del navegador/WebView2
 PORT = random.randint(8100, 8900)
 
 def start_server():
-    uvicorn.run(app, host='127.0.0.1', port=PORT, log_level='error')
+    uvicorn.run(app, host='127.0.0.1', port=PORT, log_level='info')
 
 if __name__ == '__main__':
     server_thread = threading.Thread(target=start_server, daemon=True)
