@@ -4884,8 +4884,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         function updateAudioVolumes() {
             let v = document.getElementById('vol-voz') ? parseFloat(document.getElementById('vol-voz').value) : 1.0;
             let j = document.getElementById('vol-juego') ? parseFloat(document.getElementById('vol-juego').value) : 1.0;
-            document.getElementById('global-audio-voice').volume = v;
-            document.getElementById('global-audio-game').volume = j;
+            document.getElementById('global-audio-voice').volume = Math.max(0, Math.min(1, v));
+            document.getElementById('global-audio-game').volume = Math.max(0, Math.min(1, j));
             if (document.getElementById('lbl-vol-voz')) document.getElementById('lbl-vol-voz').innerText = v.toFixed(1);
             if (document.getElementById('lbl-vol-juego')) document.getElementById('lbl-vol-juego').innerText = j.toFixed(1);
         }
