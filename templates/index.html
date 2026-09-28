@@ -4515,35 +4515,44 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     });
                     
                     let lastFolder = localStorage.getItem('lastFolder');
+                    let lastVideo = localStorage.getItem('lastVideo');
                     let isFirstLoad = !videoName;
                     
-                    if (lastFolder && folders.has(lastFolder) && isFirstLoad) {
-                        folderSel.value = lastFolder;
-                    } else if (isFirstLoad) {
-                        if (folderSel.options.length > 1) folderSel.selectedIndex = 1;
-                    } else if (videoName) {
-                        const parts = videoName.split('/');
-                        folderSel.value = parts.length > 1 ? parts[0] : "Raz";
-                    }
-                    
-                    updateVideoDropdown();
-                    
-                    let lastVideo = localStorage.getItem('lastVideo');
-                    const videoSel = document.getElementById('video-selector');
-                    
                     if (isFirstLoad) {
+                        // Restaurar carpeta
+                        if (lastFolder && folders.has(lastFolder)) {
+                            folderSel.value = lastFolder;
+                        } else {
+                            if (folderSel.options.length > 1) folderSel.selectedIndex = 1;
+                        }
+                        
+                        updateVideoDropdown();
+                        
+                        // Restaurar video
+                        const videoSel = document.getElementById('video-selector');
+                        let videoFound = false;
                         if (lastVideo) {
                             for (let i = 0; i < videoSel.options.length; i++) {
                                 if (videoSel.options[i].value === lastVideo) {
                                     videoSel.selectedIndex = i;
+                                    videoFound = true;
                                     break;
                                 }
                             }
                         }
-                        if (videoSel.selectedIndex <= 0 && videoSel.options.length > 1) {
+                        
+                        // Si no encontr el video, quizs es de otra carpeta, seleccionamos el primero de la carpeta actual
+                        if (!videoFound && videoSel.options.length > 1) {
                             videoSel.selectedIndex = 1;
                         }
-                        init();
+                        
+                        if (videoSel.value) {
+                            init();
+                        }
+                    } else if (videoName) {
+                        const parts = videoName.split('/');
+                        folderSel.value = parts.length > 1 ? parts[0] : "Raz";
+                        updateVideoDropdown();
                     }
                 }
             } catch(e) { console.error("Error en loadVideosList:", e); }
@@ -4551,6 +4560,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         
         function updateVideoDropdown() {
             const folder = document.getElementById('folder-selector').value;
+            if (folder) localStorage.setItem('lastFolder', folder);
             const sel = document.getElementById('video-selector');
             sel.innerHTML = '<option value="">Selecciona un Video...</option>';
             
