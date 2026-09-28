@@ -971,6 +971,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             try {
                 const selVideo = document.getElementById('video-selector').value;
+                localStorage.setItem('lastFolder', document.getElementById('folder-selector').value);
+                localStorage.setItem('lastVideo', selVideo);
                 const res = await fetch('/clips?video_name=' + encodeURIComponent(selVideo), { cache: 'no-store' });
                 const json = await res.json();
                 
@@ -2095,6 +2097,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     h: parseInt(el.style.height) * scaleY
                 };
             });
+            saveCurrentClipState();
         }
 
         function makeDraggable(elOrId, callbackOrStateKey) {
@@ -2274,11 +2277,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 document.getElementById('redes-desc').value = currentClip.social_desc || '';
             }
             
-            let defaultCrop = {
+            let defaultCrop = currentClip.cropState ? currentClip.cropState : {
                 face: currentClip.facecam_coords || { x: 1500, y: 600, w: 420, h: 480 },
                 game: currentClip.gameplay_coords || { x: 420, y: 0, w: 1080, h: 1080 },
                 full: { x: 420, y: 0, w: 1080, h: 1920 },
-                subs: { x: 420, y: 800, w: 1080, h: 200 }
+                subs: { x: 420, y: 800, w: 1080, h: 200 },
+                splitY: 960
             };
             let isNewClip = !completedClipsData.find(c => c.id === currentClip.id);
             if (isNewClip) {
@@ -2847,6 +2851,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         }
                     }
                     updateCropBoxesVisuals();
+                    saveCurrentClipState();
                 };
                 
                 const delBtn = document.createElement('button');
@@ -2919,6 +2924,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         video_name: document.getElementById('video-selector').value,
                         start: currentClip.start,
                         end: currentClip.end,
+                        cropState: (editorScenes && editorScenes[activeSceneId]) ? editorScenes[activeSceneId].cropState : null,
+                        stickers: editorStickers || [],
                         subtitle_style: {
                             color: document.getElementById('style-color') ? document.getElementById('style-color').value : "&H00FF33CC&",
                             font: document.getElementById('style-font') ? document.getElementById('style-font').value : "Arial Black",
@@ -3801,9 +3808,21 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             const s = editorStickers.find(st => st.id === id);
             if (s) {
                 s[key] = value;
+                if (key === 'text') {
+                    renderStickersList(); // re-render word color pickers
+                }
                 renderStickersCanvas();
                 saveStickersState();
             }
+        }
+        
+        function updateTextStickerWordColor(id, wordIndex, colorHex) {
+            const st = editorStickers.find(s => String(s.id) === String(id));
+            if (!st) return;
+            if (!st.wordColors) st.wordColors = {};
+            st.wordColors[wordIndex] = colorHex;
+            renderStickersCanvas();
+            saveStickersState();
         }
         
         function addTextSticker() {

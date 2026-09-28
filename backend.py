@@ -84,6 +84,8 @@ class UpdateClipRequest(BaseModel):
     end: Optional[float] = None
     export_name: Optional[str] = None
     subtitle_style: dict = {}
+    cropState: Optional[dict] = None
+    stickers: list = []
 
 class SaveAllClipsRequest(BaseModel):
     video_name: str
@@ -940,6 +942,9 @@ def update_clip(req: UpdateClipRequest):
                         c["end"] = req.end
                     if req.export_name is not None:
                         c["export_name"] = req.export_name
+                    if req.cropState is not None:
+                        c["cropState"] = req.cropState
+                    c["stickers"] = req.stickers
             
             completed_proposals = data.get("completed_proposals", [])
             for c in completed_proposals:
@@ -955,6 +960,9 @@ def update_clip(req: UpdateClipRequest):
                         c["end"] = req.end
                     if req.export_name is not None:
                         c["export_name"] = req.export_name
+                    if req.cropState is not None:
+                        c["cropState"] = req.cropState
+                    c["stickers"] = req.stickers
             with open(analysis_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
                 
