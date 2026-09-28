@@ -16,6 +16,19 @@ import datetime
 import cv2
 import io
 
+def atomic_write_json(file_path, data):
+    import tempfile
+    import os
+    import json
+    dir_name = os.path.dirname(file_path)
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name, exist_ok=True)
+    with tempfile.NamedTemporaryFile('w', dir=dir_name, delete=False, encoding='utf-8') as tf:
+        json.dump(data, tf, indent=4, ensure_ascii=False)
+        temp_name = tf.name
+    os.replace(temp_name, file_path)
+
+
 export_progress = {}
 analysis_progress = {"status": "idle", "percent": 0, "message": ""}
 
@@ -1824,17 +1837,6 @@ def preview_audio_mix(req: AudioPreviewRequest):
 if __name__ == '__main__':
     import uvicorn
 
-def atomic_write_json(file_path, data):
-    import tempfile
-    import os
-    import json
-    dir_name = os.path.dirname(file_path)
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name, exist_ok=True)
-    with tempfile.NamedTemporaryFile('w', dir=dir_name, delete=False, encoding='utf-8') as tf:
-        json.dump(data, tf, indent=4, ensure_ascii=False)
-        temp_name = tf.name
-    os.replace(temp_name, file_path)
 
     uvicorn.run(app, host='0.0.0.0', port=8000)
 

@@ -1198,9 +1198,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         <div style="font-size:0.85em; color:#aaa; margin-top:5px;" id="times-${clip.id}">${formatTime(clip.start)} - ${formatTime(clip.end)} <span style="color:#fff; font-weight:bold;">(${duration}s)</span></div>
                         <div style="display: flex; gap: 10px; margin-top: 10px; align-items: stretch;">
                             <button class="btn" style="background:#d09010; flex: 1; margin:0;" onclick="enterTrimMode('${clip.id}', event)">Modo Edicin</button>
-                            <label style="display:flex; align-items:center; background:#444; padding: 0 10px; border-radius:4px; cursor:pointer;" onclick="event.stopPropagation()">
-                                <input type="checkbox" onchange="markClipDone('${clip.id}', this)" style="margin-right:5px; width:16px; height:16px; cursor:pointer;"> Listo
-                            </label>
+                            
                         </div>
                         <div id="controls-${clip.id}" style="display:none; flex-direction:column; gap:8px; margin-top: 15px; background: #1a1a1a; padding: 12px; border-radius: 4px; border: 1px solid #444;">
                             <div style="font-size: 11px; color: #aaa; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Ajuste de Precisin</div>
