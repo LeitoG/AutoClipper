@@ -57,13 +57,20 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
     video_basename = os.path.basename(video_path)
     
     if progress_callback: progress_callback(10, "Extrayendo audio general...")
-    temp_wav = os.path.join(temp_dir, "full_audio_temp.wav")
-    print("Extrayendo audio para análisis RMS...")
-    subprocess.run([
-        "ffmpeg", "-i", video_path,
-        "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
-        "-y", temp_wav
-    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    # Hash sencillo basado en nombre para reutilizar audio si es el mismo video
+    safe_name = "".join(c for c in video_basename if c.isalnum() or c in " _-")
+    temp_wav = os.path.join(temp_dir, f"{safe_name}_audio_temp.wav")
+    
+    if os.path.exists(temp_wav) and os.path.getsize(temp_wav) > 1000:
+        print("Audio general ya extraído, utilizando caché...")
+    else:
+        print("Extrayendo audio para análisis RMS...")
+        subprocess.run([
+            "ffmpeg", "-i", video_path,
+            "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
+            "-y", temp_wav
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
     if progress_callback: progress_callback(20, "Calculando mapa de volumen (RMS)...")
     print("Analizando picos de volumen...")
