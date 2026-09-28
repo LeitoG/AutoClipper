@@ -2268,7 +2268,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             }
             
             const sourceInfo = document.getElementById('workspace-source-info');
-            if(sourceInfo) sourceInfo.innerHTML = 'Fuente 16:9 <span style="color:#d09010; font-weight:bold;">' + currentClip.id + '</span> |  Duracion: <span id="clip-timer" style="color:#28a745; font-weight:bold;"></span>';
+            if(sourceInfo) sourceInfo.innerHTML = 'Video Principal <span style="color:#d09010; font-weight:bold;">' + currentClip.id + '</span> |  Duracion: <span id="clip-timer" style="color:#28a745; font-weight:bold;"></span>';
             
             if (document.getElementById('redes-titulo')) {
                 document.getElementById('redes-titulo').value = currentClip.social_title || '';
@@ -3400,6 +3400,20 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         async function loadStickersState() {
             if (currentClip && currentClip.stickers) {
                 editorStickers = JSON.parse(JSON.stringify(currentClip.stickers));
+                editorStickers.forEach(s => {
+                    if (s.type === 'video') {
+                        let vid = document.createElement('video');
+                        vid.src = s.url;
+                        vid.muted = true;
+                        vid.loop = true;
+                        vid.load();
+                        s.videoElement = vid;
+                    } else if (s.url) {
+                        let img = document.createElement('img');
+                        img.src = s.url;
+                        s.imageElement = img;
+                    }
+                });
                 renderStickersList();
                 renderStickerPreview();
                 return;
