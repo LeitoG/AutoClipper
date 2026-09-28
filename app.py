@@ -22,4 +22,7 @@ if __name__ == '__main__':
         background_color='#0f172a'
     )
     
-    webview.start()
+    import os
+    app_data_dir = os.path.join(os.environ.get('APPDATA', '.'), 'AutoClipper')
+    os.makedirs(app_data_dir, exist_ok=True)
+    webview.start(private_mode=False, storage_path=app_data_dir)

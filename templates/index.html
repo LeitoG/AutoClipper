@@ -613,7 +613,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         <input type="text" id="export-filename" placeholder="Nombre (opcional)" style="padding:5px; border-radius:4px; border:1px solid #444; background:#222; color:#fff; font-size:12px; flex: 1; min-width: 400px;">
                         <button id="btn-export" class="btn" style="background:#2080df; font-size: 12px; font-weight: bold; margin:0;" onclick="exportClip()">  Exportar a<br>FFmpeg</button>
                         <button class="btn" style="background:#28a745; font-size: 12px; font-weight: bold; margin:0;" onclick="approveClipFromEditor()">  Aprobar y<br>Guardar</button>
-                        <button id="workspace-audio-btn" class="btn" style="background:#1155aa; font-size: 12px; margin:0;" onclick="toggleWorkspace Audio<br>Activado</button>
+                        <button id="workspace-audio-btn" class="btn" style="background:#1155aa; font-size: 12px; margin:0;" onclick="toggleWorkspaceAudio()">Audio<br>Activado</button>
                         <button class="btn" style="background:#1155aa; font-size: 12px; margin:0;" onclick="togglePlayPauseWorkspace()">Reproducir / Pausa</button>
                     </div>
                 </div>
@@ -2296,6 +2296,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 }
             }
 
+            if (defaultCrop.fitMode) {
+                window.fitMode = defaultCrop.fitMode;
+                const rBtn = document.querySelector(input[name="fitMode"][value=""]);
+                if(rBtn) rBtn.checked = true;
+            }
+            
             editorScenes = [{
                 id: Date.now(),
                 start: currentClip.start,
@@ -2924,7 +2930,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         video_name: document.getElementById('video-selector').value,
                         start: currentClip.start,
                         end: currentClip.end,
-                        cropState: (editorScenes && editorScenes[activeSceneId]) ? editorScenes[activeSceneId].cropState : null,
+                        cropState: (editorScenes && editorScenes[activeSceneId]) ? { ...editorScenes[activeSceneId].cropState, fitMode: window.fitMode } : null,
                         stickers: editorStickers || [],
                         subtitle_style: {
                             color: document.getElementById('style-color') ? document.getElementById('style-color').value : "&H00FF33CC&",
