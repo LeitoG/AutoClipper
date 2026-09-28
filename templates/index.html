@@ -508,7 +508,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     <button class="btn" style="flex:1; background: #9333ea; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3); margin:0;" onclick="addTextSticker()"> Aadir Texto</button>
                 </div>
                 <input type="file" id="sticker-upload" accept="image/png, image/jpeg, video/mp4, video/quicktime, video/webm" style="display:none;" onchange="uploadSticker(event)">
-                <div id="stickers-list" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; max-height:200px; overflow-y:auto; padding-right:5px;"></div>
+                <div id="stickers-list" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;"></div>
                 
                 <div style="border-top:1px solid var(--border-color); margin-top:10px; padding-top:20px; margin-bottom: 15px;">
                     <div style="color: var(--accent-primary); font-weight: 600; font-size: 13px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;"> Marca de Agua Global</div>
@@ -2400,6 +2400,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             editorScenes.splice(currentSceneIndex + 1, 0, newScene);
             renderTimelineTracks();
             pushHistoryState();
+        }
+        
+        function rewindClip() {
+            if (workspaceVideo && currentClip) {
+                workspaceVideo.currentTime = currentClip.start;
+            }
         }
         
         function duplicateScene() {

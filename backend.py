@@ -685,16 +685,26 @@ def mark_clip_done(req: MarkClipDoneRequest):
         import csv
         import datetime
         analysis_file = get_analysis_file(req.video_name)
-        if not analysis_file or not os.path.exists(analysis_file):
-            return {"status": "error", "message": "No analysis.json"}
+        if not analysis_file:
+            return {"status": "error", "message": "Nombre de video invalido"}
             
-        with open(analysis_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        if not os.path.exists(analysis_file):
+            data = {"video": req.video_name, "proposals": [], "completed_proposals": [], "completed_ranges": [], "rejected_proposals": []}
+        else:
+            with open(analysis_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
             
         completed_ranges = data.get("completed_ranges", [])
         proposals = data.get("proposals", [])
         
         target_clip = next((c for c in proposals if c["id"] == req.clip_id), None)
+        is_completed = False
+        
+        if not target_clip:
+            completed_proposals = data.get("completed_proposals", [])
+            target_clip = next((c for c in completed_proposals if c["id"] == req.clip_id), None)
+            is_completed = True
+            
         if target_clip:
             if req.start is not None:
                 target_clip["start"] = req.start
@@ -703,15 +713,16 @@ def mark_clip_done(req: MarkClipDoneRequest):
             if req.export_name is not None:
                 target_clip["export_name"] = req.export_name
             
-            completed_ranges.append({"start": target_clip["start"], "end": target_clip["end"]})
-            data["completed_ranges"] = completed_ranges
-            
-            # Save full clip to completed_proposals
-            completed_proposals = data.get("completed_proposals", [])
-            completed_proposals.append(target_clip)
-            data["completed_proposals"] = completed_proposals
-            
-            data["proposals"] = [c for c in proposals if c["id"] != req.clip_id]
+            if not is_completed:
+                completed_ranges.append({"start": target_clip["start"], "end": target_clip["end"]})
+                data["completed_ranges"] = completed_ranges
+                
+                # Save full clip to completed_proposals
+                completed_proposals = data.get("completed_proposals", [])
+                completed_proposals.append(target_clip)
+                data["completed_proposals"] = completed_proposals
+                
+                data["proposals"] = [c for c in proposals if c["id"] != req.clip_id]
             
             with open(analysis_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
@@ -741,11 +752,14 @@ class RestoreClipRequest(BaseModel):
 def restore_clip(req: RestoreClipRequest):
     try:
         analysis_file = get_analysis_file(req.video_name)
-        if not analysis_file or not os.path.exists(analysis_file):
-            return {"status": "error", "message": "No analysis.json"}
+        if not analysis_file:
+            return {"status": "error", "message": "Nombre de video invalido"}
             
-        with open(analysis_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        if not os.path.exists(analysis_file):
+            data = {"video": req.video_name, "proposals": [], "completed_proposals": [], "completed_ranges": [], "rejected_proposals": []}
+        else:
+            with open(analysis_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
             
         completed_proposals = data.get("completed_proposals", [])
         rejected_proposals = data.get("rejected_proposals", [])
@@ -952,9 +966,12 @@ def update_clip(req: UpdateClipRequest):
 def save_all_clips(req: SaveAllClipsRequest):
     try:
         analysis_file = get_analysis_file(req.video_name)
-        if analysis_file and os.path.exists(analysis_file):
-            with open(analysis_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
+        if analysis_file:
+            if not os.path.exists(analysis_file):
+                data = {"video": req.video_name, "proposals": [], "completed_proposals": [], "completed_ranges": [], "rejected_proposals": []}
+            else:
+                with open(analysis_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
             data["proposals"] = req.proposals
             with open(analysis_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
