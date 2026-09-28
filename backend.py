@@ -264,8 +264,7 @@ def mark_video_reviewed(req: MarkVideoReviewedRequest):
         data = {}
     
     data[req.video_name] = req.reviewed
-    with open(rev_file, "w", encoding="utf-8") as f:
-        json.dump(data, f)
+    atomic_write_json(rev_file, data)
     return {"status": "success"}
 
 app.mount('/videos', StaticFiles(directory=VIDEO_DIR), name='videos')
@@ -488,8 +487,7 @@ def generate_clips(req: GenerateClipsRequest):
         
         data["video"] = video_file_name
         if analysis_file:
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4)
+            atomic_write_json(analysis_file, data)
             
         video_path = find_video_path(video_file_name)
         if not os.path.exists(video_path):
@@ -573,8 +571,7 @@ def generate_clips(req: GenerateClipsRequest):
             data.setdefault("proposals", []).append(c)
             data["proposals"].sort(key=lambda x: x["start"])
             if analysis_file:
-                with open(analysis_file, "w", encoding="utf-8") as f:
-                    json.dump(data, f, indent=4)
+                atomic_write_json(analysis_file, data)
                     
         all_new_clips = []
         total_in = 0
@@ -623,8 +620,7 @@ def generate_clips(req: GenerateClipsRequest):
         cost_out = (total_out / 1_000_000) * 0.30
         costs_data[current_month]["cost"] += (cost_in + cost_out)
         
-        with open(COSTS_FILE, "w", encoding="utf-8") as f:
-            json.dump(costs_data, f, indent=4)
+        atomic_write_json(COSTS_FILE, costs_data)
         
         if not all_new_clips:
             return {"status": "error", "message": "No se encontraron clips viables o la IA rechazÃƒÂ³ los segmentos detectados."}
@@ -674,8 +670,7 @@ def add_manual_clip(req: AddManualClipRequest):
         data["proposals"].append(new_clip)
         
         if analysis_file:
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4)
+            atomic_write_json(analysis_file, data)
                 
         return {"status": "success", "message": "Clip manual aÃƒÂ±adido", "clip_id": clip_id}
     except Exception as e:
@@ -726,8 +721,7 @@ def mark_clip_done(req: MarkClipDoneRequest):
                 
                 data["proposals"] = [c for c in proposals if c["id"] != req.clip_id]
             
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
+            atomic_write_json(analysis_file, data)
                 
             # APPEND TO CSV
             csv_file = os.path.join(DB_DIR, "historial_clips.csv")
@@ -781,8 +775,7 @@ def restore_clip(req: RestoreClipRequest):
             completed_ranges = data.get("completed_ranges", [])
             data["completed_ranges"] = [cr for cr in completed_ranges if not (cr["start"] == target["start"] and cr["end"] == target["end"])]
             
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
+            atomic_write_json(analysis_file, data)
                 
         return {"status": "success"}
     except Exception as e:
@@ -829,8 +822,7 @@ def delete_clip(req: DeleteClipRequest):
             
         data["proposals"] = [c for c in proposals if c["id"] != req.clip_id]
         
-        with open(analysis_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
+        atomic_write_json(analysis_file, data)
             
         return {"status": "success"}
     except Exception as e:
@@ -846,8 +838,7 @@ def update_clip_reason(req: UpdateClipReasonRequest):
             for c in data.get("proposals", []):
                 if c["id"] == req.clip_id:
                     c["reason"] = req.reason
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
+            atomic_write_json(analysis_file, data)
         return {"status": "success"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -875,8 +866,7 @@ def clip_feedback(req: ClipFeedbackRequest):
                     c["feedback"] = req.feedback
                     target_clip = c
                     
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
+            atomic_write_json(analysis_file, data)
                 
             if target_clip:
                 # Guardar en CSV original
@@ -909,8 +899,7 @@ def clip_feedback(req: ClipFeedbackRequest):
                 }
                 feedback_data.append(new_entry)
                 
-                with open(fb_file_json, "w", encoding="utf-8") as f:
-                    json.dump(feedback_data, f, indent=4, ensure_ascii=False)
+                atomic_write_json(fb_file_json, feedback_data)
                     
         return {"status": "success"}
     except Exception as e:
@@ -963,8 +952,7 @@ def update_clip(req: UpdateClipRequest):
                     if req.cropState is not None:
                         c["cropState"] = req.cropState
                     c["stickers"] = req.stickers
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
+            atomic_write_json(analysis_file, data)
                 
         return {"status": "success", "message": "SubtÃƒÂ­tulos actualizados correctamente."}
     except Exception as e:
@@ -981,8 +969,7 @@ def save_all_clips(req: SaveAllClipsRequest):
                 with open(analysis_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
             data["proposals"] = req.proposals
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
+            atomic_write_json(analysis_file, data)
         return {"status": "success"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -1684,8 +1671,7 @@ def reset_video(req: ResetVideoRequest):
         analysis_file = get_analysis_file(req.video_name)
         if analysis_file and os.path.exists(analysis_file):
             data = {"video": req.video_name, "proposals": [], "completed_ranges": [], "completed_proposals": [], "rejected_proposals": []}
-            with open(analysis_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4)
+            atomic_write_json(analysis_file, data)
         return {"status": "success", "message": "Video reseteado."}
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -1732,8 +1718,7 @@ def mark_published(req: MarkPublishedRequest):
                 c["is_published"] = True
                 break
                 
-        with open(analysis_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
+        atomic_write_json(analysis_file, data)
             
         return {"status": "success", "message": "Marcado como subido"}
     except Exception as e:
@@ -1765,8 +1750,7 @@ def update_publish_dates(req: UpdatePublishDatesRequest):
                 updated = True
                 
         if updated:
-            with open(filepath, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
+            atomic_write_json(filepath, data)
                 
         return {"status": "success"}
     except Exception as e:
@@ -1839,6 +1823,19 @@ def preview_audio_mix(req: AudioPreviewRequest):
 
 if __name__ == '__main__':
     import uvicorn
+
+def atomic_write_json(file_path, data):
+    import tempfile
+    import os
+    import json
+    dir_name = os.path.dirname(file_path)
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name, exist_ok=True)
+    with tempfile.NamedTemporaryFile('w', dir=dir_name, delete=False, encoding='utf-8') as tf:
+        json.dump(data, tf, indent=4, ensure_ascii=False)
+        temp_name = tf.name
+    os.replace(temp_name, file_path)
+
     uvicorn.run(app, host='0.0.0.0', port=8000)
 
 

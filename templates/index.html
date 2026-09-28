@@ -2905,6 +2905,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         
         async function saveCurrentClipState() {
             if(!currentClip) return;
+            if(editorStickers) localStorage.setItem('lastUsedStickers', JSON.stringify(editorStickers));
+            if(editorScenes && editorScenes[0]) localStorage.setItem('lastUsedCrop', JSON.stringify(editorScenes[0].cropState));
             currentClip.words = editorWords;
             currentClip.ass_text = document.getElementById('ass-text').value;
             if (document.getElementById('redes-titulo')) {
@@ -3389,6 +3391,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 wordColors: s.wordColors
             }));
             localStorage.setItem('savedStickers', JSON.stringify(data));
+            saveCurrentClipState();
         }
         async function loadStickersState() {
             if (currentClip && currentClip.stickers) {
