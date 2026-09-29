@@ -591,7 +591,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             <!-- PESTAA: REDES -->
             <div id="panel-redes" style="display:none;">
                 <div style="color: #d09010; font-weight: bold; margin-bottom: 10px;"> Redes Sociales</div>
-                <p style="color:#888; font-size:12px; margin-bottom:15px;">Ttulo y Descripcin autogenerados por la IA.</p>
+                <p style="color:#888; font-size:12px; margin-bottom:15px;">Titulo y Descripcion autogenerados por la IA.</p>
+                <button id="btn-regenerate-meta" class="btn" style="margin-bottom:15px; font-size:12px; padding:8px; background:#d09010; color:#000;" onclick="regenerateMetadata()"> Regenerar Metadatos con IA</button>
                 <div style="margin-bottom: 15px;">
                     <label style="color:#aaa; font-size:12px; margin-bottom:5px; display:block;">Ttulo del Short</label>
                     <input type="text" id="redes-titulo" class="input-text" style="width:100%; padding: 6px;" placeholder="Ej: Me asusto muchsimo..." onblur="saveCurrentClipState()" oninput="syncExportFilename()">
@@ -3114,7 +3115,57 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             document.removeEventListener('mouseup', onSoundDragEnd);
         }
         
-        let transcribeController = null;
+        
+        async function regenerateMetadata() {
+            const btn = document.getElementById('btn-regenerate-meta');
+            const originalText = btn.innerText;
+            
+            // Collect words from editorWords or just use full clip transcript if empty
+            let transcriptText = "";
+            if (editorWords && editorWords.length > 0) {
+                transcriptText = editorWords.map(w => w.text || w.word).join(" ");
+            } else if (currentClip && currentClip.transcript) {
+                transcriptText = currentClip.transcript;
+            } else {
+                alert("No hay subtitulos ni transcripcion para regenerar los metadatos. Primero transcribe el clip.");
+                return;
+            }
+            
+            btn.innerText = "Regenerando con IA...";
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch('/regenerate_metadata', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        video_name: videoName,
+                        transcript: transcriptText
+                    })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (data.social_title) {
+                        document.getElementById('redes-titulo').value = data.social_title;
+                        currentClip.social_title = data.social_title;
+                    }
+                    if (data.social_desc) {
+                        document.getElementById('redes-desc').value = data.social_desc;
+                        currentClip.social_desc = data.social_desc;
+                    }
+                    saveCurrentClipState();
+                } else {
+                    alert('Error regenerando metadatos: ' + data.message);
+                }
+            } catch (err) {
+                alert('Error en la conexion: ' + err);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+let transcribeController = null;
         async function runAIAutoTranscribe() {
             const btn = document.getElementById('btn-transcribe');
             
@@ -3152,6 +3203,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 document.getElementById('ass-text').value = editorWords.map(w => w.text).join(' ');
                 renderTimelineTracks();
                 await saveCurrentClipState();
+                
+                // Regenerar título y descripción en base a la nueva transcripción
+                try {
+                    toast.innerHTML = '<strong style="color:#d09010;"> IA Trabajando</strong><br><span style="font-size:12px;">Generando nuevos metadatos (título y descripción)...</span>';
+                    await regenerateMetadata();
+                } catch(e) { console.error(e); }
                 
                 btn.innerText = " Auto-Transcribir con IA";
                 btn.disabled = false;
