@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+<select id="sel"></select>
+<script>
+    let sel = document.getElementById('sel');
+    sel.innerHTML = '<option value="">Select...</option>';
+    let opt = document.createElement('option');
+    opt.value = 'test';
+    opt.innerText = 'Test Option';
+    sel.appendChild(opt);
+    
+    sel.value = 'test';
+    console.log("Selected index:", sel.selectedIndex);
+</script>
+</body>
+</html>
