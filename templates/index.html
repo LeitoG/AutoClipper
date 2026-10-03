@@ -1833,15 +1833,16 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             if (currentClip) {
                 const cTime = workspaceVideo.currentTime;
+                const relTime = absToRel(cTime);
                 editorStickers.forEach(st => {
-                    if (cTime >= st.start && cTime <= st.end) {
+                    if (relTime >= st.start && relTime <= st.end) {
                         const drawW = st.w;
                         const drawH = st.h;
                         const drawX = st.x;
                         const drawY = st.y;
                         
                         if (st.type === 'video' && st.videoElement) {
-                            const relativeTime = absToRel(cTime) - absToRel(st.start);
+                            const relativeTime = relTime - st.start;
                             if (Math.abs(st.videoElement.currentTime - relativeTime) > 0.1) {
                                 st.videoElement.currentTime = relativeTime;
                             }
@@ -1870,9 +1871,10 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     }
                 });
                 
+                const relTime = absToRel(cTime);
                 editorSounds.forEach(snd => {
-                    if (cTime >= snd.start && cTime <= snd.end) {
-                        const relativeTime = absToRel(cTime) - absToRel(snd.start);
+                    if (relTime >= snd.start && relTime <= snd.end) {
+                        const relativeTime = relTime - snd.start;
                         if (snd.audioElement) {
                             if (Math.abs(snd.audioElement.currentTime - relativeTime) > 0.1) {
                                 snd.audioElement.currentTime = relativeTime;
@@ -2320,8 +2322,9 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             editorScenes = [{
                 id: Date.now(),
-                start: currentClip.start,
-                end: currentClip.end,
+                start: 0,
+                end: getTimelineDuration(),
+                isRelative: true,
                 template: initialTemplate,
                 cropState: defaultCrop
             }];
@@ -2782,24 +2785,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         let sTrack = st.track || 0;
                         if (sTrack !== t) return;
                         
-                        if (st.start === undefined) st.start = currentClip.start;
-                        if (st.end === undefined) st.end = currentClip.end;
+                        if (st.start === undefined) st.start = 0;
+                        if (st.end === undefined) st.end = totalDur;
                         
-                        let relOffset = 0;
-                        let firstRel = null;
-                        let lastRel = null;
-                        
-                        editorScenes.forEach(sc => {
-                            let i_start = Math.max(st.start, sc.start);
-                            let i_end = Math.min(st.end, sc.end);
-                            if (i_start < i_end) {
-                                const s_rel = relOffset + (i_start - sc.start);
-                                const e_rel = relOffset + (i_end - sc.start);
-                                if (firstRel === null) firstRel = s_rel;
-                                lastRel = e_rel;
-                            }
-                            relOffset += (sc.end - sc.start);
-                        });
+                        let firstRel = st.start;
+                        let lastRel = st.end;
                         
                         if (firstRel !== null && lastRel !== null) {
                             const sPerc = (firstRel / totalDur) * 100;
@@ -3022,27 +3012,27 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         function onStickerDrag(e) {
             if(!draggingSticker) return;
             const track = document.getElementById('stickers-track');
-            const totalDur = currentClip.end - currentClip.start;
+            const totalDur = getTimelineDuration();
             const trackWidth = track.getBoundingClientRect().width;
             const dx = e.clientX - stickerDragStartX;
             const dt = (dx / trackWidth) * totalDur;
             
             if (draggingStickerHandle === 'left') {
-                draggingSticker.start = Math.max(currentClip.start, Math.min(draggingSticker.end - 0.1, stickerDragStartVal + dt));
+                draggingSticker.start = Math.max(0, Math.min(draggingSticker.end - 0.1, stickerDragStartVal + dt));
                 draggingSticker.duration = draggingSticker.end - draggingSticker.start;
             } else if (draggingStickerHandle === 'right') {
-                draggingSticker.end = Math.max(draggingSticker.start + 0.1, Math.min(currentClip.end, stickerDragStartVal + dt));
+                draggingSticker.end = Math.max(draggingSticker.start + 0.1, Math.min(totalDur, stickerDragStartVal + dt));
                 draggingSticker.duration = draggingSticker.end - draggingSticker.start;
             } else if (draggingStickerHandle === 'move') {
                 const w = stickerDragStartVal.e - stickerDragStartVal.s;
                 let newS = stickerDragStartVal.s + dt;
                 let newE = stickerDragStartVal.e + dt;
-                if (newS < currentClip.start) {
-                    newS = currentClip.start;
+                if (newS < 0) {
+                    newS = 0;
                     newE = newS + w;
                 }
-                if (newE > currentClip.end) {
-                    newE = currentClip.end;
+                if (newE > totalDur) {
+                    newE = totalDur;
                     newS = newE - w;
                 }
                 draggingSticker.start = newS;
@@ -3432,7 +3422,7 @@ let transcribeController = null;
         function saveSoundsState() {
             const data = editorSounds.map(s => ({
                 id: s.id, name: s.name, server_path: s.server_path, url: s.url,
-                start: s.start, end: s.end
+                start: s.start, end: s.end, isRelative: s.isRelative
             }));
             localStorage.setItem('savedSounds', JSON.stringify(data));
         }
@@ -3450,7 +3440,16 @@ let transcribeController = null;
             if (saved && saved !== '[]') {
                 try {
                     editorSounds = JSON.parse(saved);
-                    editorSounds.forEach(s => { s.audioElement = new Audio(s.url); });
+                    editorSounds.forEach(s => { 
+                        if (!s.isRelative) {
+                            if (s.start !== undefined) s.start = absToRel(s.start);
+                            else s.start = 0;
+                            if (s.end !== undefined) s.end = absToRel(s.end);
+                            else s.end = 5.0;
+                            s.isRelative = true;
+                        }
+                        s.audioElement = new Audio(s.url); 
+                    });
                 } catch(e) {
                     editorSounds = [];
                 }
@@ -3467,7 +3466,7 @@ let transcribeController = null;
                 x: s.x, y: s.y, w: s.w, h: s.h, type: s.type, duration: s.duration || (s.end - s.start),
                 text: s.text, color: s.color, strokeColor: s.strokeColor, font: s.font,
                 animIn: s.animIn, animOut: s.animOut, track: s.track,
-                wordColors: s.wordColors
+                wordColors: s.wordColors, start: s.start, end: s.end, isRelative: s.isRelative, fontSize: s.fontSize
             }));
             localStorage.setItem('savedStickers', JSON.stringify(data));
             saveCurrentClipState();
@@ -3476,7 +3475,15 @@ let transcribeController = null;
             if (currentClip && currentClip.stickers) {
                 editorStickers = JSON.parse(JSON.stringify(currentClip.stickers));
                 editorStickers.forEach(s => {
+                    if (!s.isRelative) {
+                        if (s.start !== undefined) s.start = absToRel(s.start);
+                        else s.start = 0;
+                        if (s.end !== undefined) s.end = absToRel(s.end);
+                        else s.end = (s.duration || 5.0);
+                        s.isRelative = true;
+                    }
                     if (s.type === 'video') {
+
                         let vid = document.createElement('video');
                         vid.src = s.url;
                         vid.muted = true;
@@ -4037,8 +4044,9 @@ let transcribeController = null;
                         name: file.name,
                         server_path: data.server_path,
                         url: data.url,
-                        start: currentClip ? currentClip.start : 0,
-                        end: currentClip ? currentClip.start + 5 : 5, // Default 5s
+                        start: 0,
+                        end: 5, // Default 5s
+                        isRelative: true,
                         audioElement: audioEl
                     });
                     
@@ -4125,7 +4133,7 @@ let transcribeController = null;
                 animIn: s.animIn,
                 animOut: s.animOut,
                 track: s.track,
-                wordColors: s.wordColors
+                wordColors: s.wordColors, start: s.start, end: s.end, isRelative: s.isRelative, fontSize: s.fontSize
             }));
             
             let presets = JSON.parse(localStorage.getItem('stickerPresets') || '{}');
@@ -4207,7 +4215,7 @@ let transcribeController = null;
                         animIn: s.animIn,
                         animOut: s.animOut,
                         track: s.track || 0,
-                        wordColors: s.wordColors,
+                        wordColors: s.wordColors, start: s.start, end: s.end, isRelative: s.isRelative, fontSize: s.fontSize,
                         duration: s.duration,
                         videoElement: null,
                         imageElement: null
@@ -4216,7 +4224,15 @@ let transcribeController = null;
                 
                 // Cargar elementos HTML para los stickers (video/img)
                 editorStickers.forEach(s => {
+                    if (!s.isRelative) {
+                        if (s.start !== undefined) s.start = absToRel(s.start);
+                        else s.start = 0;
+                        if (s.end !== undefined) s.end = absToRel(s.end);
+                        else s.end = (s.duration || 5.0);
+                        s.isRelative = true;
+                    }
                     if (s.type === 'video') {
+
                         let vid = document.createElement('video');
                         vid.src = s.url;
                         vid.muted = true;

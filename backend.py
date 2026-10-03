@@ -1102,7 +1102,6 @@ def export_clip(req: ExportRequest):
                             bright_color = brighten_ass_color(s_color)
                             grad_tag = f"{{\\pos({draw_x},{draw_y})\\xbord0\\ybord0\\xshad0\\yshad0\\c{bright_color}\\clip(0,0,1080,{draw_y})}}"
                             f.write(f"Dialogue: 1,{format_time(s_ms)},{format_time(e_ms)},Default,,0,0,0,,{grad_tag}{anim_tag}{w['text']}\n")
-                    rel_offset += (sc['end'] - sc['start'])
 
             # AÃƒÂ±adir stickers de texto al archivo ASS
             if req.stickers:
@@ -1111,16 +1110,9 @@ def export_clip(req: ExportRequest):
                         st_start = st.get('start', 0.0)
                         st_end = st.get('end', 0.0)
                         
-                        rel_offset = 0.0
-                        for sc in req.scenes:
-                            i_start = max(st_start, sc['start'])
-                            i_end = min(st_end, sc['end'])
-                            if i_start < i_end:
-                                s_rel = rel_offset + (i_start - sc['start'])
-                                e_rel = rel_offset + (i_end - sc['start'])
-                                
-                                s_ms = int(s_rel * 1000)
-                                e_ms = int(e_rel * 1000)
+                        if True:
+                                s_ms = int(st_start * 1000)
+                                e_ms = int(st_end * 1000)
                                 
                                 def html_to_ass_color(hc):
                                     hc = hc.replace('#', '')
@@ -1173,7 +1165,6 @@ def export_clip(req: ExportRequest):
                                     
                                 tag = f"{{{move_tag}\\c{c_ass}\\3c{sc_ass}\\bord4\\fn{s_font}\\fs60\\an5\\q1}}"
                                 f.write(f"Dialogue: 2,{format_time(s_ms)},{format_time(e_ms)},Default,,{margin_l},{margin_r},0,,{tag}{st.get('text', '')}\n")
-                            rel_offset += (sc['end'] - sc['start'])
 
         ass_ff = ass_path.replace("\\", "/").replace(":", "\\:")
         
@@ -1507,20 +1498,9 @@ def export_clip(req: ExportRequest):
         for i, snd in enumerate(sound_inputs):
             snd_start = snd['start']
             
-            # Encontrar el inicio relativo en la timeline concatenada
-            rel_offset = 0.0
-            first_s_rel = None
-            
-            for sc in req.scenes:
-                if sc['start'] <= snd_start <= sc['end']:
-                    first_s_rel = rel_offset + (snd_start - sc['start'])
-                    break
-                rel_offset += (sc['end'] - sc['start'])
-                
-            if first_s_rel is not None:
-                delay_ms = int(first_s_rel * 1000)
-                filter_parts.append(f"[{snd['idx']}:a]adelay={delay_ms}|{delay_ms}[a_snd_{i}]")
-                sound_amix_inputs.append(f"[a_snd_{i}]")
+            delay_ms = int(snd_start * 1000)
+            filter_parts.append(f"[{snd['idx']}:a]adelay={delay_ms}|{delay_ms}[a_snd_{i}]")
+            sound_amix_inputs.append(f"[a_snd_{i}]")
         
         if len(sound_amix_inputs) > 1:
             amix_inputs_str = "".join(sound_amix_inputs)
@@ -1542,28 +1522,11 @@ def export_clip(req: ExportRequest):
             pos_x = int(st['x'])
             pos_y = int(st['y'])
             
-            # Map start and end using intersection for duplicated scenes
             st_start = st['start']
             st_end = st['end']
             
-            enable_exprs = []
-            rel_offset = 0.0
-            first_s_rel = None
-            
-            for sc in req.scenes:
-                i_start = max(st_start, sc['start'])
-                i_end = min(st_end, sc['end'])
-                if i_start < i_end:
-                    s_rel = rel_offset + (i_start - sc['start'])
-                    e_rel = rel_offset + (i_end - sc['start'])
-                    enable_exprs.append(f"between(t,{s_rel},{e_rel})")
-                    if first_s_rel is None: first_s_rel = s_rel
-                rel_offset += (sc['end'] - sc['start'])
-                
-            if not enable_exprs:
-                continue
-                
-            enable_expr = "enable='" + "+".join(enable_exprs) + "'"
+            enable_expr = f"enable='between(t,{st_start},{st_end})'"
+            first_s_rel = st_start
             
             filter_parts.append(f"[{st['idx']}:v]format=rgba,scale={scale_w}:{scale_h}[st_scaled_{i}]")
             
