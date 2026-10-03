@@ -1871,7 +1871,6 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     }
                 });
                 
-                const relTime = absToRel(cTime);
                 editorSounds.forEach(snd => {
                     if (relTime >= snd.start && relTime <= snd.end) {
                         const relativeTime = relTime - snd.start;
