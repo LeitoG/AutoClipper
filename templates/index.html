@@ -2792,7 +2792,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     const wPerc = ((snd.end - snd.start) / totalDur) * 100;
                     
                     const el = document.createElement('div');
-                    el.style = \position: absolute; left: \%; width: \%; height: 100%; background: #00aa55; border: 1px solid #000; border-radius: 2px; color: #fff; font-size: 9px; display: flex; align-items: center; justify-content: space-between; overflow: hidden; box-sizing: border-box;\;
+                    el.style = `position: absolute; left: ${sPerc}%; width: ${wPerc}%; height: 100%; background: #00aa55; border: 1px solid #000; border-radius: 2px; color: #fff; font-size: 9px; display: flex; align-items: center; justify-content: space-between; overflow: hidden; box-sizing: border-box;`;
                     
                     const leftH = document.createElement('div');
                     leftH.style = 'width: 5px; height: 100%; cursor: w-resize; background: rgba(0,0,0,0.2);';
