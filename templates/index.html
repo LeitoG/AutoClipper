@@ -2321,9 +2321,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             editorScenes = [{
                 id: Date.now(),
-                start: 0,
-                end: currentClip.end - currentClip.start,
-                isRelative: true,
+                start: currentClip.start,
+                end: currentClip.end,
                 template: initialTemplate,
                 cropState: defaultCrop
             }];
@@ -2356,8 +2355,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             loadStickersState();
             loadSoundsState();
+            renderTimelineTracks();
             
             workspaceVideo.src = window.location.origin + "/videos/" + encodeURIComponent(videoName) + "#t=" + currentClip.start + "," + currentClip.end;
+            
+            workspaceVideo.currentTime = currentClip.start;
+            workspaceVideo.addEventListener('loadedmetadata', function() {
+                if (Math.abs(workspaceVideo.currentTime - currentClip.start) > 1) {
+                    workspaceVideo.currentTime = currentClip.start;
+                }
+            }, { once: true });
+            
             let vUrl = "/get_clip_audio_track?video_name=" + encodeURIComponent(videoName) + "&start=" + currentClip.start + "&end=" + currentClip.end + "&track_index=1";
             let jUrl = "/get_clip_audio_track?video_name=" + encodeURIComponent(videoName) + "&start=" + currentClip.start + "&end=" + currentClip.end + "&track_index=2";
             document.getElementById('global-audio-voice').src = vUrl;
