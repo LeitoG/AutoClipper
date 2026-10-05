@@ -1018,7 +1018,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             const duration = tlVideo.duration;
             if (!duration || isNaN(duration)) return;
             
-            clipsData.forEach(clip => {
+            clipsData.forEach((clip, idx) => {
                 const percStart = (clip.start / duration) * 100;
                 const percEnd = (clip.end / duration) * 100;
                 const widthPerc = Math.max(0.1, percEnd - percStart);
@@ -1154,6 +1154,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ clip_id: id, video_name: document.getElementById('video-selector').value })
                     });
+                    const clipToReject = clipsData.find(c => c.id === id);
+                    if (clipToReject) rejectedClipsData.push(clipToReject);
                     clipsData = clipsData.filter(x => x.id !== id);
                     renderSidebar();
                 }
@@ -1171,7 +1173,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             if(clipsData.length === 0) {
                 clipListEl.innerHTML = `<div style="color:#aaa;">No hay clips pendientes.</div>`;
             } else {
-                clipsData.forEach(clip => {
+                clipsData.forEach((clip, idx) => {
                     const virality = clip.virality_score ? `<span style="color:#28a745; font-size: 14px;"> ${clip.virality_score}% Viral</span>` : '';
                     const duration = (clip.end - clip.start).toFixed(1);
                     const el = document.createElement('div');
@@ -1185,11 +1187,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         <div style="font-weight:bold; color:#007acc; font-size:18px; display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <input type="checkbox" class="merge-checkbox" data-clip-id="${clip.id}" style="width:16px; height:16px; cursor:pointer;" onclick="event.stopPropagation()">
-                                <span> <span style="font-size:12px; color:#aaa;"></span></span>
+                                <span>Clip ${idx + 1} <span style="font-size:12px; color:#aaa;">(${clip.id})</span></span>
                             </div>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbUpStyle}" onclick="giveFeedback('${clip.id}', 'up', event)" title="Buen clip"></span>
-                                <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbDownStyle}" onclick="giveFeedback('${clip.id}', 'down', event)" title="Mal clip"></span>
+                                <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbUpStyle}" onclick="giveFeedback('${clip.id}', 'up', event)" title="Buen clip">👍</span>
+                                <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbDownStyle}" onclick="giveFeedback('${clip.id}', 'down', event)" title="Mal clip">👎</span>
                                 ${virality}
                             </div>
                         </div>
@@ -1198,10 +1200,10 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                                 onchange="updateClipReason('${clip.id}', this.value)" onclick="event.stopPropagation()">
                         <div style="font-size:0.85em; color:#aaa; margin-top:5px;" id="times-${clip.id}">${formatTime(clip.start)} - ${formatTime(clip.end)} <span style="color:#fff; font-weight:bold;">(${duration}s)</span></div>
                         <div style="display: flex; gap: 10px; margin-top: 10px; align-items: stretch;">
-                            <button class="btn" style="background:#d09010; flex: 1; margin:0;" onclick="enterTrimMode('${clip.id}', event)">Modo Edicin</button>
-                            
+                            <button class="btn" style="background:#cc3333; flex: 1; margin:0;" onclick="discardClip('${clip.id}', event)">Descartar</button>
+                            <button class="btn" style="background:#d09010; flex: 1; margin:0;" onclick="enterTrimMode('${clip.id}', event)">Modo Edición</button>
                         </div>
-                        <div id="controls-${clip.id}" style="display:none; flex-direction:column; gap:8px; margin-top: 15px; background: #1a1a1a; padding: 12px; border-radius: 4px; border: 1px solid #444;">
+                    `;    <div id="controls-${clip.id}" style="display:none; flex-direction:column; gap:8px; margin-top: 15px; background: #1a1a1a; padding: 12px; border-radius: 4px; border: 1px solid #444;">
                             <div style="font-size: 11px; color: #aaa; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Ajuste de Precisin</div>
                             <div style="display: flex; gap: 10px;">
                                 <button class="btn" style="flex:1; background:#333; font-size:12px; padding:8px 0; margin:0; border: 1px solid #555;" onclick="setClipStart('${clip.id}', event)"> Marcar Inicio</button>
@@ -1412,6 +1414,26 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 clip.end = tlVideo.currentTime;
                 if (clip.end <= clip.start) clip.start = clip.end - 5; // Sanity check
                 await enforceNoOverlaps(clipId);
+            }
+        }
+        
+        async function discardClip(clipId, event) {
+            event.stopPropagation();
+            const clip = clipsData.find(c => c.id === clipId);
+            if (!clip) return;
+            
+            try {
+                await fetch('/delete_clip', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ clip_id: clipId, video_name: document.getElementById('video-selector').value })
+                });
+                
+                rejectedClipsData.push(clip);
+                clipsData = clipsData.filter(x => x.id !== clipId);
+                renderSidebar();
+            } catch(err) {
+                console.error(err);
             }
         }
         
