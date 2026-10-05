@@ -2773,6 +2773,45 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 });
             });
 
+            const soundsTrack = document.getElementById('sounds-track');
+            if(soundsTrack) {
+                soundsTrack.innerHTML = '<div style="position: absolute; left: 5px; top: 5px; font-size: 10px; color: #555; pointer-events: none;">Pista de Sonidos</div>';
+                
+                soundsTrack.onclick = (e) => {
+                    if (e.target !== soundsTrack) return;
+                    const rect = soundsTrack.getBoundingClientRect();
+                    const perc = (e.clientX - rect.left) / rect.width;
+                    workspaceVideo.currentTime = relToAbs(totalDur * perc);
+                };
+                
+                editorSounds.forEach((snd) => {
+                    if (snd.start === undefined) snd.start = 0;
+                    if (snd.end === undefined) snd.end = totalDur;
+                    
+                    const sPerc = (snd.start / totalDur) * 100;
+                    const wPerc = ((snd.end - snd.start) / totalDur) * 100;
+                    
+                    const el = document.createElement('div');
+                    el.style = \position: absolute; left: \%; width: \%; height: 100%; background: #00aa55; border: 1px solid #000; border-radius: 2px; color: #fff; font-size: 9px; display: flex; align-items: center; justify-content: space-between; overflow: hidden; box-sizing: border-box;\;
+                    
+                    const leftH = document.createElement('div');
+                    leftH.style = 'width: 5px; height: 100%; cursor: w-resize; background: rgba(0,0,0,0.2);';
+                    leftH.onmousedown = (e) => startSoundDrag(e, snd, 'left');
+                    const cLabel = document.createElement('div');
+                    cLabel.innerText = snd.name || 'Audio';
+                    cLabel.style = 'flex: 1; text-align: center; cursor: move; user-select: none;';
+                    cLabel.onmousedown = (e) => startSoundDrag(e, snd, 'move');
+                    const rightH = document.createElement('div');
+                    rightH.style = 'width: 5px; height: 100%; cursor: e-resize; background: rgba(0,0,0,0.2);';
+                    rightH.onmousedown = (e) => startSoundDrag(e, snd, 'right');
+                    
+                    el.appendChild(leftH);
+                    el.appendChild(cLabel);
+                    el.appendChild(rightH);
+                    soundsTrack.appendChild(el);
+                });
+            }
+            
             const stickersTrack = document.getElementById('stickers-track');
             if(stickersTrack) {
                 stickersTrack.innerHTML = '';
@@ -3079,25 +3118,25 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         function onSoundDrag(e) {
             if(!draggingSound) return;
             const track = document.getElementById('sounds-track');
-            const totalDur = currentClip.end - currentClip.start;
+            const totalDur = getTimelineDuration();
             const trackWidth = track.getBoundingClientRect().width;
             const dx = e.clientX - soundDragStartX;
             const dt = (dx / trackWidth) * totalDur;
             
             if (draggingSoundHandle === 'left') {
-                draggingSound.start = Math.max(currentClip.start, Math.min(draggingSound.end - 0.1, soundDragStartVal + dt));
+                draggingSound.start = Math.max(0, Math.min(draggingSound.end - 0.1, soundDragStartVal + dt));
             } else if (draggingSoundHandle === 'right') {
-                draggingSound.end = Math.max(draggingSound.start + 0.1, Math.min(currentClip.end, soundDragStartVal + dt));
+                draggingSound.end = Math.max(draggingSound.start + 0.1, Math.min(totalDur, soundDragStartVal + dt));
             } else if (draggingSoundHandle === 'move') {
                 const w = soundDragStartVal.e - soundDragStartVal.s;
                 let newS = soundDragStartVal.s + dt;
                 let newE = soundDragStartVal.e + dt;
-                if (newS < currentClip.start) {
-                    newS = currentClip.start;
+                if (newS < 0) {
+                    newS = 0;
                     newE = newS + w;
                 }
-                if (newE > currentClip.end) {
-                    newE = currentClip.end;
+                if (newE > totalDur) {
+                    newE = totalDur;
                     newS = newE - w;
                 }
                 draggingSound.start = newS;
@@ -3585,6 +3624,7 @@ let transcribeController = null;
                         start: stStart,
                         end: stEnd,
                         duration: defaultDur,
+                        isRelative: true,
                         videoElement: vidEl,
                         imageElement: imgEl
                     });
@@ -3762,13 +3802,13 @@ let transcribeController = null;
                     }
                     
                     // Placement in 6 parts to avoid overlaps
-                    const totalDur = currentClip.end - currentClip.start;
+                    const totalDur = getTimelineDuration();
                     const partDur = totalDur / 6;
                     
                     let occupiedParts = [];
                     editorStickers.forEach(st => {
                         if (st.type !== 'text') {
-                            let relStart = st.start - currentClip.start;
+                            let relStart = st.start;
                             let partIdx = Math.floor(relStart / partDur);
                             occupiedParts.push(partIdx);
                         }
@@ -3783,7 +3823,7 @@ let transcribeController = null;
                         }
                     }
                     
-                    let stStart = currentClip.start + (selectedPart * partDur);
+                    let stStart = (selectedPart * partDur);
                     let stEnd;
                     if (isVideo) {
                         stEnd = stStart + Math.min(mediaDuration, partDur);
@@ -3956,9 +3996,10 @@ let transcribeController = null;
             if (cTime < currentClip.start) cTime = currentClip.start;
             if (cTime >= currentClip.end) cTime = currentClip.start;
             
-            let stStart = cTime;
-            let stEnd = relToAbs(absToRel(stStart) + 5);
-            if (stEnd > currentClip.end) stEnd = currentClip.end;
+            let stStart = absToRel(cTime);
+            let totalDur = getTimelineDuration();
+            let stEnd = stStart + 5;
+            if (stEnd > totalDur) stEnd = totalDur;
             
             let trackCounts = [0, 0, 0];
             editorStickers.forEach(st => {
@@ -3985,6 +4026,7 @@ let transcribeController = null;
                 start: stStart,
                 end: stEnd,
                 duration: 5.0,
+                isRelative: true,
                 server_path: null,
                 url: null,
                 videoElement: null,
