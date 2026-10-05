@@ -1,41 +1,36 @@
 with open('backend.py', 'r', encoding='utf-8') as f:
     text = f.read()
 
-target = '''        # Procesar Sonidos
-        current_a = "a_concat_base"
-        sound_amix_inputs = [f"[{current_a}]"]
-        for i, snd in enumerate(sound_inputs):
-            snd_start = snd['start']
-            
-            # Encontrar el inicio relativo en la timeline concatenada
-            rel_offset = 0.0
-            first_s_rel = None
-            
-            for sc in req.scenes:
-                if sc['start'] <= snd_start <= sc['end']:
-                    first_s_rel = rel_offset + (snd_start - sc['start'])
-                    break
-                rel_offset += (sc['end'] - sc['start'])
-                
-            if first_s_rel is not None:
-                delay_ms = int(first_s_rel * 1000)
-                filter_parts.append(f"[{snd['idx']}:a]adelay={delay_ms}|{delay_ms}[a_snd_{i}]")
-                sound_amix_inputs.append(f"[a_snd_{i}]")'''
+target = '''@app.post("/generate_clips")
+def generate_clips(req: GenerateClipsRequest, background_tasks: BackgroundTasks):
+    if analysis_progress.get("status") == "processing":
+        return {"status": "error", "message": "Ya hay un proceso de generaci\u00f3n en curso. Espera a que termine."}
+    
+    background_tasks.add_task(_generate_clips_task, req)
+    return {"status": "success", "message": "Generaci\u00f3n iniciada en segundo plano."}
 
-replacement = '''        # Procesar Sonidos
-        current_a = "a_concat_base"
-        sound_amix_inputs = [f"[{current_a}]"]
-        for i, snd in enumerate(sound_inputs):
-            snd_start = snd['start']
-            
-            delay_ms = int(snd_start * 1000)
-            filter_parts.append(f"[{snd['idx']}:a]adelay={delay_ms}|{delay_ms}[a_snd_{i}]")
-            sound_amix_inputs.append(f"[a_snd_{i}]")'''
+def _generate_clips_task(req: GenerateClipsRequest):
+    try:
+        analysis_progress["status"] = "processing"
+        analysis_progress["percent"] = 0
+        analysis_progress["message"] = "Inicializando entorno de IA..."'''
 
-if target in text:
-    text = text.replace(target, replacement)
-    with open('backend.py', 'w', encoding='utf-8') as f:
-        f.write(text)
-    print("Sounds backend updated")
-else:
-    print("Sounds target not found")
+replacement = '''@app.post("/generate_clips")
+def generate_clips(req: GenerateClipsRequest, background_tasks: BackgroundTasks):
+    if analysis_progress.get("status") == "processing":
+        return {"status": "error", "message": "Ya hay un proceso de generaci\u00f3n en curso. Espera a que termine."}
+    
+    analysis_progress["status"] = "processing"
+    analysis_progress["percent"] = 0
+    analysis_progress["message"] = "Inicializando entorno de IA..."
+    background_tasks.add_task(_generate_clips_task, req)
+    return {"status": "success", "message": "Generaci\u00f3n iniciada en segundo plano."}
+
+def _generate_clips_task(req: GenerateClipsRequest):
+    try:'''
+
+text = text.replace(target, replacement)
+
+with open('backend.py', 'w', encoding='utf-8') as f:
+    f.write(text)
+print("status sync fixed")

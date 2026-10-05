@@ -1,5 +1,5 @@
 
-from fastapi import FastAPI, HTTPException, Header, Request, UploadFile, File
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Header, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -485,7 +485,14 @@ def get_clips(video_name: str = ""):
         return {"status": "error", "message": str(e)}
 
 @app.post("/generate_clips")
-def generate_clips(req: GenerateClipsRequest):
+def generate_clips(req: GenerateClipsRequest, background_tasks: BackgroundTasks):
+    if analysis_progress.get("status") == "processing":
+        return {"status": "error", "message": "Ya hay un proceso de generación en curso. Espera a que termine."}
+    
+    background_tasks.add_task(_generate_clips_task, req)
+    return {"status": "success", "message": "Generación iniciada en segundo plano."}
+
+def _generate_clips_task(req: GenerateClipsRequest):
     try:
         import time
         import uuid
@@ -494,7 +501,9 @@ def generate_clips(req: GenerateClipsRequest):
         
         video_file_name = req.video_name
         if not video_file_name:
-            return {"status": "error", "message": "No hay video activo."}
+            analysis_progress["status"] = "error"
+            analysis_progress["message"] = "No hay video activo."
+            return
             
         analysis_file = get_analysis_file(video_file_name)
         data = {"video": video_file_name, "proposals": [], "completed_proposals": [], "completed_ranges": []}
@@ -508,7 +517,9 @@ def generate_clips(req: GenerateClipsRequest):
             
         video_path = find_video_path(video_file_name)
         if not os.path.exists(video_path):
-            return {"status": "error", "message": f"Video no encontrado: {video_path}"}
+            analysis_progress["status"] = "error"
+            analysis_progress["message"] = f"Video no encontrado: {video_path}"
+            return
             
         gemini_api_key = ""
         if os.path.exists(CONFIG_FILE):
@@ -516,7 +527,9 @@ def generate_clips(req: GenerateClipsRequest):
                 gemini_api_key = json.load(f).get("gemini_api_key", "")
                 
         if not gemini_api_key:
-            return {"status": "error", "message": "No se ha configurado la API Key de Gemini en los ajustes."}
+            analysis_progress["status"] = "error"
+            analysis_progress["message"] = "No se ha configurado la API Key de Gemini en los ajustes."
+            return
             
         try:
             import pipeline
@@ -524,7 +537,9 @@ def generate_clips(req: GenerateClipsRequest):
             importlib.reload(pipeline)
             from pipeline import analyze_video_local_first, analyze_video_semantic
         except ImportError:
-            return {"status": "error", "message": "Falta el archivo pipeline.py."}
+            analysis_progress["status"] = "error"
+            analysis_progress["message"] = "Falta el archivo pipeline.py."
+            return
             
         def progress_cb(percent, msg):
             analysis_progress["percent"] = percent

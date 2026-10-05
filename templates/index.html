@@ -4455,24 +4455,31 @@ let transcribeController = null;
                     body: JSON.stringify({ prompt: prompt, video_name: selectedVideo, search_modes: searchModes, max_clips: maxClips })
                 });
 
-                // Polling al backend cada 500ms
-                const progressInterval = setInterval(async () => {
-                    try {
-                        const progRes = await fetch('/progress');
-                        const progJson = await progRes.json();
-                        if (progJson.status === "processing") {
-                            progressBar.style.width = progJson.percent + '%';
-                            progressText.innerText = `${progJson.percent}% - ${progJson.message}`;
-                        }
-                    } catch(e) {}
-                }, 500);
-                
-                // Esperar a que el backend termine
                 const res = await fetchPromise;
-                clearInterval(progressInterval);
                 const json = await res.json();
-                
-                if(json.status === "error") throw new Error(json.message);
+                if(json.status === "error") {
+                    throw new Error(json.message);
+                }
+
+                // Polling al backend hasta que termine
+                await new Promise((resolve, reject) => {
+                    const checkInterval = setInterval(async () => {
+                        try {
+                            const progRes = await fetch('/progress');
+                            const progJson = await progRes.json();
+                            if (progJson.status === "processing") {
+                                progressBar.style.width = progJson.percent + '%';
+                                progressText.innerText = progJson.percent + "% - " + progJson.message;
+                            } else if (progJson.status === "idle") {
+                                clearInterval(checkInterval);
+                                resolve();
+                            } else if (progJson.status === "error") {
+                                clearInterval(checkInterval);
+                                reject(new Error(progJson.message));
+                            }
+                        } catch(e) {}
+                    }, 1000);
+                });
                 
                 progressBar.style.width = '100%';
                 progressText.innerText = "Clips generados exitosamente!";
