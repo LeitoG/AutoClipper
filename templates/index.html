@@ -3628,7 +3628,7 @@ let transcribeController = null;
             try {
                 const parsed = JSON.parse(saved);
                 editorStickers = [];
-                let currentStickerStart = currentClip.start;
+                let currentStickerStart = 0;
                 for(let s of parsed) {
                     let vidEl = null, imgEl = null;
                     
@@ -3637,12 +3637,13 @@ let transcribeController = null;
                     if (s.duration === undefined && s.end !== undefined && s.start !== undefined) {
                         defaultDur = s.end - s.start;
                     }
-                    let stEnd = Math.min(currentClip.end, stStart + defaultDur);
+                    let totalDur = currentClip.end - currentClip.start;
+                    let stEnd = Math.min(totalDur, stStart + defaultDur);
                     
                     // Siguiente sticker empieza despues de este
                     currentStickerStart = stEnd + 1.0;
-                    if (currentStickerStart >= currentClip.end - 5) {
-                        currentStickerStart = currentClip.start;
+                    if (currentStickerStart >= totalDur - 5) {
+                        currentStickerStart = 0;
                     }
                     
                     if(s.type === 'video') {
@@ -4275,11 +4276,21 @@ let transcribeController = null;
             
             if (savedData && Array.isArray(savedData)) {
                 editorStickers = [];
+                let totalDur = currentClip.end - currentClip.start;
                 savedData.forEach((s, idx) => {
                     let id = Date.now().toString() + "_" + idx;
-                    let stStart = currentClip.start + (s.startOffset !== undefined ? s.startOffset : 0);
-                    let stEnd = currentClip.start + (s.endOffset !== undefined ? s.endOffset : (s.end - (s.start || 0)));
-                    if (stEnd > currentClip.end) stEnd = currentClip.end;
+                    
+                    // Asegurar que usemos tiempos relativos (0 a totalDur)
+                    let defaultDur = s.duration || 5.0;
+                    if (s.duration === undefined && s.end !== undefined && s.start !== undefined) {
+                        defaultDur = s.end - s.start;
+                    }
+                    let stStart = 0;
+                    if (s.isRelative && s.start !== undefined) {
+                        stStart = s.start;
+                    }
+                    let stEnd = stStart + defaultDur;
+                    if (stEnd > totalDur) stEnd = totalDur;
                     
                     editorStickers.push({
                         id: id,
@@ -4290,8 +4301,6 @@ let transcribeController = null;
                         y: s.y,
                         w: s.w,
                         h: s.h,
-                        start: stStart,
-                        end: stEnd,
                         type: s.type || 'image',
                         text: s.text,
                         color: s.color,
@@ -4300,8 +4309,12 @@ let transcribeController = null;
                         animIn: s.animIn,
                         animOut: s.animOut,
                         track: s.track || 0,
-                        wordColors: s.wordColors, start: s.start, end: s.end, isRelative: s.isRelative, fontSize: s.fontSize,
-                        duration: s.duration,
+                        wordColors: s.wordColors,
+                        fontSize: s.fontSize,
+                        start: stStart,
+                        end: stEnd,
+                        isRelative: true,
+                        duration: defaultDur,
                         videoElement: null,
                         imageElement: null
                     });
@@ -4309,13 +4322,6 @@ let transcribeController = null;
                 
                 // Cargar elementos HTML para los stickers (video/img)
                 editorStickers.forEach(s => {
-                    if (!s.isRelative) {
-                        if (s.start !== undefined) s.start = absToRel(s.start);
-                        else s.start = 0;
-                        if (s.end !== undefined) s.end = absToRel(s.end);
-                        else s.end = (s.duration || 5.0);
-                        s.isRelative = true;
-                    }
                     if (s.type === 'video') {
 
                         let vid = document.createElement('video');
