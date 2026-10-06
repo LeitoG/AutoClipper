@@ -1199,7 +1199,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         <div style="font-weight:bold; color:#007acc; font-size:18px; display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <input type="checkbox" class="merge-checkbox" data-clip-id="${clip.id}" style="width:16px; height:16px; cursor:pointer;" onclick="event.stopPropagation()">
-                                <span>Clip ${idx + 1} <span style="font-size:12px; color:#aaa;">(${clip.id})</span></span>
+                                <span>Clip ${clip.id.replace("clip_", "")} <span style="font-size:12px; color:#aaa;">(${clip.id})</span></span>
                             </div>
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbUpStyle}" onclick="giveFeedback('${clip.id}', 'up', event)" title="Buen clip">👍</span>
