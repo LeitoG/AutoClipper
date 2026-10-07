@@ -1121,6 +1121,7 @@ def export_clip(req: ExportRequest):
                             bright_color = brighten_ass_color(s_color)
                             grad_tag = f"{{\\pos({draw_x},{draw_y})\\xbord0\\ybord0\\xshad0\\yshad0\\c{bright_color}\\clip(0,0,1080,{draw_y})}}"
                             f.write(f"Dialogue: 1,{format_time(s_ms)},{format_time(e_ms)},Default,,0,0,0,,{grad_tag}{anim_tag}{w['text']}\n")
+                    rel_offset += (sc['end'] - sc['start'])
 
             # AÃƒÂ±adir stickers de texto al archivo ASS
             if req.stickers:
@@ -1637,8 +1638,10 @@ def export_clip(req: ExportRequest):
 def regenerate_metadata(req: RegenerateMetadataRequest):
     try:
         from google import genai
-        config_data = load_config()
-        api_key = config_data.get("gemini_api_key", "")
+        api_key = ""
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                api_key = json.load(f).get("gemini_api_key", "")
         if not api_key:
             raise Exception("No hay API Key configurada.")
         
@@ -1811,7 +1814,7 @@ def get_clip_audio_track(video_name: str, start: float, end: float, track_index:
         temp_dir = os.path.join(os.getcwd(), 'temp_clips')
         os.makedirs(temp_dir, exist_ok=True)
         
-        out_path = os.path.join(temp_dir, f'audio_track_{track_index}_{start}_{end}.mp3')
+        out_path = os.path.join(temp_dir, f'audio_track_{track_index}_{start}_{end}.wav')
         
         if not os.path.exists(out_path):
             cmd = [
@@ -1819,7 +1822,7 @@ def get_clip_audio_track(video_name: str, start: float, end: float, track_index:
                 '-ss', str(start), '-to', str(end),
                 '-i', video_path,
                 '-map', f'0:a:{track_index}',
-                '-q:a', '5',
+                '-c:a', 'pcm_s16le',
                 out_path
             ]
             subprocess.run(cmd, check=True)
