@@ -311,7 +311,7 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
     return final_clips, total_input_tokens, total_output_tokens
 
 
-def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callback=None, exclusion_zones=None, incremental_save_cb=None, max_clips=15):
+def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callback=None, exclusion_zones=None, incremental_save_cb=None, max_clips=15, keywords=''):
     try:
         from google import genai
         import whisper

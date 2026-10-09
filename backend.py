@@ -140,6 +140,7 @@ class GenerateClipsRequest(BaseModel):
     max_clips: int = 15
     start_time_str: str = ""
     end_time_str: str = ""
+    keywords: str = ""
 
 class AddManualClipRequest(BaseModel):
     video_name: str
@@ -576,6 +577,52 @@ def _generate_clips_task(req: GenerateClipsRequest):
             exclusion_zones.append((0, range_start))
         if range_end < 999999:
             exclusion_zones.append((range_end, 999999))
+            
+        # Procesar marcadores de Streamdeck
+        import datetime
+        markers_file = os.path.join(DB_DIR, 'markers.txt')
+        if os.path.exists(markers_file):
+            try:
+                stat = os.stat(video_path)
+                video_start_time = datetime.datetime.fromtimestamp(stat.st_ctime)
+                video_end_time = datetime.datetime.fromtimestamp(stat.st_mtime)
+                
+                with open(markers_file, 'r', encoding='utf-8') as f:
+                    markers_lines = f.readlines()
+                
+                remaining_markers = []
+                for line in markers_lines:
+                    line = line.strip()
+                    if not line: continue
+                    try:
+                        marker_time = datetime.datetime.strptime(line, '%Y-%m-%d %H:%M:%S')
+                        # Si el marcador esta dentro del periodo de grabacion
+                        if video_start_time <= marker_time <= video_end_time:
+                            rel_seconds = (marker_time - video_start_time).total_seconds()
+                            c = {
+                                "start": max(0, rel_seconds - 30),
+                                "end": rel_seconds + 30,
+                                "reason": "Marcador manual desde Streamdeck",
+                                "virality_score": 100,
+                                "transcript": "Marcador insertado manualmente durante la grabacion.",
+                                "social_title": "Clip Manual (Streamdeck)",
+                                "social_desc": "Clip marcado manualmente en vivo.",
+                                "yt_title": "Clip Manual (Streamdeck)",
+                                "yt_desc": "Clip marcado manualmente en vivo.",
+                                "yt_tags": "Leito4Gaming, Clip"
+                            }
+                            incremental_save(c)
+                            # Actualizar zonas de exclusion para que la IA no lo repita
+                            exclusion_zones.append((c["start"], c["end"]))
+                        else:
+                            remaining_markers.append(line)
+                    except:
+                        remaining_markers.append(line)
+                        
+                # Opcional: sobreescribir el archivo de marcadores solo con los que no se usaron
+                # (Para no procesarlos de nuevo en otros videos, aunque el check de tiempo ya los filtra)
+            except Exception as e:
+                print(f"Error procesando marcadores: {e}")
         for p in data.get("proposals", []):
             exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
         for p in data.get("completed_proposals", []):
@@ -650,7 +697,8 @@ def _generate_clips_task(req: GenerateClipsRequest):
             print("Iniciando Pipeline SemÃƒÂ¡ntico (Whisper + Gemini Texto)")
             def prog_sem(pct, msg): progress_cb(50 + int(pct/2), "MODO HISTORIA: " + msg) if "volume" in req.search_modes else progress_cb(pct, msg)
             nc, tin, tout = analyze_video_semantic(
-                video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_sem, exclusion_zones, incremental_save, req.max_clips
+                video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_sem, exclusion_zones, 
+                incremental_save, req.max_clips, req.keywords
             )
             all_new_clips.extend(nc)
             total_in += tin

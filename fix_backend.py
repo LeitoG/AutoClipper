@@ -1,34 +1,39 @@
+﻿import re
+
 with open('backend.py', 'r', encoding='utf-8') as f:
     text = f.read()
 
-target = '''@app.post("/generate_clips")
-def generate_clips(req: GenerateClipsRequest):
-    try:
-        import time'''
+target = '''        # Recopilar zonas a excluir (clips ya generados o completados)
+        exclusion_zones = []'''
 
-replacement = '''def _generate_clips_task(req: GenerateClipsRequest):
-    try:
-        import time'''
+replacement = '''        def parse_time(t_str, default):
+            if not t_str: return default
+            parts = t_str.split(':')
+            try:
+                if len(parts) == 3:
+                    return int(parts[0])*3600 + int(parts[1])*60 + int(parts[2])
+                elif len(parts) == 2:
+                    return int(parts[0])*60 + int(parts[1])
+                elif len(parts) == 1:
+                    return int(parts[0])
+            except:
+                return default
+            return default
+            
+        range_start = parse_time(req.start_time_str, 0)
+        range_end = parse_time(req.end_time_str, 999999)
+        
+        # Recopilar zonas a excluir (clips ya generados o completados)
+        exclusion_zones = []
+        if range_start > 0:
+            exclusion_zones.append((0, range_start))
+        if range_end < 999999:
+            exclusion_zones.append((range_end, 999999))'''
 
-text = text.replace(target, replacement)
-
-target2 = '''@app.post("/generate_clips")
-def _generate_clips_task'''
-
-# Since we replaced the def, we need to add the endpoint back above it
-target3 = '''def _generate_clips_task(req: GenerateClipsRequest):'''
-replacement3 = '''@app.post("/generate_clips")
-def generate_clips(req: GenerateClipsRequest, background_tasks: BackgroundTasks):
-    if analysis_progress.get("status") == "processing":
-        return {"status": "error", "message": "Ya hay un proceso de generaci\u00f3n en curso. Espera a que termine."}
-    
-    background_tasks.add_task(_generate_clips_task, req)
-    return {"status": "success", "message": "Generaci\u00f3n iniciada en segundo plano."}
-
-def _generate_clips_task(req: GenerateClipsRequest):'''
-
-text = text.replace(target3, replacement3)
-
-with open('backend.py', 'w', encoding='utf-8') as f:
-    f.write(text)
-print("generate_clips extracted to background task")
+new_text = text.replace(target, replacement)
+if new_text != text:
+    with open('backend.py', 'w', encoding='utf-8') as f:
+        f.write(new_text)
+    print("Replaced!")
+else:
+    print("Not replaced.")
