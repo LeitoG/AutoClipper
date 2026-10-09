@@ -325,21 +325,21 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
     os.makedirs(db_dir, exist_ok=True)
     transcript_file = os.path.join(db_dir, f"{video_basename}_transcript.json")
     
+    temp_wav = os.path.join(temp_dir, f"{video_basename}_full.wav")
+    if not os.path.exists(temp_wav):
+        if progress_callback: progress_callback(10, "Extrayendo audio general...")
+        subprocess.run([
+            "ffmpeg", "-i", video_path,
+            "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
+            "-y", temp_wav
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
     if os.path.exists(transcript_file):
-        if progress_callback: progress_callback(10, "Cargando transcripciÃ³n previa de la cachÃ©...")
-        print("Cargando transcripciÃ³n cacheada...")
+        if progress_callback: progress_callback(10, "Cargando transcripcion previa de la cache...")
+        print("Cargando transcripcion cacheada...")
         with open(transcript_file, "r", encoding="utf-8") as f:
             transcript_segments = json.load(f)
     else:
-        if progress_callback: progress_callback(10, "Extrayendo audio para Whisper...")
-        temp_wav = os.path.join(temp_dir, f"{video_basename}_full.wav")
-        if not os.path.exists(temp_wav):
-            subprocess.run([
-                "ffmpeg", "-i", video_path,
-                "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
-                "-y", temp_wav
-            ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            
         if progress_callback: progress_callback(30, "Transcribiendo audio con Whisper (Esto puede tardar)...")
         print("Cargando modelo Whisper...")
         model = whisper.load_model("small")
@@ -350,13 +350,14 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
         with open(transcript_file, "w", encoding="utf-8") as f:
             json.dump(transcript_segments, f, indent=4, ensure_ascii=False)
             
-    # Formatear transcripciÃ³n para Gemini
+    # Formatear transcripcion para Gemini
     if progress_callback: progress_callback(70, "Analizando contexto con Gemini 2.5 Flash...")
     
     CHUNK_DUR = 1800 # 30 minutes per chunk
     chunks = []
     current_chunk_text = ""
     current_chunk_start = 0.0
+    current_chunk_end = 0.0
     
     for seg in transcript_segments:
         start = seg['start']
@@ -371,13 +372,14 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
             if not current_chunk_text:
                 current_chunk_start = start
             if start - current_chunk_start > CHUNK_DUR:
-                chunks.append(current_chunk_text)
+                chunks.append({"start": current_chunk_start, "end": current_chunk_end, "text": current_chunk_text})
                 current_chunk_text = ""
                 current_chunk_start = start
-            current_chunk_text += f"[{seg['start']:.1f} - {seg['end']:.1f}] {seg['text']}\\n"
+            current_chunk_text += f"[{seg['start']:.1f} - {seg['end']:.1f}] {seg['text']}\n"
+            current_chunk_end = end
             
     if current_chunk_text.strip():
-        chunks.append(current_chunk_text)
+        chunks.append({"start": current_chunk_start, "end": current_chunk_end, "text": current_chunk_text})
         
     if not chunks:
         print("Todo el texto esta excluido por clips anteriores. No hay nada nuevo que analizar.")
@@ -391,13 +393,34 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
     
     clips_per_chunk = max(3, int(max_clips / len(chunks)) + 1)
     
-    for chunk_idx, chunk_text in enumerate(chunks):
+    import time
+    for chunk_idx, chunk_data in enumerate(chunks):
+        chunk_start = chunk_data["start"]
+        chunk_end = chunk_data["end"]
+        chunk_text = chunk_data["text"]
+        
+        if progress_callback: progress_callback(70 + int(20 * (chunk_idx / len(chunks))), f"Preparando audio del bloque {chunk_idx+1}/{len(chunks)}...")
+        
+        # Cortar audio del chunk
+        chunk_mp3_path = os.path.join(temp_dir, f"chunk_{chunk_idx}.mp3")
+        subprocess.run([
+            "ffmpeg", "-y", "-ss", str(chunk_start), "-to", str(chunk_end),
+            "-i", temp_wav, "-c:a", "libmp3lame", "-q:a", "5",
+            chunk_mp3_path
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
+        if progress_callback: progress_callback(70 + int(20 * (chunk_idx / len(chunks))), f"Subiendo audio {chunk_idx+1}/{len(chunks)} a Gemini...")
+        g_audio = client.files.upload(file=chunk_mp3_path)
+        while g_audio.state and "PROCESSING" in str(g_audio.state):
+            time.sleep(2)
+            g_audio = client.files.get(name=g_audio.name)
+            
         if progress_callback: progress_callback(70 + int(20 * (chunk_idx / len(chunks))), f"Analizando bloque {chunk_idx+1}/{len(chunks)} con Gemini 2.5 Flash...")
         
-        sys_prompt = f"Eres Leito4Gaming, un streamer y creador de videos virales de gaming de Argentina. Estas creando metadatos para tus propios clips, de juegos que TU MISMO jugaste (NOMBRE DEL JUEGO: {video_basename}). CRITICO: Escribe SIEMPRE en Español Argentino autentico (rioplatense). NO uses español neutro. NUNCA uses la palabra o conjugaciones de 'tu' (ej: nunca digas 'Te ha pasado', debes decir 'Te paso', 'Mira', 'Fijate'). Habla siempre tratando de VOS. Usa modismos locales ('cagazo', 'la puta madre'). EVITA 'che' y NUNCA uses 'boludo'. NUNCA asumas que no jugaste el juego ('Me contaron'). Escribe como un gamer con actitud, en PRIMERA PERSONA. Recibes una seccion de la transcripcion. Encuentra hasta {clips_per_chunk} clips DIVERTIDOS o BUENOS basandote en el prompt. IMPORTANTE: Clips entre 35 y 75 segundos. Asegurate de abarcar TODO el contexto (el inicio de la anecdota o explicacion) para que tenga sentido. No cortes las oraciones a la mitad. Devuelve UNICAMENTE lista JSON valida. Formato: [{{\"start\": float, \"end\": float, \"reason\": \"string corto\", \"virality_score\": int (70-99), \"transcript\": \"string\", \"social_title\": \"Titulo ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip\", \"social_desc\": \"Descripcion MUY CORTA de APENAS UN RENGLON (max 10 palabras) que tenga sentido con el clip, en PRIMERA PERSONA. {link_instruction} Luego pon solo 3 hashtags populares del juego\", \"yt_title\": \"Titulo super llamativo para YouTube Shorts\", \"yt_desc\": \"Descripcion CORTA en PRIMERA PERSONA\", \"yt_tags\": \"Etiquetas SIN hashtag, incluye Leito4Gaming, Leito4GamingPlus y tags del juego real\"}}]. Respeta estrictamente JSON, sin markdown. FUNDAMENTAL: Los titulos y descripciones DEBEN referirse ESTRICTAMENTE al dialogo del clip. Cita tus propias palabras en la descripcion."
+        sys_prompt = f"Eres Leito4Gaming, un streamer y creador de videos virales de gaming de Argentina. Estas creando metadatos para tus propios clips, de juegos que TU MISMO jugaste (NOMBRE DEL JUEGO: {video_basename}). CRITICO: Escribe SIEMPRE en Español Argentino autentico (rioplatense). NO uses español neutro. NUNCA uses la palabra o conjugaciones de 'tu'. Habla siempre tratando de VOS. Usa modismos locales ('cagazo', 'la puta madre'). EVITA 'che' y NUNCA uses 'boludo'. NUNCA asumas que no jugaste el juego. Escribe como un gamer con actitud, en PRIMERA PERSONA. Recibes el AUDIO EXACTO y la transcripcion de una seccion de {CHUNK_DUR/60} minutos. Usa el AUDIO para distinguir cuando estas leyendo dialogos del juego de cuando estas reaccionando espontaneamente, hablando a tu chat o gritando de un susto. PRIORIZA LAS REACCIONES REALES, CHISTES Y SUSTOS. Encuentra hasta {clips_per_chunk} clips DIVERTIDOS o BUENOS basandote en el prompt. IMPORTANTE: Clips entre 35 y 75 segundos. Asegurate de abarcar TODO el contexto (el inicio de la anecdota o explicacion) para que tenga sentido. Devuelve UNICAMENTE lista JSON valida. Formato: [{{\"start\": float, \"end\": float, \"reason\": \"string corto\", \"virality_score\": int (70-99), \"transcript\": \"string\", \"social_title\": \"Titulo ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip\", \"social_desc\": \"Descripcion MUY CORTA de APENAS UN RENGLON (max 10 palabras) que tenga sentido con el clip, en PRIMERA PERSONA. {link_instruction} Luego pon solo 3 hashtags populares del juego\", \"yt_title\": \"Titulo super llamativo para YouTube Shorts\", \"yt_desc\": \"Descripcion CORTA en PRIMERA PERSONA\", \"yt_tags\": \"Etiquetas SIN hashtag\"}}]. Respeta estrictamente JSON. FUNDAMENTAL: EL AUDIO COMIENZA EN EL SEGUNDO {chunk_start}. Los tiempos 'start' y 'end' que devuelvas en el JSON deben ser RELATIVOS AL VIDEO ORIGINAL, es decir, usa exactamente las marcas de tiempo que aparecen en la transcripcion."
         sys_prompt += get_feedback_injection()
         
-        prompt_text = f"PROMPT DEL USUARIO: {prompt}\\n\\nAqui tienes la transcripcion del bloque {chunk_idx+1}:\\n\\n{chunk_text}"
+        prompt_text = f"PROMPT DEL USUARIO: {prompt}\n\nAqui tienes la transcripcion del bloque {chunk_idx+1} (El audio que escuchas abarca exactamente este mismo tramo):\n\n{chunk_text}"
         
         try:
             response = None
@@ -405,7 +428,7 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
                 try:
                     response = client.models.generate_content(
                         model='gemini-2.5-flash',
-                        contents=[sys_prompt, prompt_text],
+                        contents=[g_audio, sys_prompt, prompt_text],
                         config={
                             "temperature": 0.3,
                             "safety_settings": [
@@ -468,6 +491,13 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
         except Exception as e:
             print(f"Error de Gemini: {e}")
             raise Exception(f"Error procesando la transcripción con la IA: {str(e)}")
+            
+        try:
+            client.files.delete(name=g_audio.name)
+            if os.path.exists(chunk_mp3_path):
+                os.remove(chunk_mp3_path)
+        except:
+            pass
         
     if progress_callback: progress_callback(95, "Generando previsualizaciones...")
     
