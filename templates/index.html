@@ -141,7 +141,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         <div style="width: 50%; background: #222; border-radius: 10px; height: 15px; overflow: hidden; border: 1px solid #555;">
             <div id="ai-progress-bar" style="width: 0%; height: 100%; background: #007acc; transition: width 0.3s ease;"></div>
         </div>
-        <p id="ai-loading-text" style="color: #aaa; margin-top: 15px;">Iniciando modelo semntico...</p>
+        <p id="ai-loading-text" style="color: #aaa; margin-top: 15px;">Iniciando modelo semántico...</p>
+        <p id="ai-eta-text" style="color: #888; font-size: 14px; font-weight: bold; margin-top: 5px;"></p>
     </div>
     
     <!-- Modal Inteligencia Artificial -->
@@ -4584,6 +4585,7 @@ let transcribeController = null;
                 }
 
                 // Polling al backend hasta que termine
+                const startTime = Date.now();
                 await new Promise((resolve, reject) => {
                     const checkInterval = setInterval(async () => {
                         try {
@@ -4592,10 +4594,25 @@ let transcribeController = null;
                             if (progJson.status === "processing") {
                                 progressBar.style.width = progJson.percent + '%';
                                 progressText.innerText = progJson.percent + "% - " + progJson.message;
+                                
+                                const etaText = document.getElementById('ai-eta-text');
+                                if (progJson.percent > 0 && progJson.percent < 100) {
+                                    const elapsedSec = (Date.now() - startTime) / 1000;
+                                    const totalExpected = elapsedSec / (progJson.percent / 100.0);
+                                    const remainingSec = Math.max(0, totalExpected - elapsedSec);
+                                    
+                                    const m = Math.floor(remainingSec / 60);
+                                    const s = Math.floor(remainingSec % 60);
+                                    etaText.innerText = "Tiempo restante estimado: " + m + "m " + (s < 10 ? '0' : '') + s + "s";
+                                } else {
+                                    etaText.innerText = "Calculando tiempo...";
+                                }
                             } else if (progJson.status === "idle") {
+                                document.getElementById('ai-eta-text').innerText = "";
                                 clearInterval(checkInterval);
                                 resolve();
                             } else if (progJson.status === "error") {
+                                document.getElementById('ai-eta-text').innerText = "";
                                 clearInterval(checkInterval);
                                 reject(new Error(progJson.message));
                             }
