@@ -227,9 +227,16 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         if progress_callback: progress_callback(base_percent + 2, f"Subiendo mini-audio {idx+1} a la IA...")
         print(f"Subiendo mini-audio {idx} a Gemini API...")
         g_audio = client.files.upload(file=temp_audio_clip)
+        wait_time = 0
         while g_audio.state and "PROCESSING" in str(g_audio.state):
-            time.sleep(2)
+            if wait_time > 300: # 5 minutos maximo
+                raise Exception("El servidor de Gemini se quedo colgado procesando el video (TimeOut).")
+            time.sleep(5)
+            wait_time += 5
             g_audio = client.files.get(name=g_audio.name)
+            
+        if g_audio.state and "FAILED" in str(g_audio.state):
+            raise Exception("Gemini rechazo el archivo de video/audio (FAILED).")
             
         if progress_callback: progress_callback(base_percent + 4, f"Evaluando clip {idx+1}/{len(valid_segments)} con Gemini 2.5 Flash...")
         print(f"Evaluando clip {idx} con Gemini 2.5 Flash...")
@@ -410,17 +417,23 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
         chunk_mp3_path = os.path.join(temp_dir, f"chunk_{chunk_idx}.mp4")
         subprocess.run([
             "ffmpeg", "-y", "-ss", str(chunk_start), "-to", str(chunk_end),
-            "-skip_frame", "nokey", "-i", video_path, 
-            "-vf", "scale=480:-2,fps=1", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "35",
+            "-i", video_path, "-r", "1", "-vf", "scale=480:-2", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "35",
             "-c:a", "libmp3lame", "-q:a", "5",
             chunk_mp3_path
         ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
         if progress_callback: progress_callback(70 + int(20 * (chunk_idx / len(chunks))), f"Subiendo audio {chunk_idx+1}/{len(chunks)} a Gemini...")
         g_audio = client.files.upload(file=chunk_mp3_path)
+        wait_time = 0
         while g_audio.state and "PROCESSING" in str(g_audio.state):
-            time.sleep(2)
+            if wait_time > 300: # 5 minutos maximo
+                raise Exception("El servidor de Gemini se quedo colgado procesando el video (TimeOut).")
+            time.sleep(5)
+            wait_time += 5
             g_audio = client.files.get(name=g_audio.name)
+            
+        if g_audio.state and "FAILED" in str(g_audio.state):
+            raise Exception("Gemini rechazo el archivo de video/audio (FAILED).")
             
         if progress_callback: progress_callback(70 + int(20 * (chunk_idx / len(chunks))), f"Analizando bloque {chunk_idx+1}/{len(chunks)} con Gemini 2.5 Flash...")
         
