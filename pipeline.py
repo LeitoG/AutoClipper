@@ -246,19 +246,30 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         response = None
         for attempt in range(4):
             try:
-                response = client.models.generate_content(
-                    model='gemini-2.5-flash',
-                    contents=[g_audio] + frames_extracted + [sys_prompt, prompt_text],
-                    config={
-                        "temperature": 0.3,
-                        "safety_settings": [
-                            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-                            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-                            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-                            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"}
-                        ]
-                    }
-                )
+                import concurrent.futures
+                    
+                    def call_api1():
+                        return client.models.generate_content(
+                            model='gemini-2.5-flash',
+                            contents=[g_audio] + frames_extracted + [sys_prompt, prompt_text],
+                            config={
+                                "temperature": 0.3,
+                                "safety_settings": [
+                                    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+                                    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+                                    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+                                    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+                                ],
+                                "response_mime_type": "application/json",
+                            }
+                        )
+                    
+                    with concurrent.futures.ThreadPoolExecutor() as executor:
+                        future = executor.submit(call_api1)
+                        try:
+                            response = future.result(timeout=300)
+                        except concurrent.futures.TimeoutError:
+                            raise Exception("Gemini API timeout")
                 break
             except Exception as e:
                 err_str = str(e)
@@ -446,19 +457,30 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
             response = None
             for attempt in range(4):
                 try:
-                    response = client.models.generate_content(
-                        model='gemini-2.5-flash',
-                        contents=[g_audio, sys_prompt, prompt_text],
-                        config={
-                            "temperature": 0.3,
-                            "safety_settings": [
-                                {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-                                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-                                {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-                                {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"}
-                            ]
-                        }
-                    )
+                    import concurrent.futures
+                    
+                    def call_api2():
+                        return client.models.generate_content(
+                            model='gemini-2.5-flash',
+                            contents=[g_audio, sys_prompt, prompt_text],
+                            config={
+                                "temperature": 0.3,
+                                "safety_settings": [
+                                    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+                                    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+                                    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+                                    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+                                ],
+                                "response_mime_type": "application/json",
+                            }
+                        )
+                        
+                    with concurrent.futures.ThreadPoolExecutor() as executor:
+                        future = executor.submit(call_api2)
+                        try:
+                            response = future.result(timeout=300)
+                        except concurrent.futures.TimeoutError:
+                            raise Exception("Gemini API timeout")
                     break
                 except Exception as e:
                     import time
