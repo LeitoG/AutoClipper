@@ -607,6 +607,7 @@ def _generate_clips_task(req: GenerateClipsRequest):
                             c = {
                                 "start": max(0, peak_sec - 30),
                                 "end": peak_sec + 30,
+                                "category": "chat",
                                 "reason": "Pico de reacciones en el Chat (JSON)",
                                 "virality_score": 95,
                                 "transcript": "El chat enloquecio de repente.",
@@ -660,6 +661,7 @@ def _generate_clips_task(req: GenerateClipsRequest):
                         c = {
                             "start": max(0, peak_sec - 30),
                             "end": peak_sec + 30,
+                            "category": "chat",
                             "reason": "Pico de reacciones en el Chat (Streamer.bot)",
                             "virality_score": 95,
                             "transcript": "El chat enloquecio de repente.",
@@ -699,6 +701,7 @@ def _generate_clips_task(req: GenerateClipsRequest):
                             c = {
                                 "start": max(0, rel_seconds - 30),
                                 "end": rel_seconds + 30,
+                                "category": "manual",
                                 "reason": "Marcador manual desde Streamdeck",
                                 "virality_score": 100,
                                 "transcript": "Marcador insertado manualmente durante la grabacion.",
@@ -851,7 +854,8 @@ def add_manual_clip(req: AddManualClipRequest):
             "id": clip_id,
             "start": req.start,
             "end": req.end,
-            "reason": "Clip aÃƒÂ±adido manualmente",
+            "category": "manual",
+            "reason": "Clip añadido manualmente",
             "virality_score": 100,
             "transcript": "",
             "social_title": "Clip Manual",
@@ -1823,7 +1827,13 @@ def regenerate_metadata(req: RegenerateMetadataRequest):
             model='gemini-2.5-flash',
             contents=[sys_prompt, f"TRANSCRIPCION:\n{req.transcript}"]
         )
-        txt = response.text.replace('`json', '').replace('`', '').strip()
+        txt = response.text
+        import re
+        match = re.search(r'\{.*\}', txt, re.DOTALL)
+        if match:
+            txt = match.group(0)
+        else:
+            txt = txt.replace('```json', '').replace('```', '').replace('`', '').strip()
         data = json.loads(txt)
         return {"status": "success", "social_title": data.get("social_title", ""), "social_desc": data.get("social_desc", "")}
     except Exception as e:

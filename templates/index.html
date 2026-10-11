@@ -130,6 +130,50 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         
         @keyframes highlightFlash { 0% { background-color: rgba(99, 102, 241, 0.3); } 100% { background-color: transparent; } }
         .highlight-row { animation: highlightFlash 2s ease-out; }
+
+        /* Timeline Filters & Legend */
+        .timeline-filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 3px 8px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 11px;
+            user-select: none;
+            transition: all 0.2s ease;
+            color: #cbd5e1;
+        }
+        .timeline-filter-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        .timeline-filter-chip.active {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .timeline-filter-chip input[type="checkbox"] {
+            cursor: pointer;
+            margin: 0;
+            width: 13px;
+            height: 13px;
+            accent-color: var(--accent-primary);
+        }
+        .filter-dot-sample {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1.5px solid #ffffff;
+        }
+        .filter-range-sample {
+            width: 18px;
+            height: 8px;
+            border-radius: 2px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -314,10 +358,24 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 <video id="tl-video" controls style="width: 100%; height: 100%; position: absolute; top:0; left:0; object-fit: contain;"></video>
                 <div id="out-of-bounds-indicator" style="display:none; position:absolute; top: 15px; right: 15px; background: rgba(239, 68, 68, 0.9); color: white; padding: 8px 16px; border-radius: var(--radius-md); font-weight: bold; pointer-events: none; z-index: 20; box-shadow: var(--shadow-float);">FUERA DEL CLIP</div>
             </div>
-            <div style="background: var(--bg-panel); padding: 25px 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-float);">
-                <div id="timeline-dots" style="position: relative; width: 100%; height: 8px; background: var(--bg-base); border-radius: 4px; cursor: pointer; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);" onclick="seekTimeline(event)">
+            <div style="background: var(--bg-panel); padding: 22px 20px 18px 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-float);">
+                <div id="timeline-dots" style="position: relative; width: 100%; height: 14px; background: var(--bg-base); border-radius: 7px; cursor: pointer; box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);" onclick="seekTimeline(event)">
                     <!-- Dots inyectados por JS -->
-                    <div id="timeline-playhead" style="position: absolute; top: -4px; bottom: -4px; width: 2px; background: red; left: 0%; pointer-events: none; z-index: 10; display: none;"></div>
+                    <div id="timeline-playhead" style="position: absolute; top: -5px; bottom: -5px; width: 2px; background: #ffffff; box-shadow: 0 0 6px #ff0055; left: 0%; pointer-events: none; z-index: 20; display: none;"></div>
+                </div>
+
+                <!-- Barra de Filtros & Leyenda de Colores -->
+                <div id="timeline-legend-container" style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">🎨 Filtros & Leyenda:</span>
+                            <button onclick="toggleAllTimelineFilters(true)" class="btn" style="width: auto; padding: 2px 10px; font-size: 11px; background: #334155; margin: 0; border-radius: 4px;">Todos</button>
+                            <button onclick="toggleAllTimelineFilters(false)" class="btn" style="width: auto; padding: 2px 10px; font-size: 11px; background: #1e293b; margin: 0; color: #94a3b8; border-radius: 4px;">Ninguno</button>
+                        </div>
+                        <div id="timeline-filter-badges" style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 11px;">
+                            <!-- Inyectado dinámicamente con checkboxes y contadores -->
+                        </div>
+                    </div>
                 </div>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -1036,6 +1094,204 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             if(gNumEl) gNumEl.value = gNum;
         }
 
+        const CLIP_CATEGORIES = {
+            susto: {
+                id: 'susto',
+                name: 'Sustos / Terror',
+                color: '#ef4444',
+                shadow: 'rgba(239, 68, 68, 0.8)',
+                badgeBg: 'rgba(239, 68, 68, 0.2)',
+                badgeBorder: '#ef4444',
+                icon: '🔴',
+                keywords: ['susto', 'jumpscare', 'cagazo', 'miedo', 'terror', 'grito', 'panico', 'fright']
+            },
+            streamer: {
+                id: 'streamer',
+                name: 'Interesante / Streamer',
+                color: '#3b82f6',
+                shadow: 'rgba(59, 130, 246, 0.8)',
+                badgeBg: 'rgba(59, 130, 246, 0.2)',
+                badgeBorder: '#3b82f6',
+                icon: '🔵',
+                keywords: ['streamer', 'ancdota', 'anecdota', 'charla', 'explicacin', 'explicacion', 'opinin', 'opinion', 'historia', 'lore', 'teora', 'teoria', 'curiosidad', 'habla', 'cuenta', 'confesin', 'confesion', 'reflexin', 'reflexion']
+            },
+            humor: {
+                id: 'humor',
+                name: 'Humor / Risas',
+                color: '#eab308',
+                shadow: 'rgba(234, 179, 8, 0.8)',
+                badgeBg: 'rgba(234, 179, 8, 0.2)',
+                badgeBorder: '#eab308',
+                icon: '🟡',
+                keywords: ['chiste', 'humor', 'gracioso', 'broma', 'risa', 'jaja', 'xd', 'fail', 'divertido']
+            },
+            gameplay: {
+                id: 'gameplay',
+                name: 'Gameplay / Acción',
+                color: '#f97316',
+                shadow: 'rgba(249, 115, 22, 0.8)',
+                badgeBg: 'rgba(249, 115, 22, 0.2)',
+                badgeBorder: '#f97316',
+                icon: '🟠',
+                keywords: ['gameplay', 'combate', 'boss', 'jefe', 'muerte', 'pelea', 'accin', 'accion', 'jugada', 'pro', 'bug', 'glitch']
+            },
+            chat: {
+                id: 'chat',
+                name: 'Reacciones Chat',
+                color: '#d946ef',
+                shadow: 'rgba(217, 70, 239, 0.8)',
+                badgeBg: 'rgba(217, 70, 239, 0.2)',
+                badgeBorder: '#d946ef',
+                icon: '🟣',
+                keywords: ['chat']
+            },
+            manual: {
+                id: 'manual',
+                name: 'Manual / Streamdeck',
+                color: '#06b6d4',
+                shadow: 'rgba(6, 182, 212, 0.8)',
+                badgeBg: 'rgba(6, 182, 212, 0.2)',
+                badgeBorder: '#06b6d4',
+                icon: '🔷',
+                keywords: ['manual', 'streamdeck']
+            },
+            general: {
+                id: 'general',
+                name: 'General / Otros',
+                color: '#8b5cf6',
+                shadow: 'rgba(139, 92, 246, 0.8)',
+                badgeBg: 'rgba(139, 92, 246, 0.2)',
+                badgeBorder: '#8b5cf6',
+                icon: '🟣',
+                keywords: []
+            }
+        };
+
+        function getClipCategory(clip) {
+            if (!clip) return CLIP_CATEGORIES.general;
+            const cid = String(clip.id || '').toLowerCase();
+            const reason = String(clip.reason || '').toLowerCase();
+            const title = (String(clip.social_title || '') + ' ' + String(clip.yt_title || '')).toLowerCase();
+            const transcript = String(clip.transcript || '').toLowerCase();
+            
+            if (clip.category) {
+                const cat = String(clip.category).toLowerCase();
+                for (const k in CLIP_CATEGORIES) {
+                    if (cat.includes(k)) return CLIP_CATEGORIES[k];
+                }
+            }
+            
+            if (cid.startsWith('manual') || reason.includes('manual') || reason.includes('streamdeck')) {
+                return CLIP_CATEGORIES.manual;
+            }
+            if (reason.includes('chat') || cid.includes('chat')) {
+                return CLIP_CATEGORIES.chat;
+            }
+            
+            for (const k of ['susto', 'humor', 'streamer', 'gameplay']) {
+                if (CLIP_CATEGORIES[k].keywords.some(kw => reason.includes(kw))) {
+                    return CLIP_CATEGORIES[k];
+                }
+            }
+            for (const k of ['susto', 'humor', 'streamer', 'gameplay']) {
+                if (CLIP_CATEGORIES[k].keywords.some(kw => title.includes(kw))) {
+                    return CLIP_CATEGORIES[k];
+                }
+            }
+            for (const k of ['susto', 'humor', 'streamer', 'gameplay']) {
+                if (CLIP_CATEGORIES[k].keywords.some(kw => transcript.includes(kw))) {
+                    return CLIP_CATEGORIES[k];
+                }
+            }
+            return CLIP_CATEGORIES.general;
+        }
+
+        let activeTimelineFilters = {
+            susto: true,
+            streamer: true,
+            humor: true,
+            gameplay: true,
+            chat: true,
+            manual: true,
+            general: true,
+            approved: true,
+            rejected: true
+        };
+
+        function toggleTimelineFilter(key, checked) {
+            activeTimelineFilters[key] = checked;
+            drawTimelineDots();
+            renderSidebar();
+        }
+
+        function toggleAllTimelineFilters(status) {
+            for (const k in activeTimelineFilters) {
+                activeTimelineFilters[k] = status;
+            }
+            renderTimelineFilterBadges();
+            drawTimelineDots();
+            renderSidebar();
+        }
+
+        function renderTimelineFilterBadges() {
+            const container = document.getElementById('timeline-filter-badges');
+            if (!container) return;
+
+            const counts = {
+                susto: 0,
+                streamer: 0,
+                humor: 0,
+                gameplay: 0,
+                chat: 0,
+                manual: 0,
+                general: 0,
+                approved: (completedClipsData ? completedClipsData.length : 0) + (completedRangesData ? completedRangesData.length : 0),
+                rejected: rejectedClipsData ? rejectedClipsData.length : 0
+            };
+
+            if (clipsData) {
+                clipsData.forEach(c => {
+                    const cat = getClipCategory(c);
+                    counts[cat.id] = (counts[cat.id] || 0) + 1;
+                });
+            }
+
+            let html = '';
+
+            for (const k in CLIP_CATEGORIES) {
+                const cat = CLIP_CATEGORIES[k];
+                const count = counts[k] || 0;
+                const isChecked = activeTimelineFilters[k] ? 'checked' : '';
+                html += `
+                    <label class="timeline-filter-chip ${activeTimelineFilters[k] ? 'active' : ''}" title="Filtrar ${cat.name}">
+                        <input type="checkbox" ${isChecked} onchange="toggleTimelineFilter('${k}', this.checked)">
+                        <span class="filter-dot-sample" style="background:${cat.color}; box-shadow: 0 0 5px ${cat.shadow};"></span>
+                        <span>${cat.name} (${count})</span>
+                    </label>
+                `;
+            }
+
+            const appChecked = activeTimelineFilters.approved ? 'checked' : '';
+            html += `
+                <label class="timeline-filter-chip ${activeTimelineFilters.approved ? 'active' : ''}" title="Filtrar Clips Aprobados / Exportados" style="border-left: 2px solid #10b981;">
+                    <input type="checkbox" ${appChecked} onchange="toggleTimelineFilter('approved', this.checked)">
+                    <span class="filter-range-sample" style="background:rgba(16, 185, 129, 0.85); border: 1px solid #10b981;"></span>
+                    <span style="color:#10b981; font-weight:600;">Aprobados (${counts.approved})</span>
+                </label>
+            `;
+
+            const rejChecked = activeTimelineFilters.rejected ? 'checked' : '';
+            html += `
+                <label class="timeline-filter-chip ${activeTimelineFilters.rejected ? 'active' : ''}" title="Filtrar Clips Descartados / Rechazados" style="border-left: 2px solid #ef4444;">
+                    <input type="checkbox" ${rejChecked} onchange="toggleTimelineFilter('rejected', this.checked)">
+                    <span class="filter-range-sample" style="background:rgba(239, 68, 68, 0.85); border: 1px solid #ef4444;"></span>
+                    <span style="color:#ef4444; font-weight:600;">Rechazados (${counts.rejected})</span>
+                </label>
+            `;
+
+            container.innerHTML = html;
+        }
+
         function drawTimelineDots() {
             const container = document.getElementById('timeline-dots');
             if (!container) return;
@@ -1043,7 +1299,71 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             const duration = tlVideo.duration;
             if (!duration || isNaN(duration)) return;
             
+            renderTimelineFilterBadges();
+
+            // 1. TRAMOS / RANGOS APROBADOS Y EXPORTADOS (Verde)
+            if (activeTimelineFilters.approved) {
+                [...completedClipsData, ...completedRangesData].forEach(clip => {
+                    const percStart = (clip.start / duration) * 100;
+                    const percEnd = (clip.end / duration) * 100;
+                    const widthPerc = Math.max(0.2, percEnd - percStart);
+                    
+                    const block = document.createElement('div');
+                    block.className = 'timeline-approved-range';
+                    block.style.position = 'absolute';
+                    block.style.left = `${percStart}%`;
+                    block.style.width = `${widthPerc}%`;
+                    block.style.top = '0px';
+                    block.style.height = '100%';
+                    block.style.borderRadius = '3px';
+                    block.style.background = 'rgba(16, 185, 129, 0.65)'; // Verde
+                    block.style.border = '1px solid #10b981';
+                    block.style.boxShadow = '0 0 6px rgba(16, 185, 129, 0.4)';
+                    block.style.cursor = 'pointer';
+                    block.style.zIndex = '2';
+                    block.title = `Clip Aprobado / Exportado (${formatTime(clip.start)} - ${formatTime(clip.end)})`;
+                    block.onclick = (e) => {
+                        e.stopPropagation();
+                        tlVideo.currentTime = clip.start;
+                    };
+                    container.appendChild(block);
+                });
+            }
+            
+            // 2. TRAMOS / RANGOS RECHAZADOS Y DESCARTADOS (Rojo)
+            if (activeTimelineFilters.rejected) {
+                rejectedClipsData.forEach(clip => {
+                    const percStart = (clip.start / duration) * 100;
+                    const percEnd = (clip.end / duration) * 100;
+                    const widthPerc = Math.max(0.2, percEnd - percStart);
+                    
+                    const block = document.createElement('div');
+                    block.className = 'timeline-rejected-range';
+                    block.style.position = 'absolute';
+                    block.style.left = `${percStart}%`;
+                    block.style.width = `${widthPerc}%`;
+                    block.style.top = '0px';
+                    block.style.height = '100%';
+                    block.style.borderRadius = '3px';
+                    block.style.background = 'rgba(239, 68, 68, 0.65)'; // Rojo
+                    block.style.border = '1px solid #ef4444';
+                    block.style.boxShadow = '0 0 6px rgba(239, 68, 68, 0.4)';
+                    block.style.cursor = 'pointer';
+                    block.style.zIndex = '2';
+                    block.title = `Clip Rechazado: ${clip.reason || clip.id} (${formatTime(clip.start)} - ${formatTime(clip.end)})`;
+                    block.onclick = (e) => {
+                        e.stopPropagation();
+                        tlVideo.currentTime = clip.start;
+                    };
+                    container.appendChild(block);
+                });
+            }
+
+            // 3. CLIPS PENDIENTES CON BOLITAS DIFERENCIADAS POR COLOR
             clipsData.forEach((clip, idx) => {
+                const cat = getClipCategory(clip);
+                if (!activeTimelineFilters[cat.id]) return;
+
                 const percStart = (clip.start / duration) * 100;
                 const percEnd = (clip.end / duration) * 100;
                 const widthPerc = Math.max(0.1, percEnd - percStart);
@@ -1055,12 +1375,14 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     block.style.left = `${percStart}%`;
                     block.style.width = `${widthPerc}%`;
                     block.style.top = '-4px';
-                    block.style.height = '14px';
-                    block.style.borderRadius = '4px';
-                    block.style.background = 'rgba(170, 85, 255, 0.8)';
-                    block.style.border = '2px solid #fff';
+                    block.style.height = '22px';
+                    block.style.borderRadius = '5px';
+                    block.style.background = cat.color + 'cc';
+                    block.style.border = '2px solid #ffffff';
                     block.style.cursor = 'pointer';
-                    block.style.boxShadow = '0 0 8px rgba(170, 85, 255, 1)';
+                    block.style.boxShadow = `0 0 12px ${cat.color}, 0 0 4px #ffffff`;
+                    block.style.zIndex = '6';
+                    block.title = `Seleccionado: [${cat.name}] ${clip.reason || clip.id} (${formatTime(clip.start)} - ${formatTime(clip.end)})`;
                     block.onclick = (e) => {
                         e.stopPropagation();
                         focusClip(clip);
@@ -1073,14 +1395,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     dot.dataset.end = clip.end;
                     dot.style.position = 'absolute';
                     dot.style.left = `${percStart + (widthPerc/2)}%`;
-                    dot.style.top = '-4px';
-                    dot.style.width = '14px';
-                    dot.style.height = '14px';
+                    dot.style.top = '-3px';
+                    dot.style.width = '20px';
+                    dot.style.height = '20px';
                     dot.style.borderRadius = '50%';
-                    dot.style.background = '#aa55ff';
+                    dot.style.background = cat.color;
+                    dot.style.border = '2px solid #ffffff';
                     dot.style.transform = 'translateX(-50%)';
                     dot.style.cursor = 'pointer';
-                    dot.style.boxShadow = '0 0 5px rgba(170, 85, 255, 0.8)';
+                    dot.style.boxShadow = `0 0 8px ${cat.shadow}`;
+                    dot.style.zIndex = '5';
+                    dot.title = `[${cat.name}] ${clip.reason || clip.id} (${formatTime(clip.start)} - ${formatTime(clip.end)})`;
                     dot.onclick = (e) => {
                         e.stopPropagation();
                         focusClip(clip);
@@ -1089,51 +1414,18 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 }
             });
             
-            [...completedClipsData, ...completedRangesData].forEach(clip => {
-                const percStart = (clip.start / duration) * 100;
-                const percEnd = (clip.end / duration) * 100;
-                const widthPerc = Math.max(0.1, percEnd - percStart);
-                
-                const block = document.createElement('div');
-                block.style.position = 'absolute';
-                block.style.left = `${percStart}%`;
-                block.style.width = `${widthPerc}%`;
-                block.style.top = '-2px';
-                block.style.height = '12px';
-                block.style.borderRadius = '2px';
-                block.style.background = 'rgba(16, 185, 129, 0.7)'; // Verde
-                block.style.pointerEvents = 'none';
-                container.appendChild(block);
-            });
-            
-            rejectedClipsData.forEach(clip => {
-                const percStart = (clip.start / duration) * 100;
-                const percEnd = (clip.end / duration) * 100;
-                const widthPerc = Math.max(0.1, percEnd - percStart);
-                
-                const block = document.createElement('div');
-                block.style.position = 'absolute';
-                block.style.left = `${percStart}%`;
-                block.style.width = `${widthPerc}%`;
-                block.style.top = '-2px';
-                block.style.height = '12px';
-                block.style.borderRadius = '2px';
-                block.style.background = 'rgba(239, 68, 68, 0.7)'; // Rojo
-                block.style.pointerEvents = 'none';
-                container.appendChild(block);
-            });
-            
             // Re-append playhead so it stays on top
             const playhead = document.createElement('div');
             playhead.id = 'timeline-playhead';
             playhead.style.position = 'absolute';
-            playhead.style.top = '-4px';
-            playhead.style.bottom = '-4px';
+            playhead.style.top = '-5px';
+            playhead.style.bottom = '-5px';
             playhead.style.width = '2px';
-            playhead.style.background = 'red';
+            playhead.style.background = '#ffffff';
+            playhead.style.boxShadow = '0 0 6px #ff0055';
             playhead.style.left = '0%';
             playhead.style.pointerEvents = 'none';
-            playhead.style.zIndex = '10';
+            playhead.style.zIndex = '20';
             playhead.style.display = 'none';
             container.appendChild(playhead);
         }
@@ -1183,23 +1475,31 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     if (clipToReject) rejectedClipsData.push(clipToReject);
                     clipsData = clipsData.filter(x => x.id !== id);
                     renderSidebar();
+                    drawTimelineDots();
                 }
             } catch(e) { console.error(e); }
         }
 
         function renderSidebar() {
+            const filteredClips = clipsData.filter(clip => {
+                const cat = getClipCategory(clip);
+                return activeTimelineFilters[cat.id] !== false;
+            });
+
             clipListEl.innerHTML = `
-                <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
-                    <button class="btn" style="background:#5522aa; font-size:12px; padding:5px 10px;" onclick="mergeSelectedClips()">  Unir Clips Seleccionados</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-size:11px; color:#888;">Mostrando ${filteredClips.length} de ${clipsData.length} clips</span>
+                    <button class="btn" style="background:#5522aa; font-size:12px; padding:5px 10px; width:auto; margin:0;" onclick="mergeSelectedClips()">  Unir Clips Seleccionados</button>
                 </div>
                 <div id="clip-list-inner"></div>
             `;
             const inner = document.getElementById('clip-list-inner');
-            if(clipsData.length === 0) {
-                clipListEl.innerHTML = `<div style="color:#aaa;">No hay clips pendientes.</div>`;
+            if(filteredClips.length === 0) {
+                inner.innerHTML = `<div style="color:#aaa; padding:10px; text-align:center;">No hay clips pendientes visibles con los filtros actuales.</div>`;
             } else {
-                clipsData.forEach((clip, idx) => {
-                    const virality = clip.virality_score ? `<span style="color:#28a745; font-size: 14px;"> ${clip.virality_score}% Viral</span>` : '';
+                filteredClips.forEach((clip, idx) => {
+                    const cat = getClipCategory(clip);
+                    const virality = clip.virality_score ? `<span style="color:#28a745; font-size: 13px;"> ${clip.virality_score}% Viral</span>` : '';
                     const duration = (clip.end - clip.start).toFixed(1);
                     const el = document.createElement('div');
                     
@@ -1208,15 +1508,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     
                     el.className = 'clip-item';
                     el.id = `clip-item-${clip.id}`;
+                    el.style.borderLeft = `3px solid ${cat.color}`;
                     el.innerHTML = `
-                        <div style="font-weight:bold; color:#007acc; font-size:18px; display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <input type="checkbox" class="merge-checkbox" data-clip-id="${clip.id}" style="width:16px; height:16px; cursor:pointer;" onclick="event.stopPropagation()">
-                                <span>Clip ${clip.id.replace("clip_", "")} <span style="font-size:12px; color:#aaa;">(${clip.id})</span></span>
+                        <div style="font-weight:bold; color:#007acc; font-size:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <input type="checkbox" class="merge-checkbox" data-clip-id="${clip.id}" style="width:15px; height:15px; cursor:pointer;" onclick="event.stopPropagation()">
+                                <span>Clip ${clip.id.replace("clip_", "")} <span style="font-size:11px; color:#aaa;">(${clip.id})</span></span>
+                                <span style="background:${cat.badgeBg}; color:${cat.color}; border: 1px solid ${cat.badgeBorder}; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">${cat.name}</span>
                             </div>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbUpStyle}" onclick="giveFeedback('${clip.id}', 'up', event)" title="Buen clip">👍</span>
-                                <span style="cursor:pointer; font-size:16px; transition:0.2s; ${thumbDownStyle}" onclick="giveFeedback('${clip.id}', 'down', event)" title="Mal clip">👎</span>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="cursor:pointer; font-size:15px; transition:0.2s; ${thumbUpStyle}" onclick="giveFeedback('${clip.id}', 'up', event)" title="Buen clip">👍</span>
+                                <span style="cursor:pointer; font-size:15px; transition:0.2s; ${thumbDownStyle}" onclick="giveFeedback('${clip.id}', 'down', event)" title="Mal clip">👎</span>
                                 ${virality}
                             </div>
                         </div>
@@ -1229,7 +1531,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                             <button class="btn" style="background:#d09010; flex: 1; margin:0;" onclick="enterTrimMode('${clip.id}', event)">Modo Edición</button>
                         </div>
                         <div id="controls-${clip.id}" style="display:none; flex-direction:column; gap:8px; margin-top: 15px; background: #1a1a1a; padding: 12px; border-radius: 4px; border: 1px solid #444;">
-                            <div style="font-size: 11px; color: #aaa; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Ajuste de Precisin</div>
+                            <div style="font-size: 11px; color: #aaa; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Ajuste de Precisión</div>
                             <div style="display: flex; gap: 10px;">
                                 <button class="btn" style="flex:1; background:#333; font-size:12px; padding:8px 0; margin:0; border: 1px solid #555;" onclick="setClipStart('${clip.id}', event)"> Marcar Inicio</button>
                                 <button class="btn" style="flex:1; background:#333; font-size:12px; padding:8px 0; margin:0; border: 1px solid #555;" onclick="setClipEnd('${clip.id}', event)">Marcar Final </button>
@@ -1243,45 +1545,71 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             const completedListEl = document.getElementById('completed-clip-list');
             if (completedListEl) {
-                completedListEl.innerHTML = '';
-                if(completedClipsData.length === 0) {
-                    completedListEl.innerHTML = `<div style="color:#aaa;">No hay clips editados.</div>`;
+                const prevHeader = completedListEl.previousElementSibling;
+                if (!activeTimelineFilters.approved) {
+                    completedListEl.style.display = 'none';
+                    if (prevHeader) prevHeader.style.display = 'none';
                 } else {
-                    completedClipsData.forEach(clip => {
-                        const duration = (clip.end - clip.start).toFixed(1);
-                        const el = document.createElement('div');
-                        el.className = 'clip-item';
-                        el.style.opacity = '0.7';
-                        el.innerHTML = `
-                            <div style="font-weight:bold; color:#28a745; font-size:16px;">Clip ${(clip.id || '').replace('clip_', '')} <span style="font-size:12px; color:#aaa;">(${clip.id || 'N/A'})</span></div>
-                            <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
-                            <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
-                            <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar / Re-editar</button>
-                        `;
-                        completedListEl.appendChild(el);
-                    });
+                    completedListEl.style.display = 'block';
+                    if (prevHeader) prevHeader.style.display = 'block';
+                    completedListEl.innerHTML = '';
+                    if(completedClipsData.length === 0) {
+                        completedListEl.innerHTML = `<div style="color:#aaa;">No hay clips editados.</div>`;
+                    } else {
+                        completedClipsData.forEach(clip => {
+                            const cat = getClipCategory(clip);
+                            const duration = (clip.end - clip.start).toFixed(1);
+                            const el = document.createElement('div');
+                            el.className = 'clip-item';
+                            el.style.opacity = '0.85';
+                            el.style.borderLeft = '3px solid #10b981';
+                            el.innerHTML = `
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                                    <div style="font-weight:bold; color:#28a745; font-size:16px;">Clip ${(clip.id || '').replace('clip_', '')} <span style="font-size:11px; color:#aaa;">(${clip.id || 'N/A'})</span></div>
+                                    <span style="background:rgba(16, 185, 129, 0.2); color:#10b981; border: 1px solid #10b981; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Aprobado</span>
+                                </div>
+                                <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
+                                <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
+                                <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar / Re-editar</button>
+                            `;
+                            completedListEl.appendChild(el);
+                        });
+                    }
                 }
             }
             
             const rejectedListEl = document.getElementById('rejected-clip-list');
             if (rejectedListEl) {
-                rejectedListEl.innerHTML = '';
-                if(rejectedClipsData.length === 0) {
-                    rejectedListEl.innerHTML = `<div style="color:#aaa;">No hay clips descartados.</div>`;
+                const prevHeader = rejectedListEl.previousElementSibling;
+                if (!activeTimelineFilters.rejected) {
+                    rejectedListEl.style.display = 'none';
+                    if (prevHeader) prevHeader.style.display = 'none';
                 } else {
-                    rejectedClipsData.forEach(clip => {
-                        const duration = (clip.end - clip.start).toFixed(1);
-                        const el = document.createElement('div');
-                        el.className = 'clip-item';
-                        el.style.opacity = '0.7';
-                        el.innerHTML = `
-                            <div style="font-weight:bold; color:#f44336; font-size:16px;">Clip ${(clip.id || '').replace('clip_', '')} <span style="font-size:12px; color:#aaa;">(${clip.id || 'N/A'})</span></div>
-                            <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
-                            <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
-                            <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar</button>
-                        `;
-                        rejectedListEl.appendChild(el);
-                    });
+                    rejectedListEl.style.display = 'block';
+                    if (prevHeader) prevHeader.style.display = 'block';
+                    rejectedListEl.innerHTML = '';
+                    if(rejectedClipsData.length === 0) {
+                        rejectedListEl.innerHTML = `<div style="color:#aaa;">No hay clips descartados.</div>`;
+                    } else {
+                        rejectedClipsData.forEach(clip => {
+                            const cat = getClipCategory(clip);
+                            const duration = (clip.end - clip.start).toFixed(1);
+                            const el = document.createElement('div');
+                            el.className = 'clip-item';
+                            el.style.opacity = '0.85';
+                            el.style.borderLeft = '3px solid #ef4444';
+                            el.innerHTML = `
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                                    <div style="font-weight:bold; color:#f44336; font-size:16px;">Clip ${(clip.id || '').replace('clip_', '')} <span style="font-size:11px; color:#aaa;">(${clip.id || 'N/A'})</span></div>
+                                    <span style="background:rgba(239, 68, 68, 0.2); color:#ef4444; border: 1px solid #ef4444; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Descartado</span>
+                                </div>
+                                <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
+                                <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
+                                <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar</button>
+                            `;
+                            rejectedListEl.appendChild(el);
+                        });
+                    }
                 }
             }
         }
@@ -1457,6 +1785,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 rejectedClipsData.push(clip);
                 clipsData = clipsData.filter(x => x.id !== clipId);
                 renderSidebar();
+                drawTimelineDots();
             } catch(err) {
                 console.error(err);
             }
@@ -1746,6 +2075,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         jAudio.src = jUrl;
                         vAudio.setAttribute("data-loaded-clip", currentClip.id);
                         attachAudioSync(workspaceVideo, currentClip.start);
+                        
+                        let rel = workspaceVideo.currentTime - currentClip.start;
+                        if (rel < 0) rel = 0;
+                        const syncOnLoad = (audioEl) => {
+                            audioEl.addEventListener('loadedmetadata', function onL() {
+                                audioEl.currentTime = rel;
+                                audioEl.removeEventListener('loadedmetadata', onL);
+                            });
+                        };
+                        syncOnLoad(vAudio);
+                        syncOnLoad(jAudio);
                     } else {
                         let rel = workspaceVideo.currentTime - currentClip.start;
                         if (rel >= 0) { vAudio.currentTime = rel; jAudio.currentTime = rel; }
@@ -3937,7 +4277,7 @@ let transcribeController = null;
                     textControls = `
                         <div style="margin-top: 5px; display:flex; flex-direction:column; gap: 8px;">
                             <textarea oninput="updateTextStickerFast('${s.id}', 'text', this.value)" onblur="updateTextSticker('${s.id}', 'text', this.value)" style="width:100%; height:40px; padding:2px; font-size:11px; background:#111; color:#fff; border:1px solid #444; resize:vertical;" placeholder="Texto">${s.text || 'Texto'}</textarea>
-                            <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; padding:5px; background:#1a1a1a; border-radius:4px; border:1px solid #333;">
+                            <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; padding:5px; background:#1a1a1a; border-radius:4px; border:1px solid #333;" id="word-colors-${s.id}">
                                 <div style="width:100%; font-size:10px; color:#888; margin-bottom:2px;">Colores por palabra:</div>
                                 ${(s.text || 'Texto').split(/\s+/).filter(w => w.length > 0).map((word, wIdx) => `
                                     <div style="display:flex; flex-direction:column; align-items:center; background:#111; padding:2px; border-radius:3px; border:1px solid #444;">
@@ -4022,7 +4362,18 @@ let transcribeController = null;
             if (s) {
                 s[key] = value;
                 if (key === 'text') {
-                    renderStickersList(); // re-render word color pickers
+                    const wcContainer = document.getElementById('word-colors-' + id);
+                    if (wcContainer) {
+                        wcContainer.innerHTML = `
+                            <div style="width:100%; font-size:10px; color:#888; margin-bottom:2px;">Colores por palabra:</div>
+                            ${(s.text || 'Texto').split(/\s+/).filter(w => w.length > 0).map((word, wIdx) => `
+                                <div style="display:flex; flex-direction:column; align-items:center; background:#111; padding:2px; border-radius:3px; border:1px solid #444;">
+                                    <span style="font-size:9px; color:#ccc; max-width:50px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${word}">${word}</span>
+                                    <input type="color" value="${s.wordColors && s.wordColors[wIdx] ? s.wordColors[wIdx] : (s.color || '#ffffff')}" onchange="updateTextStickerWordColor('${s.id}', ${wIdx}, this.value)" style="width:20px; height:15px; padding:0; border:none; cursor:pointer;">
+                                </div>
+                            `).join('')}
+                        `;
+                    }
                 }
                 renderStickersCanvas();
                 saveStickersState();
@@ -5037,7 +5388,10 @@ let transcribeController = null;
                                 </div>
                             </td>
                             <td style="padding: 10px;">
-                                <div id="pub-yt-text-${clip.id}" style="color: ${clip.pub_yt ? '#00e676' : '#888'}; font-size:11px; margin-bottom:5px;">${clip.pub_yt || 'No'}</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                                    <div id="pub-yt-text-${clip.id}" style="color: ${clip.pub_yt ? '#00e676' : '#888'}; font-size:11px;">${clip.pub_yt || 'No'}</div>
+                                    <button onclick="syncDatesFromYT('${clip.id}', '${clip.db_file}', this)" style="background:#2080df; color:#fff; border:none; border-radius:3px; padding:2px 5px; font-size:9px; cursor:pointer;" title="Copiar fecha a IG y TikTok">Copiar</button>
+                                </div>
                                 <input type="date" value="${clip.pub_yt || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:3px; padding:2px; font-size:10px; width:100%;" onchange="savePublishDate('${clip.id}', '${clip.db_file}', 'yt', this.value, this)">
                             </td>
                             <td style="padding: 10px;">
@@ -5202,6 +5556,16 @@ let transcribeController = null;
             });
         }
         
+        function syncDatesFromYT(clipId, dbFile, btnElement) {
+            const row = btnElement.closest('tr');
+            const inputs = row.querySelectorAll('input[type="date"]');
+            const ytDate = inputs[0].value;
+            inputs[1].value = ytDate;
+            inputs[2].value = ytDate;
+            savePublishDate(clipId, dbFile, 'ig', ytDate, inputs[1]);
+            savePublishDate(clipId, dbFile, 'tiktok', ytDate, inputs[2]);
+        }
+        
         async function savePublishDate(clipId, dbFile, network, dateValue, inputElement) {
             try {
                 const row = inputElement.closest('tr');
@@ -5329,8 +5693,21 @@ let transcribeController = null;
             videoEl.onpause = () => { vAudio.pause(); jAudio.pause(); };
             videoEl.onseeked = () => {
                 let rel = videoEl.currentTime - clipStart;
-                vAudio.currentTime = rel;
-                jAudio.currentTime = rel;
+                if (rel < 0) rel = 0;
+                const seekAudio = (audioEl) => {
+                    try {
+                        if(audioEl.readyState > 0) {
+                            audioEl.currentTime = rel;
+                        } else {
+                            audioEl.addEventListener('loadedmetadata', function onL() {
+                                audioEl.currentTime = rel;
+                                audioEl.removeEventListener('loadedmetadata', onL);
+                            });
+                        }
+                    } catch(e) {}
+                };
+                seekAudio(vAudio);
+                seekAudio(jAudio);
             };
             videoEl.onratechange = () => {
                 vAudio.playbackRate = videoEl.playbackRate;

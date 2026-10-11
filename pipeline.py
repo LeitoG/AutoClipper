@@ -140,12 +140,6 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         
     print(f"Se detectaron {len(valid_segments)} picos de interés.")
     
-    if len(valid_segments) > 0:
-        valid_segments.sort(key=lambda seg: np.max(rms_array[seg[0]:seg[1]]), reverse=True)
-        limit = max_clips if max_clips > 0 else 30
-        valid_segments = valid_segments[:limit] # Limitar a los mas fuertes para evitar horas de procesamiento
-        valid_segments.sort(key=lambda x: x[0])
-        
     valid_segments_filtered = []
     for start, end in valid_segments:
         is_excluded = False
@@ -157,6 +151,14 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         if not is_excluded:
             valid_segments_filtered.append((start, end))
             
+    print(f"Tras aplicar filtros de tiempo quedan {len(valid_segments_filtered)} picos.")
+    
+    if len(valid_segments_filtered) > 0:
+        valid_segments_filtered.sort(key=lambda seg: np.max(rms_array[seg[0]:seg[1]]), reverse=True)
+        limit = max_clips if max_clips > 0 else 30
+        valid_segments_filtered = valid_segments_filtered[:limit] # Limitar a los mas fuertes
+        valid_segments_filtered.sort(key=lambda x: x[0])
+        
     valid_segments = valid_segments_filtered
     print(f"Tras aplicar zonas de exclusión (clips previos/actuales), quedan {len(valid_segments)} segmentos a evaluar.")
     
@@ -167,7 +169,7 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
     total_output_tokens = 0
     
     link_instruction = "que SIEMPRE termine con 'Podes ver el video completo haciendo click en el link' seguida de los " if "gourmet" in video_path.lower() else ""
-    sys_prompt = f"Eres Leito4Gaming, un streamer y creador de videos virales de gaming de Argentina. Estás creando metadatos para tus propios clips, de juegos que TÚ MISMO jugaste (NOMBRE DEL JUEGO: {video_basename}). CRÍTICO: Escribe SIEMPRE en Español Argentino auténtico (rioplatense). NO uses español neutro. NUNCA uses la palabra o conjugaciones de 'tú' (ej: nunca digas 'Te ha pasado', debes decir 'Te pasó', 'Mirá', 'Fijate'). Habla siempre tratando de VOS. Usa modismos locales ('cagazo', 'la puta madre'). EVITA 'che' y NUNCA uses 'boludo'. NUNCA asumas que no jugaste el juego ('Me contaron'). Escribe como un gamer con actitud, en PRIMERA PERSONA. Recibes el audio y fotogramas. Evalúa si es BUENO o DIVERTIDO según el prompt. Si es silencio, responde 'RECHAZADO'. Si tiene valor, devuelve JSON: 'start' (float, inicio, sumale offset), 'end' (float, fin, sumale offset), 'reason' (string), 'virality_score' (int 70-99), 'transcript' (string), 'social_title' (string, Titulo ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip), 'social_desc' (string, descripcion MUY CORTA de APENAS UN RENGLON (max 10 palabras) que tenga sentido con el clip, en PRIMERA PERSONA. {link_instruction} Luego pon solo 3 hashtags populares del juego), 'yt_title' (string, llamativo para YT Shorts), 'yt_desc' (string, descripción CORTA), 'yt_tags' (string, separadas por coma, incluye 'Leito4Gaming' y 'Leito4GamingPlus' y tags del juego real). IMPORTANTE: Clip entre 35 y 75 segundos. DEBES RETROCEDER LO SUFICIENTE para incluir TODO el contexto previo necesario (la preparación del chiste o susto). No cortes las oraciones a la mitad. FUNDAMENTAL: Los títulos y descripciones DEBEN referirse ESTRICTAMENTE a lo que se dice o pasa en el clip. Usa frases de tu propio diálogo en la descripción para que no suene genérico."
+    sys_prompt = f"Eres Leito4Gaming, un streamer y creador de videos virales de gaming de Argentina. Estás creando metadatos para tus propios clips, de juegos que TÚ MISMO jugaste (NOMBRE DEL JUEGO: {video_basename}). CRÍTICO: Escribe SIEMPRE en Español Argentino auténtico (rioplatense). NO uses español neutro. NUNCA uses la palabra o conjugaciones de 'tú' (ej: nunca digas 'Te ha pasado', debes decir 'Te pasó', 'Mirá', 'Fijate'). Habla siempre tratando de VOS. Usa modismos locales ('cagazo', 'la puta madre'). EVITA 'che' y NUNCA uses 'boludo'. NUNCA asumas que no jugaste el juego ('Me contaron'). Escribe como un gamer con actitud, en PRIMERA PERSONA. Recibes el audio y fotogramas. Evalúa si es BUENO o DIVERTIDO según el prompt. Si es silencio, responde 'RECHAZADO'. Si tiene valor, devuelve JSON: 'start' (float, inicio, sumale offset), 'end' (float, fin, sumale offset), 'category' (string: 'susto' si es miedo/grito/terror, 'streamer' si es charla/anécdota/explicación/lore, 'humor' si es chiste/broma/fail, 'gameplay' si es jugada/combate/boss/muerte épica), 'reason' (string), 'virality_score' (int 70-99), 'transcript' (string), 'social_title' (string, Titulo ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip), 'social_desc' (string, descripcion MUY CORTA de APENAS UN RENGLON (max 10 palabras) que tenga sentido con el clip, en PRIMERA PERSONA. {link_instruction} Luego pon solo 3 hashtags populares del juego), 'yt_title' (string, llamativo para YT Shorts), 'yt_desc' (string, descripción CORTA), 'yt_tags' (string, separadas por coma, incluye 'Leito4Gaming' y 'Leito4GamingPlus' y tags del juego real). IMPORTANTE: Clip entre 35 y 75 segundos. DEBES RETROCEDER LO SUFICIENTE para incluir TODO el contexto previo necesario (la preparación del chiste o susto). No cortes las oraciones a la mitad. FUNDAMENTAL: Los títulos y descripciones DEBEN referirse ESTRICTAMENTE a lo que se dice o pasa en el clip. Usa frases de tu propio diálogo en la descripción para que no suene genérico."
     sys_prompt += get_feedback_injection()
     
     final_clips = []
@@ -247,29 +249,29 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         for attempt in range(4):
             try:
                 import concurrent.futures
-                    
-                    def call_api1():
-                        return client.models.generate_content(
-                            model='gemini-2.5-flash',
-                            contents=[g_audio] + frames_extracted + [sys_prompt, prompt_text],
-                            config={
-                                "temperature": 0.3,
-                                "safety_settings": [
-                                    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-                                    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-                                    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-                                    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-                                ],
-                                "response_mime_type": "application/json",
-                            }
-                        )
-                    
-                    with concurrent.futures.ThreadPoolExecutor() as executor:
-                        future = executor.submit(call_api1)
-                        try:
-                            response = future.result(timeout=300)
-                        except concurrent.futures.TimeoutError:
-                            raise Exception("Gemini API timeout")
+                
+                def call_api1():
+                    return client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=[g_audio] + frames_extracted + [sys_prompt, prompt_text],
+                        config={
+                            "temperature": 0.3,
+                            "safety_settings": [
+                                {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+                                {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+                                {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+                                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+                            ],
+                            "response_mime_type": "application/json",
+                        }
+                    )
+                
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(call_api1)
+                    try:
+                        response = future.result(timeout=300)
+                    except concurrent.futures.TimeoutError:
+                        raise Exception("Gemini API timeout")
                 break
             except Exception as e:
                 err_str = str(e)
@@ -448,7 +450,7 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
             
         if progress_callback: progress_callback(70 + int(20 * (chunk_idx / len(chunks))), f"Analizando bloque {chunk_idx+1}/{len(chunks)} con Gemini 2.5 Flash...")
         
-        sys_prompt = f"Eres Leito4Gaming, un streamer y creador de videos virales de gaming de Argentina. Estas creando metadatos para tus propios clips, de juegos que TU MISMO jugaste (NOMBRE DEL JUEGO: {video_basename}). CRITICO: Escribe SIEMPRE en Español Argentino autentico (rioplatense). NO uses español neutro. NUNCA uses la palabra o conjugaciones de 'tu'. Habla siempre tratando de VOS. Usa modismos locales ('cagazo', 'la puta madre'). EVITA 'che' y NUNCA uses 'boludo'. NUNCA asumas que no jugaste el juego. Escribe como un gamer con actitud, en PRIMERA PERSONA. Recibes el VIDEO EXACTO (a 1 frame por segundo) y la transcripcion de una seccion de {CHUNK_DUR/60} minutos. Usa el VIDEO y el AUDIO para entender el contexto visual (ej: si murio en el juego, si hay un boss, sus expresiones faciales) y distinguir cuando esta leyendo dialogos del juego de cuando reacciona espontaneamente. PRIORIZA LAS REACCIONES REALES, CHISTES, SUSTOS Y MUERTES EPICAS. {clips_instruction} basandote en el prompt. IMPORTANTE: Clips entre 35 y 75 segundos. Asegurate de abarcar TODO el contexto (el inicio de la anecdota o explicacion) para que tenga sentido. Devuelve UNICAMENTE lista JSON valida. Formato: [{{\"start\": float, \"end\": float, \"reason\": \"string corto\", \"virality_score\": int (70-99), \"transcript\": \"string\", \"social_title\": \"Titulo ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip\", \"social_desc\": \"Descripcion MUY CORTA de APENAS UN RENGLON (max 10 palabras) que tenga sentido con el clip, en PRIMERA PERSONA. {link_instruction} Luego pon solo 3 hashtags populares del juego\", \"yt_title\": \"Titulo super llamativo para YouTube Shorts\", \"yt_desc\": \"Descripcion CORTA en PRIMERA PERSONA\", \"yt_tags\": \"Etiquetas SIN hashtag\"}}]. Respeta estrictamente JSON. FUNDAMENTAL: EL AUDIO COMIENZA EN EL SEGUNDO {chunk_start}. Los tiempos 'start' y 'end' que devuelvas en el JSON deben ser RELATIVOS AL VIDEO ORIGINAL, es decir, usa exactamente las marcas de tiempo que aparecen en la transcripcion."
+        sys_prompt = f"Eres Leito4Gaming, un streamer y creador de videos virales de gaming de Argentina. Estas creando metadatos para tus propios clips, de juegos que TU MISMO jugaste (NOMBRE DEL JUEGO: {video_basename}). CRITICO: Escribe SIEMPRE en Español Argentino autentico (rioplatense). NO uses español neutro. NUNCA uses la palabra o conjugaciones de 'tu'. Habla siempre tratando de VOS. Usa modismos locales ('cagazo', 'la puta madre'). EVITA 'che' y NUNCA uses 'boludo'. NUNCA asumas que no jugaste el juego. Escribe como un gamer con actitud, en PRIMERA PERSONA. Recibes el VIDEO EXACTO (a 1 frame por segundo) y la transcripcion de una seccion de {CHUNK_DUR/60} minutos. Usa el VIDEO y el AUDIO para entender el contexto visual (ej: si murio en el juego, si hay un boss, sus expresiones faciales) y distinguir cuando esta leyendo dialogos del juego de cuando reacciona espontaneamente. PRIORIZA LAS REACCIONES REALES, CHISTES, SUSTOS Y MUERTES EPICAS. {clips_instruction} basandote en el prompt. IMPORTANTE: Clips entre 35 y 75 segundos. Asegurate de abarcar TODO el contexto (el inicio de la anecdota o explicacion) para que tenga sentido. Devuelve UNICAMENTE lista JSON valida. Formato: [{{\"start\": float, \"end\": float, \"category\": \"susto\"|\"streamer\"|\"humor\"|\"gameplay\", \"reason\": \"string corto\", \"virality_score\": int (70-99), \"transcript\": \"string\", \"social_title\": \"Titulo ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip\", \"social_desc\": \"Descripcion MUY CORTA de APENAS UN RENGLON (max 10 palabras) que tenga sentido con el clip, en PRIMERA PERSONA. {link_instruction} Luego pon solo 3 hashtags populares del juego\", \"yt_title\": \"Titulo super llamativo para YouTube Shorts\", \"yt_desc\": \"Descripcion CORTA en PRIMERA PERSONA\", \"yt_tags\": \"Etiquetas SIN hashtag\"}}]. Respeta estrictamente JSON. FUNDAMENTAL: EL AUDIO COMIENZA EN EL SEGUNDO {chunk_start}. Los tiempos 'start' y 'end' que devuelvas en el JSON deben ser RELATIVOS AL VIDEO ORIGINAL, es decir, usa exactamente las marcas de tiempo que aparecen en la transcripcion."
         sys_prompt += get_feedback_injection()
         
         prompt_text = f"PROMPT DEL USUARIO: {prompt}\n\nAqui tienes la transcripcion del bloque {chunk_idx+1} (El video que ves abarca exactamente este mismo tramo):\n\n{chunk_text}"
