@@ -1,20 +1,22 @@
-﻿with open('backend.py', 'r', encoding='utf-8') as f:
+﻿import re
+
+with open('backend.py', 'r', encoding='utf-8') as f:
     text = f.read()
 
-target = '''    try:
-        from google import genai
-        config_data = load_config()
-        api_key = config_data.get("gemini_api_key", "")'''
-
-replacement = '''    try:
-        from google import genai
-        api_key = ""
-        if os.path.exists(CONFIG_FILE):
-            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-                api_key = json.load(f).get("gemini_api_key", "")'''
+target = '''        txt = response.text.replace('json', '').replace('', '').strip()
+        data = json.loads(txt)'''
+        
+replacement = '''        txt = response.text
+        # Extraer solo el JSON usando regex
+        import re
+        match = re.search(r'\{.*\}', txt, re.DOTALL)
+        if match:
+            txt = match.group(0)
+        else:
+            txt = txt.replace('`json', '').replace('`', '').strip()
+            
+        data = json.loads(txt)'''
 
 text = text.replace(target, replacement)
-
 with open('backend.py', 'w', encoding='utf-8') as f:
     f.write(text)
-print("Fixed regenerate_metadata")

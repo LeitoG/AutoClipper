@@ -1,4 +1,4 @@
-﻿import webview
+import webview
 import threading
 import uvicorn
 import time
@@ -26,3 +26,4 @@ if __name__ == '__main__':
     app_data_dir = os.path.join(os.environ.get('APPDATA', '.'), 'AutoClipper')
     os.makedirs(app_data_dir, exist_ok=True)
     webview.start(private_mode=False, storage_path=app_data_dir)
+    os._exit(0)

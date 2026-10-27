@@ -1,4 +1,18 @@
 
+# === OPTIMIZACIÓN DE RECURSOS Y TEMPERATURA (ANTI-FREEZE) ===
+try:
+    import psutil
+    psutil.Process().nice(psutil.BELOW_NORMAL_PRIORITY_CLASS)
+except Exception:
+    pass
+
+try:
+    import torch
+    # Limitar PyTorch a 4 hilos en vez de los 14 núcleos de la laptop para evitar congelamiento de Windows
+    torch.set_num_threads(4)
+except Exception:
+    pass
+
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Header, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
@@ -93,6 +107,7 @@ class UpdateClipRequest(BaseModel):
     words: list = []
     social_title: Optional[str] = None
     social_desc: Optional[str] = None
+    yt_tags: Optional[str] = None
     start: Optional[float] = None
     end: Optional[float] = None
     export_name: Optional[str] = None
@@ -137,7 +152,7 @@ class GenerateClipsRequest(BaseModel):
     prompt: str
     video_name: str
     search_modes: list[str] = ["volume"]
-    max_clips: int = 15
+    max_clips: int = 6
     start_time_str: str = ""
     end_time_str: str = ""
     keywords: str = ""
@@ -295,19 +310,213 @@ app.mount('/videos', StaticFiles(directory=VIDEO_DIR), name='videos')
 def ping():
     return {"status": "ok"}
 
+def get_clean_game_name(video_name: str) -> str:
+    if not video_name:
+        return "Juego"
+    norm = video_name.replace("\\", "/").strip("/")
+    parts = [p.strip() for p in norm.split("/") if p.strip()]
+    if len(parts) > 1 and parts[0].lower() not in ("gourmet", "raiz", "raíz"):
+        raw_game = parts[0]
+    else:
+        base = os.path.splitext(parts[-1])[0] if parts else "Juego"
+        # Quitar fechas de OBS como " - 2026-06-21_19-18-16"
+        base = re.sub(r'\s*-\s*\d{4}-\d{2}-\d{2}[_\s]\d{2}-\d{2}-\d{2}.*$', '', base)
+        # Quitar sufijos de stream/resumen como "Resumen", "Directo 1...", "Leito..."
+        base = re.sub(r'(?i)[\s_-]+(resumen|directo\s*\d*|leito.*|final.*)$', '', base)
+        # Quitar número de episodio con guion bajo al final (ej: WalkingDead_1 -> WalkingDead)
+        base = re.sub(r'_+\d+$', '', base)
+        raw_game = base.strip() or "Juego"
+    clean = re.sub(r'[^a-zA-Z0-9]+', '_', raw_game).strip('_')
+    return clean or "Juego"
+
+def sync_clip_id_with_export_name(data: dict, clip_id: str, export_name: Optional[str]) -> str:
+    if not export_name:
+        return clip_id
+    clean_exp = export_name.strip()
+    if clean_exp.lower().endswith(".mp4"):
+        clean_exp = clean_exp[:-4]
+    m = re.match(r'^(\d+)_', clean_exp)
+    if not m:
+        return clip_id
+    global_num = int(m.group(1))
+    new_id = f"clip_{global_num}"
+
+    proposals = data.get("proposals", [])
+    completed = data.get("completed_proposals", [])
+    rejected = data.get("rejected_proposals", [])
+    all_lists = [proposals, completed, rejected]
+
+    target_clip = None
+    for lst in (proposals, completed):
+        for c in lst:
+            if c.get("id") == clip_id:
+                target_clip = c
+                break
+        if target_clip:
+            break
+    if not target_clip:
+        for lst in (proposals, completed):
+            for c in lst:
+                if c.get("export_name") == clean_exp or c.get("id") == new_id:
+                    target_clip = c
+                    break
+            if target_clip:
+                break
+
+    if not target_clip:
+        return clip_id
+
+    old_id = target_clip.get("id", clip_id)
+    target_clip["export_name"] = clean_exp
+
+    if old_id != new_id:
+        # Si otro clip pendiente/descartado tenía ese mismo ID local (ej. clip_48), renombrarlo para evitar colisión
+        used_ids = {c.get("id") for lst in all_lists for c in lst if c.get("id")}
+        for lst in all_lists:
+            for c in lst:
+                if c is not target_clip and c.get("id") == new_id:
+                    fallback_idx = 1000
+                    while f"clip_p{fallback_idx}" in used_ids:
+                        fallback_idx += 1
+                    alt_id = f"clip_p{fallback_idx}"
+                    used_ids.add(alt_id)
+                    c["id"] = alt_id
+                    old_ass_collision = os.path.join(ASS_DIR, f"subs_{new_id}.ass")
+                    new_ass_collision = os.path.join(ASS_DIR, f"subs_{alt_id}.ass")
+                    if os.path.exists(old_ass_collision) and not os.path.exists(new_ass_collision):
+                        try:
+                            shutil.copyfile(old_ass_collision, new_ass_collision)
+                        except Exception:
+                            pass
+
+        old_ass = os.path.join(ASS_DIR, f"subs_{old_id}.ass")
+        new_ass = os.path.join(ASS_DIR, f"subs_{new_id}.ass")
+        if os.path.exists(old_ass):
+            try:
+                shutil.copyfile(old_ass, new_ass)
+            except Exception:
+                pass
+
+        target_clip["id"] = new_id
+
+    return new_id
+
+@app.get("/next_export_info")
+def get_next_export_info(video_name: str = "", clip_id: str = ""):
+    try:
+        clean_game = get_clean_game_name(video_name)
+        max_global_num = 0
+        completed_game_count = 0
+        max_game_suffix = 0
+        existing_export_name = None
+        existing_global_num = None
+        existing_game_count = None
+
+        target_analysis_file = os.path.abspath(get_analysis_file(video_name)) if video_name else ""
+
+        if os.path.exists(DB_DIR):
+            for fname in os.listdir(DB_DIR):
+                if not fname.endswith(".json") or fname in ("cost_history.json", "feedback_ia.json", "reviewed_videos.json"):
+                    continue
+                fpath = os.path.abspath(os.path.join(DB_DIR, fname))
+                try:
+                    with open(fpath, "r", encoding="utf-8") as f:
+                        d = json.load(f)
+                except Exception:
+                    continue
+                if not isinstance(d, dict):
+                    continue
+
+                v_name = d.get("video", "")
+                v_game = get_clean_game_name(v_name)
+                is_same_file = (fpath == target_analysis_file)
+
+                # Revisar si el clip actual ya tiene export_name asignado
+                if is_same_file and clip_id:
+                    for lst_name in ("proposals", "completed_proposals"):
+                        for c in d.get(lst_name, []):
+                            if c.get("id") == clip_id and c.get("export_name"):
+                                exp = c["export_name"].strip()
+                                if exp.lower().endswith(".mp4"):
+                                    exp = exp[:-4]
+                                m_lead = re.match(r'^(\d+)_', exp)
+                                m_tail = re.search(r'_(\d+)$', exp)
+                                if m_lead:
+                                    existing_global_num = int(m_lead.group(1))
+                                    existing_game_count = int(m_tail.group(1)) if m_tail else 1
+                                    existing_export_name = f"{existing_global_num}_{clean_game}_{existing_game_count}"
+
+                for c in d.get("completed_proposals", []):
+                    exp = str(c.get("export_name", "") or "").strip()
+                    if exp.lower().endswith(".mp4"):
+                        exp = exp[:-4]
+                    m_lead = re.match(r'^(\d+)_', exp)
+                    if m_lead:
+                        g_val = int(m_lead.group(1))
+                        if g_val > max_global_num:
+                            max_global_num = g_val
+                    else:
+                        m_id = re.match(r'^clip_(\d+)$', str(c.get("id", "")))
+                        if m_id:
+                            g_val = int(m_id.group(1))
+                            if g_val > max_global_num:
+                                max_global_num = g_val
+
+                    if v_game.lower() == clean_game.lower():
+                        if is_same_file and c.get("id") == clip_id:
+                            continue
+                        completed_game_count += 1
+                        m_exact = re.match(rf'^\d+_{re.escape(clean_game)}_(\d+)$', exp, re.IGNORECASE)
+                        if m_exact:
+                            sfx = int(m_exact.group(1))
+                            if sfx > max_game_suffix:
+                                max_game_suffix = sfx
+
+        # También verificar archivos exportados en EXPORTS_DIR para no repetir nunca un número global
+        if os.path.exists(EXPORTS_DIR):
+            for root, _, files in os.walk(EXPORTS_DIR):
+                for fn in files:
+                    if fn.lower().endswith(".mp4"):
+                        m_lead = re.match(r'^(\d+)_', fn)
+                        if m_lead:
+                            g_val = int(m_lead.group(1))
+                            if g_val > max_global_num:
+                                max_global_num = g_val
+
+        next_game_count = max(completed_game_count, max_game_suffix) + 1
+        return {
+            "status": "success",
+            "game_name": clean_game,
+            "game_count": existing_game_count if existing_game_count is not None else next_game_count,
+            "next_global_num": max_global_num + 1,
+            "existing_export_name": existing_export_name,
+            "existing_global_num": existing_global_num
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 @app.get("/thumbnail")
 def get_thumbnail(video: str, time: float, export: str = ""):
     # Intento 1: Video Exportado (si existe, para mostrar miniatura final)
     if export:
-        export_path = os.path.join(EXPORTS_DIR, export)
-        if not os.path.exists(export_path):
+        candidates = [export] if export.lower().endswith(".mp4") else [export, f"{export}.mp4"]
+        export_path = ""
+        for cand in candidates:
+            p = os.path.join(EXPORTS_DIR, cand)
+            if os.path.exists(p):
+                export_path = p
+                break
+        if not export_path:
             # Buscar en subcarpetas (ej: "Subidos")
             for root, dirs, files in os.walk(EXPORTS_DIR):
-                if export in files:
-                    export_path = os.path.join(root, export)
+                for cand in candidates:
+                    if cand in files:
+                        export_path = os.path.join(root, cand)
+                        break
+                if export_path:
                     break
                     
-        if os.path.exists(export_path):
+        if export_path and os.path.exists(export_path):
             try:
                 cap = cv2.VideoCapture(export_path)
                 cap.set(cv2.CAP_PROP_POS_MSEC, 0) # El exportado ya empieza en el clip
@@ -384,11 +593,14 @@ def upload_asset(file: UploadFile = File(...)):
 def get_export_progress(clip_id: str):
     return {"progress": export_progress.get(clip_id, "0")}
 
-def run_ffmpeg(cmd, clip_id, total_duration):
+def run_ffmpeg(cmd, clip_id, total_duration, alias_id=None):
     export_progress[clip_id] = "0"
+    if alias_id:
+        export_progress[alias_id] = "0"
     total_dur = total_duration
     try:
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, universal_newlines=True)
+        below_normal = getattr(subprocess, "BELOW_NORMAL_PRIORITY_CLASS", 0x00004000)
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, universal_newlines=True, creationflags=below_normal)
         stdout_lines = []
         for line in process.stdout:
             stdout_lines.append(line)
@@ -398,6 +610,8 @@ def run_ffmpeg(cmd, clip_id, total_duration):
                     ms = int(ms_str) / 1000000.0
                     percent = min(99, int((ms / total_dur) * 100))
                     export_progress[clip_id] = str(percent)
+                    if alias_id:
+                        export_progress[alias_id] = str(percent)
         process.wait()
         if process.returncode != 0:
             raise Exception("FFmpeg exit code " + str(process.returncode) + "\n" + "".join(stdout_lines[-50:]))
@@ -436,8 +650,12 @@ def run_ffmpeg(cmd, clip_id, total_duration):
             print(f"Error generando miniatura (ignorado): {thumb_e}")
             
         export_progress[clip_id] = "100"
+        if alias_id:
+            export_progress[alias_id] = "100"
     except Exception as e:
         export_progress[clip_id] = "-1"
+        if alias_id:
+            export_progress[alias_id] = "-1"
         try:
             with open(os.path.join(BASE_DIR, "ffmpeg_error.log"), "w", encoding="utf-8", errors="replace") as f:
                 f.write(f"Error en run_ffmpeg: {e}\n{traceback.format_exc()}")
@@ -483,6 +701,7 @@ def get_clips(video_name: str = ""):
             "completed_clips": data.get("completed_proposals", []),
             "completed_ranges": data.get("completed_ranges", []),
             "rejected_clips": data.get("rejected_proposals", []),
+            "archived_clips": data.get("archived_proposals", []),
             "video_name": video_name
         }}
         
@@ -578,6 +797,53 @@ def _generate_clips_task(req: GenerateClipsRequest):
         if range_end < 999999:
             exclusion_zones.append((range_end, 999999))
             
+        max_id_val = 0
+        all_existing = data.get("proposals", []) + data.get("completed_proposals", []) + data.get("rejected_proposals", [])
+        for ex in all_existing:
+            if str(ex.get("id", "")).startswith("clip_"):
+                try:
+                    num = int(ex["id"].split("_")[1])
+                    if num > max_id_val: max_id_val = num
+                except:
+                    pass
+        
+        saved_clips_count = 0
+        def incremental_save(c):
+            nonlocal max_id_val, saved_clips_count
+            s, e = c['start'], c['end']
+            overlap = False
+            for p in data.get("proposals", []) + data.get("completed_proposals", []) + data.get("completed_ranges", []) + data.get("rejected_proposals", []) + data.get("archived_proposals", []):
+                if max(s, p['start']) < min(e, p['end']): overlap = True
+            if overlap: return
+
+            max_id_val += 1
+            c["id"] = f"clip_{max_id_val}"
+            ass_path = os.path.join(ASS_DIR, f"subs_{c['id']}.ass")
+            if not os.path.exists(ass_path):
+                try:
+                    import shutil
+                    shutil.copyfile(os.path.join(ASS_DIR, "subs_clip_1.ass"), ass_path)
+                except:
+                    with open(ass_path, "w", encoding="utf-8") as f: f.write("")
+            with open(ass_path, "r", encoding="utf-8") as f: c["ass_text"] = f.read()
+
+            c.update({
+                "template": c.get("template", "face_game"),
+                "cropState": c.get("cropState", {
+                    "splitY": 960,
+                    "face": {"x": 58, "y": 808, "w": 384, "h": 216},
+                    "game": {"x": 0, "y": 0, "w": 1920, "h": 1080},
+                    "full": {"x": 0, "y": 0, "w": 1920, "h": 1080},
+                    "subs": {"x": 530, "y": 744, "w": 860, "h": 336}
+                })
+            })
+            
+            data.setdefault("proposals", []).append(c)
+            data["proposals"].sort(key=lambda x: x["start"])
+            saved_clips_count += 1
+            if analysis_file:
+                atomic_write_json(analysis_file, data)
+                    
         # Procesar chat (Streamer.bot o TwitchDownloader)
         # 1. TwitchDownloader JSON
         chat_file = video_path.rsplit('.', 1)[0] + '.json'
@@ -731,82 +997,77 @@ def _generate_clips_task(req: GenerateClipsRequest):
             exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
         for p in data.get("rejected_proposals", []):
             exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
+        for p in data.get("archived_proposals", []):
+            exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
             
-        max_id_val = 0
-        all_existing = data.get("proposals", []) + data.get("completed_proposals", []) + data.get("rejected_proposals", [])
-        for ex in all_existing:
-            if str(ex.get("id", "")).startswith("clip_"):
-                try:
-                    num = int(ex["id"].split("_")[1])
-                    if num > max_id_val: max_id_val = num
-                except:
-                    pass
-        
-        def incremental_save(c):
-            nonlocal max_id_val
-            s, e = c['start'], c['end']
-            overlap = False
-            for p in data.get("proposals", []) + data.get("completed_proposals", []) + data.get("completed_ranges", []) + data.get("rejected_proposals", []):
-                if max(s, p['start']) < min(e, p['end']): overlap = True
-            if overlap: return
-
-            max_id_val += 1
-            c["id"] = f"clip_{max_id_val}"
-            ass_path = os.path.join(ASS_DIR, f"subs_{c['id']}.ass")
-            if not os.path.exists(ass_path):
-                try:
-                    import shutil
-                    shutil.copyfile(os.path.join(ASS_DIR, "subs_clip_1.ass"), ass_path)
-                except:
-                    with open(ass_path, "w", encoding="utf-8") as f: f.write("")
-            with open(ass_path, "r", encoding="utf-8") as f: c["ass_text"] = f.read()
-
-            c.update({
-                "template": c.get("template", "face_game"),
-                "cropState": c.get("cropState", {
-                    "splitY": 960,
-                    "face": {"x": 58, "y": 808, "w": 384, "h": 216},
-                    "game": {"x": 0, "y": 0, "w": 1920, "h": 1080},
-                    "full": {"x": 0, "y": 0, "w": 1920, "h": 1080},
-                    "subs": {"x": 530, "y": 744, "w": 860, "h": 336}
-                })
-            })
-            
-            data.setdefault("proposals", []).append(c)
-            data["proposals"].sort(key=lambda x: x["start"])
-            if analysis_file:
-                atomic_write_json(analysis_file, data)
-                    
         all_new_clips = []
         total_in = 0
         total_out = 0
         
+        # === TORNEO: se generan candidatos y solo se guardan los MEJORES ===
+        final_n = req.max_clips if req.max_clips and req.max_clips > 0 else 6
+        candidate_budget = max(12, final_n * 2)
+        candidate_pool = []
+
+        def collect_candidate(c):
+            cs, ce = c.get("start", 0), c.get("end", 0)
+            for p in data.get("proposals", []) + data.get("completed_proposals", []) + data.get("completed_ranges", []) + data.get("rejected_proposals", []) + data.get("archived_proposals", []):
+                if max(cs, p.get("start", 0)) < min(ce, p.get("end", 0)):
+                    return
+            candidate_pool.append(c)
+            # Persistir el pool por si se corta el proceso
+            data["candidate_pool"] = candidate_pool
+            if analysis_file:
+                atomic_write_json(analysis_file, data)
+
         if "volume" in req.search_modes:
             print("Iniciando Pipeline de Ahorro de Tokens Local-First...")
-            def prog_vol(pct, msg): progress_cb(int(pct/2), "MODO ACCIÃƒâ€œN: " + msg) if "semantic" in req.search_modes else progress_cb(pct, msg)
+            def prog_vol(pct, msg): progress_cb(int(pct * 0.45), "MODO ACCIÓN: " + msg) if "semantic" in req.search_modes else progress_cb(int(pct * 0.9), msg)
             nc, tin, tout = analyze_video_local_first(
-                video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_vol, exclusion_zones, incremental_save, req.max_clips
+                video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_vol, exclusion_zones, collect_candidate, candidate_budget
             )
             all_new_clips.extend(nc)
             total_in += tin
             total_out += tout
-            # Actualizar exclusiones para que semantic no repita
             for p in nc: exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
-            
+
         if "semantic" in req.search_modes:
-            print("Iniciando Pipeline SemÃƒÂ¡ntico (Whisper + Gemini Texto)")
-            def prog_sem(pct, msg): progress_cb(50 + int(pct/2), "MODO HISTORIA: " + msg) if "volume" in req.search_modes else progress_cb(pct, msg)
+            print("Iniciando Pipeline Semántico (Whisper + Gemini Texto)")
+            def prog_sem(pct, msg): progress_cb(45 + int(pct * 0.45), "MODO HISTORIA: " + msg) if "volume" in req.search_modes else progress_cb(int(pct * 0.9), msg)
             nc, tin, tout = analyze_video_semantic(
-                video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_sem, exclusion_zones, 
-                incremental_save, req.max_clips, req.keywords
+                video_path, req.prompt, gemini_api_key, TEMP_CLIPS_DIR, prog_sem, exclusion_zones,
+                collect_candidate, candidate_budget, req.keywords
             )
             all_new_clips.extend(nc)
             total_in += tin
             total_out += tout
-        
+
+        winners, losers = [], []
+        if candidate_pool:
+            progress_cb(93, f"🏆 Torneo final: eligiendo los {final_n} mejores de {len(candidate_pool)} candidatos...")
+            from pipeline import rank_and_select_best
+            winners, losers, rin, rout = rank_and_select_best(
+                candidate_pool, gemini_api_key, os.path.basename(video_path), top_n=final_n
+            )
+            total_in += rin
+            total_out += rout
+            for w in sorted(winners, key=lambda x: x["start"]):
+                w.pop("_source", None); w.pop("_spike", None)
+                incremental_save(w)
+            archived = data.setdefault("archived_proposals", [])
+            for l in losers:
+                l.pop("_source", None); l.pop("_spike", None)
+                l["id"] = "arch_" + uuid.uuid4().hex[:6]
+                l["archived_reason"] = "No entró en el top: " + str(l.get("rank_why", ""))
+                archived.append(l)
+        data.pop("candidate_pool", None)
+        if analysis_file:
+            atomic_write_json(analysis_file, data)
+        all_new_clips = winners
+
         analysis_progress["status"] = "idle"
         
-        # Guardar costos
+        # Guardar costos (Gemini Flash-Lite: $0.10/1M texto, ~$0.30/1M audio, $0.40/1M salida)
         COSTS_FILE = os.path.join(DB_DIR, "cost_history.json")
         costs_data = {}
         if os.path.exists(COSTS_FILE):
@@ -820,19 +1081,35 @@ def _generate_clips_task(req: GenerateClipsRequest):
         costs_data[current_month]["input_tokens"] += total_in
         costs_data[current_month]["output_tokens"] += total_out
         
-        # Gemini 1.5 Flash pricing approx
-        cost_in = (total_in / 1_000_000) * 0.075
-        cost_out = (total_out / 1_000_000) * 0.30
+        input_rate = 0.20 if "volume" in req.search_modes else 0.10
+        cost_in = (total_in / 1_000_000) * input_rate
+        cost_out = (total_out / 1_000_000) * 0.40
         costs_data[current_month]["cost"] += (cost_in + cost_out)
         
         atomic_write_json(COSTS_FILE, costs_data)
         
-        if not all_new_clips:
-            return {"status": "error", "message": "No se encontraron clips viables o la IA rechazÃƒÂ³ los segmentos detectados."}
+        if not all_new_clips and saved_clips_count == 0:
+            analysis_progress["status"] = "idle"
+            analysis_progress["message"] = "No se encontraron clips nuevos."
+            return {"status": "error", "message": "No se encontraron clips viables o la IA rechazó los segmentos detectados."}
             
-        return {"status": "success", "message": f"{len(all_new_clips)} Clips generados exitosamente"}
+        extra = f" (de {len(candidate_pool)} candidatos; {len(losers)} quedaron archivados)" if candidate_pool else ""
+        analysis_progress["message"] = f"🏆 {saved_clips_count} mejores clips elegidos{extra}"
+        return {"status": "success", "message": f"🏆 {saved_clips_count} mejores clips elegidos{extra}"}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        err_msg = str(e)
+        if "spending cap" in err_msg.lower() or "ai.studio/spend" in err_msg.lower():
+            err_msg = "TOPE DE GASTO MENSUAL ALCANZADO: Tu proyecto en Google AI Studio superó el límite de gasto mensual ('Monthly Spend Cap'). Entra a https://ai.studio/spend para subir tu tope mensual o usa otra API Key en Ajustes."
+        elif "prepayment credits are depleted" in err_msg or "402" in err_msg:
+            err_msg = "CRÉDITOS AGOTADOS (Error 402): Te has quedado sin saldo prepago en Google AI Studio. Recarga saldo en https://ai.studio/projects para poder seguir analizando."
+        elif "limit: 0" in err_msg:
+            err_msg = "CUOTA AGOTADA: Has superado el límite de tu API Key de Gemini."
+        if 'saved_clips_count' in locals() and saved_clips_count > 0:
+            err_msg = f"⚠️ Se guardaron {saved_clips_count} clips nuevos con éxito, pero el análisis se detuvo antes de terminar:\n\n{err_msg}"
+        analysis_progress["status"] = "error"
+        analysis_progress["message"] = err_msg
+        print(f"Error crítico en _generate_clips_task: {err_msg}")
+        return {"status": "error", "message": err_msg}
 
 @app.post("/add_manual_clip")
 def add_manual_clip(req: AddManualClipRequest):
@@ -899,22 +1176,40 @@ def mark_clip_done(req: MarkClipDoneRequest):
             
         completed_ranges = data.get("completed_ranges", [])
         proposals = data.get("proposals", [])
+        completed_proposals = data.get("completed_proposals", [])
         
         target_clip = next((c for c in proposals if c["id"] == req.clip_id), None)
         is_completed = False
         
         if not target_clip:
-            completed_proposals = data.get("completed_proposals", [])
             target_clip = next((c for c in completed_proposals if c["id"] == req.clip_id), None)
-            is_completed = True
+            is_completed = True if target_clip else False
+
+        if not target_clip and req.export_name:
+            clean_exp = req.export_name.strip()
+            if clean_exp.lower().endswith(".mp4"):
+                clean_exp = clean_exp[:-4]
+            m_lead = re.match(r'^(\d+)_', clean_exp)
+            cand_id = f"clip_{int(m_lead.group(1))}" if m_lead else None
+            target_clip = next((c for c in proposals if c.get("export_name") == clean_exp or (cand_id and c.get("id") == cand_id)), None)
+            if not target_clip:
+                target_clip = next((c for c in completed_proposals if c.get("export_name") == clean_exp or (cand_id and c.get("id") == cand_id)), None)
+                is_completed = True if target_clip else False
             
+        final_clip_id = req.clip_id
         if target_clip:
+            old_id = target_clip["id"]
+            target_clip.setdefault("original_ai_transcript", target_clip.get("transcript", ""))
+            target_clip.setdefault("original_ai_start", target_clip.get("start", 0))
+            target_clip.setdefault("original_ai_end", target_clip.get("end", 0))
             if req.start is not None:
                 target_clip["start"] = req.start
             if req.end is not None:
                 target_clip["end"] = req.end
-            if req.export_name is not None:
-                target_clip["export_name"] = req.export_name
+            if req.export_name is not None and str(req.export_name).strip():
+                final_clip_id = sync_clip_id_with_export_name(data, old_id, req.export_name)
+            else:
+                final_clip_id = old_id
             
             if not is_completed:
                 completed_ranges.append({"start": target_clip["start"], "end": target_clip["end"]})
@@ -922,10 +1217,11 @@ def mark_clip_done(req: MarkClipDoneRequest):
                 
                 # Save full clip to completed_proposals
                 completed_proposals = data.get("completed_proposals", [])
-                completed_proposals.append(target_clip)
+                if not any(c is target_clip for c in completed_proposals):
+                    completed_proposals.append(target_clip)
                 data["completed_proposals"] = completed_proposals
                 
-                data["proposals"] = [c for c in proposals if c["id"] != req.clip_id]
+                data["proposals"] = [c for c in data.get("proposals", []) if c is not target_clip and c["id"] not in (old_id, final_clip_id)]
             
             atomic_write_json(analysis_file, data)
                 
@@ -940,9 +1236,9 @@ def mark_clip_done(req: MarkClipDoneRequest):
                 dur = round(target_clip['end'] - target_clip['start'], 2)
                 video_src = data.get("video", "Desconocido")
                 export_name = target_clip.get('export_name', '')
-                writer.writerow([now, video_src, req.clip_id, export_name, target_clip.get('reason', ''), target_clip['start'], target_clip['end'], dur])
+                writer.writerow([now, video_src, final_clip_id, export_name, target_clip.get('reason', ''), target_clip['start'], target_clip['end'], dur])
                 
-        return {"status": "success"}
+        return {"status": "success", "clip_id": final_clip_id}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
@@ -970,6 +1266,18 @@ def restore_clip(req: RestoreClipRequest):
         target = next((c for c in completed_proposals if c["id"] == req.clip_id), None)
         if not target:
             target = next((c for c in rejected_proposals if c["id"] == req.clip_id), None)
+        archived_proposals = data.get("archived_proposals", [])
+        if not target:
+            target = next((c for c in archived_proposals if c["id"] == req.clip_id), None)
+            if target:
+                target.pop("archived_reason", None)
+                max_n = 0
+                for ex in data.get("proposals", []) + completed_proposals + rejected_proposals:
+                    m = re.match(r"^clip_(\d+)$", str(ex.get("id", "")))
+                    if m: max_n = max(max_n, int(m.group(1)))
+                data["archived_proposals"] = [c for c in archived_proposals if c is not target]
+                target["id"] = f"clip_{max_n + 1}"
+                req.clip_id = target["id"]
             
         if target:
             proposals.append(target)
@@ -984,6 +1292,25 @@ def restore_clip(req: RestoreClipRequest):
             atomic_write_json(analysis_file, data)
                 
         return {"status": "success"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/taste_profile")
+def taste_profile(refresh: bool = False):
+    try:
+        import pipeline, importlib
+        importlib.reload(pipeline)
+        api_key = ""
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                api_key = json.load(f).get("gemini_api_key", "")
+        profile = pipeline.get_taste_profile(api_key, force=refresh)
+        meta = {}
+        pf = os.path.join(DB_DIR, "taste_profile.json")
+        if os.path.exists(pf):
+            with open(pf, "r", encoding="utf-8") as f:
+                meta = json.load(f)
+        return {"status": "success", "profile": profile, "meta": {k: v for k, v in meta.items() if k != "profile"}}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
@@ -1025,6 +1352,28 @@ def delete_clip(req: DeleteClipRequest):
             rejected_proposals = data.get("rejected_proposals", [])
             rejected_proposals.append(target_clip)
             data["rejected_proposals"] = rejected_proposals
+
+            try:
+                fb_file_json = os.path.join(DB_DIR, "feedback_ia.json")
+                feedback_data = []
+                if os.path.exists(fb_file_json):
+                    with open(fb_file_json, "r", encoding="utf-8") as fb_f:
+                        try:
+                            feedback_data = json.load(fb_f)
+                        except Exception:
+                            feedback_data = []
+                fb_key = f"{req.video_name}_{req.clip_id}"
+                feedback_data = [item for item in feedback_data if item.get("id") not in (req.clip_id, fb_key)]
+                feedback_data.append({
+                    "id": fb_key,
+                    "feedback": "down",
+                    "category": target_clip.get("category", ""),
+                    "reason": target_clip.get("reason", ""),
+                    "transcript": target_clip.get("transcript", "")
+                })
+                atomic_write_json(fb_file_json, feedback_data)
+            except Exception as fb_err:
+                print(f"Aviso guardando feedback de rechazo: {fb_err}")
             
         data["proposals"] = [c for c in proposals if c["id"] != req.clip_id]
         
@@ -1118,6 +1467,7 @@ def update_clip(req: UpdateClipRequest):
         with open(ass_path, "w", encoding="utf-8") as f:
             f.write(req.ass_text)
             
+        final_clip_id = req.clip_id
         # Guardar las palabras exactas en analysis.json
         analysis_file = get_analysis_file(req.video_name)
         if analysis_file and os.path.exists(analysis_file):
@@ -1131,6 +1481,8 @@ def update_clip(req: UpdateClipRequest):
                         c["social_title"] = req.social_title
                     if req.social_desc is not None:
                         c["social_desc"] = req.social_desc
+                    if getattr(req, "yt_tags", None) is not None:
+                        c["yt_tags"] = req.yt_tags
                     if req.start is not None:
                         c["start"] = req.start
                     if req.end is not None:
@@ -1149,6 +1501,8 @@ def update_clip(req: UpdateClipRequest):
                         c["social_title"] = req.social_title
                     if req.social_desc is not None:
                         c["social_desc"] = req.social_desc
+                    if getattr(req, "yt_tags", None) is not None:
+                        c["yt_tags"] = req.yt_tags
                     if req.start is not None:
                         c["start"] = req.start
                     if req.end is not None:
@@ -1158,9 +1512,11 @@ def update_clip(req: UpdateClipRequest):
                     if req.cropState is not None:
                         c["cropState"] = req.cropState
                     c["stickers"] = req.stickers
+            if req.export_name is not None and str(req.export_name).strip():
+                final_clip_id = sync_clip_id_with_export_name(data, req.clip_id, req.export_name)
             atomic_write_json(analysis_file, data)
                 
-        return {"status": "success", "message": "SubtÃƒÂ­tulos actualizados correctamente."}
+        return {"status": "success", "clip_id": final_clip_id, "message": "SubtÃƒÂ­tulos actualizados correctamente."}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
@@ -1186,11 +1542,13 @@ class ExportRequest(BaseModel):
     end: float
     video_name: str
     fit_mode: str
+    split_ratio: float = 0.5
     scenes: List[dict]
     hook: Optional[dict] = None
     words: List[dict]
     subtitle_style: dict
     stickers: List[dict] = []
+    sounds: List[dict] = []
     outro: Optional[dict] = None
     export_name: Optional[str] = None
     social_title: Optional[str] = None
@@ -1210,11 +1568,28 @@ def export_clip(req: ExportRequest):
             return {"status": "error", "message": f"Video fuente no encontrado: {video_path}"}
             
         if req.export_name:
-            safe_name = "".join(c for c in req.export_name if c.isalnum() or c in " _-")
+            raw_exp = req.export_name.strip()
+            if raw_exp.lower().endswith(".mp4"):
+                raw_exp = raw_exp[:-4]
+            safe_name = "".join(c for c in raw_exp if c.isalnum() or c in " _-").strip()
             if not safe_name: safe_name = req.clip_id + "_render"
             out_file = os.path.join(EXPORTS_DIR, f"{safe_name}.mp4")
         else:
+            safe_name = ""
             out_file = os.path.join(EXPORTS_DIR, f"{req.clip_id}_render.mp4")
+
+        # Sincronizar export_name y el ID del clip con el número inicial del archivo exportado
+        synced_clip_id = req.clip_id
+        if safe_name:
+            analysis_file = get_analysis_file(req.video_name)
+            if analysis_file and os.path.exists(analysis_file):
+                try:
+                    with open(analysis_file, "r", encoding="utf-8") as af:
+                        adata = json.load(af)
+                    synced_clip_id = sync_clip_id_with_export_name(adata, req.clip_id, safe_name)
+                    atomic_write_json(analysis_file, adata)
+                except Exception as sync_err:
+                    print("Advertencia al sincronizar ID en export:", sync_err)
         
         # 1. Generar SubtÃƒÂ­tulos DinÃƒÂ¡micos (.ass)
         ass_path = os.path.join(ASS_DIR, f"subs_{req.clip_id}_auto.ass")
@@ -1636,11 +2011,43 @@ def export_clip(req: ExportRequest):
                 else:
                     font_path = "C\\:/Windows/Fonts/ariblk.ttf"
                 
-            if h_text_top:
-                draw_pipeline += f",drawbox=y={top_y_px - 35}:color=black@0.7:width=iw:height=150:t=fill,drawtext=fontfile='{font_path}':text='{h_text_top}':fontcolor={color_choice}:fontsize=80:x=(w-text_w)/2:y={top_y_px}:shadowcolor=black:shadowx=3:shadowy=3"
+            font_size = int(req.hook.get('fontSize', 65) or 65)
             
-            if h_text_bottom:
-                draw_pipeline += f",drawbox=y={bottom_y_px - 35}:color=black@0.7:width=iw:height=150:t=fill,drawtext=fontfile='{font_path}':text='{h_text_bottom}':fontcolor={color_choice}:fontsize=80:x=(w-text_w)/2:y={bottom_y_px}:shadowcolor=black:shadowx=3:shadowy=3"
+            import textwrap
+            def wrap_hook_text(raw_text, font_sz):
+                if not raw_text or not str(raw_text).strip():
+                    return []
+                max_chars = max(12, int(1350 / font_sz))
+                lines = []
+                for paragraph in str(raw_text).splitlines():
+                    p = paragraph.strip()
+                    if not p:
+                        continue
+                    wrapped = textwrap.wrap(p, width=max_chars, break_long_words=True)
+                    lines.extend(wrapped)
+                return lines
+                
+            top_lines = wrap_hook_text(req.hook.get('textTop', ''), font_size)
+            if top_lines:
+                line_height = int(font_size * 1.25)
+                box_h = int(len(top_lines) * line_height + 30)
+                box_y = int(top_y_px - 15)
+                draw_pipeline += f",drawbox=y={box_y}:color=black@0.7:width=iw:height={box_h}:t=fill"
+                for i_l, l_txt in enumerate(top_lines):
+                    esc_txt = l_txt.replace('\\', '\\\\').replace("'", "'\\\\''").replace(":", "\\:").replace("%", "\\%")
+                    l_y = int(top_y_px + i_l * line_height)
+                    draw_pipeline += f",drawtext=fontfile='{font_path}':text='{esc_txt}':fontcolor={color_choice}:fontsize={font_size}:x=(w-text_w)/2:y={l_y}:shadowcolor=black:shadowx=4:shadowy=4"
+            
+            bot_lines = wrap_hook_text(req.hook.get('textBottom', ''), font_size)
+            if bot_lines:
+                line_height = int(font_size * 1.25)
+                box_h = int(len(bot_lines) * line_height + 30)
+                box_y = int(bottom_y_px - 15)
+                draw_pipeline += f",drawbox=y={box_y}:color=black@0.7:width=iw:height={box_h}:t=fill"
+                for i_l, l_txt in enumerate(bot_lines):
+                    esc_txt = l_txt.replace('\\', '\\\\').replace("'", "'\\\\''").replace(":", "\\:").replace("%", "\\%")
+                    l_y = int(bottom_y_px + i_l * line_height)
+                    draw_pipeline += f",drawtext=fontfile='{font_path}':text='{esc_txt}':fontcolor={color_choice}:fontsize={font_size}:x=(w-text_w)/2:y={l_y}:shadowcolor=black:shadowx=4:shadowy=4"
                 
             filter_parts.append(f"{draw_pipeline},setsar=1[out_hook]")
             inputs_concat.append("[out_hook]")
@@ -1774,11 +2181,13 @@ def export_clip(req: ExportRequest):
             
         if outro_idx != -1: total_dur += 5.0
         
-        cmd = [FFMPEG_BIN, "-y", "-threads", "0"] + inputs_args + [
+        cmd = [FFMPEG_BIN, "-y", "-threads", "8"] + inputs_args + [
+            "-filter_complex_threads", "4",
             "-filter_complex", filter_complex,
             "-map", "[v_out]", "-map", "[a_concat]",
             "-c:v", "h264_nvenc", "-preset", "p2", "-cq", "25",
             "-c:a", "aac",
+            "-threads", "8",
             "-progress", "pipe:1",
             out_file
         ]
@@ -1786,10 +2195,44 @@ def export_clip(req: ExportRequest):
         with open(os.path.join(BASE_DIR, "debug_cmd.txt"), "w", encoding="utf-8") as f:
             f.write(repr(cmd))
             
-        threading.Thread(target=run_ffmpeg, args=(cmd, req.clip_id, total_dur)).start()
+        threading.Thread(target=run_ffmpeg, args=(cmd, req.clip_id, total_dur, synced_clip_id)).start()
         
+        # Sanitizar y normalizar metadatos al exportar (sin insultos, con hashtags y tags de YouTube con comas)
+        from pipeline import sanitize_and_format_metadata
+        meta_temp = {
+            "social_title": req.social_title or "",
+            "social_desc": req.social_desc or "",
+            "yt_tags": getattr(req, "social_tags", None) or "",
+        }
+        sanitize_and_format_metadata(meta_temp, req.video_name)
+        req.social_title = meta_temp.get("social_title", req.social_title)
+        req.social_desc = meta_temp.get("social_desc", req.social_desc)
+        req.social_tags = meta_temp.get("yt_tags", getattr(req, "social_tags", None))
+
+        # Persistir en el JSON del video para que la tabla de Publicaciones tenga los metadatos limpios
+        try:
+            analysis_file_meta = get_analysis_file(req.video_name)
+            if analysis_file_meta and os.path.exists(analysis_file_meta):
+                with open(analysis_file_meta, "r", encoding="utf-8") as afm:
+                    adata_m = json.load(afm)
+                for lst_k in ("proposals", "completed_proposals"):
+                    for c_item in adata_m.get(lst_k, []):
+                        if c_item.get("id") in (req.clip_id, synced_clip_id):
+                            if req.social_title:
+                                c_item["social_title"] = req.social_title
+                                c_item["yt_title"] = req.social_title
+                            if req.social_desc:
+                                c_item["social_desc"] = req.social_desc
+                            if req.social_tags:
+                                c_item["yt_tags"] = req.social_tags
+                atomic_write_json(analysis_file_meta, adata_m)
+        except Exception as e_m:
+            print("Aviso guardando metadatos en export:", e_m)
+
         # Generar archivo _redes.txt en DB_DIR
-        if getattr(req, "clip_id", None):
+        if synced_clip_id:
+            txt_path = os.path.join(DB_DIR, f"{synced_clip_id}_redes.txt")
+        elif getattr(req, "clip_id", None):
             txt_path = os.path.join(DB_DIR, f"{req.clip_id}_redes.txt")
         else:
             txt_path = os.path.join(DB_DIR, f"{safe_name}_redes.txt" if req.export_name else "redes.txt")
@@ -1802,7 +2245,7 @@ def export_clip(req: ExportRequest):
             if getattr(req, "social_tags", None):
                 f.write("ETIQUETAS:\n" + req.social_tags + "\n")
                     
-        return {"status": "success", "output": out_file, "message": "Render iniciado en segundo plano."}
+        return {"status": "success", "output": out_file, "clip_id": synced_clip_id, "export_name": safe_name, "message": "Render iniciado en segundo plano."}
     except Exception as e:
         return {"status": "error", "message": str(e), "trace": traceback.format_exc()}
 
@@ -1810,77 +2253,368 @@ def export_clip(req: ExportRequest):
 def regenerate_metadata(req: RegenerateMetadataRequest):
     try:
         from google import genai
+        import pipeline, importlib
+        importlib.reload(pipeline)
+        from pipeline import extract_game_title, sanitize_and_format_metadata
+
         api_key = ""
         if os.path.exists(CONFIG_FILE):
             with open(CONFIG_FILE, "r", encoding="utf-8") as f:
                 api_key = json.load(f).get("gemini_api_key", "")
         if not api_key:
             raise Exception("No hay API Key configurada.")
-        
+
         client = genai.Client(api_key=api_key.strip())
-        
-        link_instruction = "que SIEMPRE termine con 'Podes ver el video completo haciendo click en el link' seguida de los " if "gourmet" in req.video_name.lower() else ""
-        
-        sys_prompt = f"Eres Leito4Gaming, un streamer y creador de videos virales de gaming de Argentina. Escribe en Espanol Argentino autentico (rioplatense), NUNCA uses 'tu', habla de VOS. Escribe en PRIMERA PERSONA. Recibes la transcripcion de un clip de tu video ({req.video_name}). Tu tarea es generar UNICAMENTE un JSON valido con dos campos: 'social_title' (string, Titulo ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip) y 'social_desc' (string, descripcion MUY CORTA de APENAS UN RENGLON (maximo 10 palabras) que tenga sentido con el clip, en PRIMERA PERSONA. {link_instruction} Luego pon solo 3 hashtags populares del juego). NO uses markdown, solo el JSON raw."
-        
+        game_title = extract_game_title(req.video_name)
+        link_instruction = "que SIEMPRE termine la oración con 'Podes ver el video completo haciendo click en el link.' antes de los hashtags, " if "gourmet" in req.video_name.lower() else ""
+
+        sys_prompt = (
+            f"Sos Leito4Gaming, un streamer argentino jugando a {game_title}. "
+            f"Escribí en español argentino natural y cotidiano (tratando de vos, en primera persona, como hablarías normalmente con amigos). "
+            f"REGLAS ESTRICTAS:\n"
+            f"1. CERO INSULTOS: Está PROHIBIDO poner malas palabras o insultos ('boludo', 'la puta madre', 'concha', 'mierda', 'carajo', 'cagazo', 'wtf', etc.) aunque estén en la transcripción.\n"
+            f"2. CERO FRASES TONTAS O INFANTILES: No uses signos de exclamación exagerados ('¡Un bicho me quiso matar!') ni títulos todos en mayúsculas. Escribí de forma normal, sobria y auténtica contando qué pasó en el clip.\n"
+            f"3. Devolvé ÚNICAMENTE un JSON válido con estos 3 campos:\n"
+            f"- 'social_title': Título atractivo, natural y directo (sin insultos) que cuente qué pasa en el clip.\n"
+            f"- 'social_desc': Descripción natural en primera persona (1 o 2 oraciones cortas, de 10 a 22 palabras, como hablarías vos normalmente) {link_instruction}seguida al final por 3 o 4 hashtags relevantes con '#' (incluyendo el del juego #{re.sub(r'[^a-zA-Z0-9]', '', game_title.title())} y #Leito4Gaming).\n"
+            f"- 'yt_tags': String con 8 a 12 etiquetas para YouTube SEPARADAS POR COMA (sin '#'), que SIEMPRE incluya 'Leito4Gaming, {game_title}' y etiquetas específicas del juego y de la situación del clip."
+        )
+
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=[sys_prompt, f"TRANSCRIPCION:\n{req.transcript}"]
+            model='gemini-3.5-flash-lite',
+            contents=[sys_prompt, f"JUEGO: {game_title}\nTRANSCRIPCIÓN DEL CLIP:\n{req.transcript}"],
+            config={"temperature": 0.25, "response_mime_type": "application/json"}
         )
         txt = response.text
-        import re
         match = re.search(r'\{.*\}', txt, re.DOTALL)
         if match:
             txt = match.group(0)
         else:
             txt = txt.replace('```json', '').replace('```', '').replace('`', '').strip()
         data = json.loads(txt)
-        return {"status": "success", "social_title": data.get("social_title", ""), "social_desc": data.get("social_desc", "")}
+        sanitize_and_format_metadata(data, req.video_name)
+        return {
+            "status": "success",
+            "social_title": data.get("social_title", ""),
+            "social_desc": data.get("social_desc", ""),
+            "yt_tags": data.get("yt_tags", ""),
+        }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+def align_words_to_voice_onset(wav_path: str, words_rel: list) -> list:
+    """
+    Ajusta los tiempos relativos [start, end] de cada palabra de Whisper al inicio acústico real (onset)
+    de la voz en el archivo WAV de 16kHz, eliminando la anticipación de Whisper tras pausas o silencios.
+    """
+    if not words_rel or not os.path.exists(wav_path):
+        return words_rel
+    try:
+        import wave
+        import numpy as np
+
+        with wave.open(wav_path, "rb") as wf:
+            sr = wf.getframerate() or 16000
+            raw = wf.readframes(wf.getnframes())
+            samples = np.frombuffer(raw, dtype=np.int16).astype(np.float32)
+
+        if len(samples) == 0:
+            return words_rel
+
+        hop = max(1, int(sr * 0.01))  # 10ms por frame (100 frames/seg)
+        n_frames = len(samples) // hop
+        if n_frames < 5:
+            return words_rel
+
+        frames = samples[:n_frames * hop].reshape(n_frames, hop)
+        rms = np.sqrt(np.mean(frames ** 2, axis=1))
+        kernel = np.array([0.25, 0.5, 0.25], dtype=np.float32)
+        rms_smooth = np.convolve(rms, kernel, mode="same")
+
+        global_p25 = float(np.percentile(rms_smooth, 25))
+        global_p50 = float(np.percentile(rms_smooth, 50))
+
+        aligned = []
+        n_w = len(words_rel)
+
+        for idx, w in enumerate(words_rel):
+            w_copy = dict(w)
+            txt = str(w_copy.get("word") or w_copy.get("text") or "").strip()
+            clean_len = max(1, len(txt.strip(".,?!¡¿\"'()-")))
+            ws = max(0.0, float(w_copy.get("start", 0.0)))
+            we = max(ws + 0.06, float(w_copy.get("end", ws + 0.1)))
+
+            if idx + 1 < n_w:
+                next_s = float(words_rel[idx + 1].get("start", we))
+                if next_s > ws + 0.04 and we > next_s:
+                    we = next_s
+
+            f_s = max(0, min(n_frames - 1, int(round(ws * 100))))
+            f_e = max(f_s + 1, min(n_frames, int(round(we * 100))))
+
+            ctx_s = max(0, f_s - 150)
+            ctx_e = min(n_frames, f_e + 150)
+            local_p25 = float(np.percentile(rms_smooth[ctx_s:ctx_e], 25))
+            noise_floor = max(35.0, min(local_p25, global_p50 * 0.8, global_p25 * 1.6))
+
+            seg_rms = rms_smooth[f_s:f_e]
+            w_peak = float(np.max(seg_rms)) if len(seg_rms) > 0 else 0.0
+
+            onset_thresh = max(noise_floor * 2.1, w_peak * 0.16, 120.0 if w_peak > 450 else w_peak * 0.30)
+
+            dur = we - ws
+            max_natural_dur = max(0.34, min(0.80, 0.16 + 0.058 * clean_len))
+
+            if len(seg_rms) >= 4 and w_peak > noise_floor * 1.6:
+                active_mask = seg_rms >= onset_thresh
+                new_f_s = f_s
+                new_f_e = f_e
+
+                if np.any(active_mask):
+                    runs = []
+                    in_run = False
+                    r_start = 0
+                    for k, is_act in enumerate(active_mask):
+                        if is_act and not in_run:
+                            in_run = True
+                            r_start = k
+                        elif not is_act and in_run:
+                            in_run = False
+                            runs.append([r_start, k])
+                    if in_run:
+                        runs.append([r_start, len(active_mask)])
+
+                    merged_runs = []
+                    for r in runs:
+                        if merged_runs and (r[0] - merged_runs[-1][1]) < 7:
+                            merged_runs[-1][1] = r[1]
+                        else:
+                            merged_runs.append(r)
+
+                    if len(merged_runs) == 1:
+                        r0 = merged_runs[0]
+                        new_f_s = f_s + r0[0]
+                        if (len(seg_rms) - r0[1]) >= 20:
+                            new_f_e = f_s + min(len(seg_rms), r0[1] + 5)
+                    elif len(merged_runs) >= 2:
+                        last_r = merged_runs[-1]
+                        if last_r[1] >= len(seg_rms) - 1 and (last_r[1] - last_r[0]) <= 4 and (last_r[0] - merged_runs[-2][1]) >= 10:
+                            merged_runs.pop()
+
+                        if len(merged_runs) == 1:
+                            r0 = merged_runs[0]
+                            new_f_s = f_s + r0[0]
+                            if (len(seg_rms) - r0[1]) >= 20:
+                                new_f_e = f_s + min(len(seg_rms), r0[1] + 5)
+                        elif dur > max(0.48, max_natural_dur * 1.15):
+                            first_r = merged_runs[0]
+                            last_r = merged_runs[-1]
+                            e_first = float(np.sum(seg_rms[first_r[0]:first_r[1]]))
+                            e_last = float(np.sum(seg_rms[last_r[0]:last_r[1]]))
+                            gap_len = last_r[0] - first_r[1]
+                            if first_r[0] <= 2 and (first_r[1] - first_r[0]) <= 14 and gap_len >= 12 and e_last >= e_first * 0.7:
+                                new_f_s = f_s + last_r[0]
+                                new_f_e = f_s + min(len(seg_rms), last_r[1] + 4)
+                            elif e_first > e_last * 1.8 and gap_len >= 12:
+                                new_f_s = f_s + first_r[0]
+                                new_f_e = f_s + min(len(seg_rms), first_r[1] + 5)
+                            else:
+                                new_f_s = f_s + first_r[0]
+                        else:
+                            new_f_s = f_s + merged_runs[0][0]
+
+                ws_snapped = new_f_s * 0.01
+                we_snapped = max(ws_snapped + 0.08, new_f_e * 0.01)
+
+                if (we_snapped - ws_snapped) > max_natural_dur * 1.4:
+                    mid_f = int((new_f_s + new_f_e) // 2)
+                    if new_f_s < mid_f < new_f_e:
+                        h1_mean = float(np.mean(rms_smooth[new_f_s:mid_f]))
+                        h2_mean = float(np.mean(rms_smooth[mid_f:new_f_e]))
+                        if h1_mean < h2_mean * 0.38:
+                            ws_snapped = max(ws_snapped, we_snapped - max_natural_dur)
+
+                ws = ws_snapped
+                we = we_snapped
+            elif dur > max_natural_dur:
+                ws = max(ws, we - max_natural_dur)
+
+            # Ajuste perceptual de +20ms para que el subtítulo aparezca exacto con el golpe de voz y nunca antes
+            if (we - ws) >= 0.14:
+                ws = min(we - 0.08, ws + 0.02)
+
+            w_copy["start"] = round(ws, 2)
+            w_copy["end"] = round(max(we, ws + 0.08), 2)
+            aligned.append(w_copy)
+
+        for i in range(len(aligned) - 1):
+            if aligned[i]["end"] > aligned[i + 1]["start"]:
+                aligned[i]["end"] = round(max(aligned[i]["start"] + 0.05, aligned[i + 1]["start"]), 2)
+
+        return aligned
+    except Exception as e_al:
+        print(f"Aviso en align_words_to_voice_onset: {e_al}")
+        return words_rel
+
 
 @app.post("/transcribe")
 def transcribe_audio(req: TranscribeRequest):
     try:
+        import subprocess
+        import whisper
+        import torch
+        from pipeline import extract_game_title
+
         video_path = find_video_path(req.video_name)
         if not os.path.exists(video_path):
             return {"status": "error", "message": "Video no encontrado."}
-            
+
         temp_audio = os.path.join(TEMP_CLIPS_DIR, f"{req.clip_id}_audio.wav")
+        # Filtro vocal sin lookahead (sin dynaudnorm) para mantener latencia cero y contraste real silencio/voz
+        audio_filter = "highpass=f=85,lowpass=f=7800"
         cmd = [
-            FFMPEG_BIN, "-y", "-ss", str(req.start), "-t", str(req.end - req.start),
-            "-i", video_path, "-map", f"0:a:{req.track - 1}", "-vn", "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1", temp_audio
+            FFMPEG_BIN, "-y", "-accurate_seek", "-ss", str(req.start), "-t", str(req.end - req.start),
+            "-i", video_path, "-map", f"0:a:{req.track - 1}",
+            "-vn", "-af", audio_filter,
+            "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1", temp_audio
         ]
-        import subprocess
         try:
             subprocess.run(cmd, check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
             if req.track > 1:
-                print(f"Advertencia: No se encontrÃƒÂ³ la Pista {req.track}. Cayendo de vuelta a la Pista 1 (0:a:0).")
+                print(f"Advertencia: No se encontró la Pista {req.track}. Cayendo de vuelta a la Pista 1 (0:a:0).")
                 cmd[cmd.index("-map") + 1] = "0:a:0"
                 subprocess.run(cmd, check=True, capture_output=True)
             else:
                 raise Exception(f"FFmpeg error: {e.stderr.decode('utf-8', errors='ignore')}")
-        
-        import whisper
-        print("Cargando modelo Whisper...")
-        try:
-            whisper_model = whisper.load_model("small")
-        except:
-            whisper_model = None
-        result = whisper_model.transcribe(temp_audio, word_timestamps=True, language="es", 
-            initial_prompt="boludo, wtf, la puta madre, ciervo, hotel, veneno.", 
-            condition_on_previous_text=False, no_speech_threshold=0.6, logprob_threshold=-1.0)
-        
-        words_out = []
+
+        game_title = extract_game_title(req.video_name)
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"Cargando modelo Whisper en {device} para transcribir clip de {game_title}...")
+        whisper_model = whisper.load_model("small", device=device)
+
+        clean_prompt = (
+            f"Gameplay en español argentino de {game_title}. "
+            f"Mirá, fijate acá, cuidado, corre, no puede ser, qué pasó, boludo, hermano, amigo, dale."
+        )
+        result = whisper_model.transcribe(
+            temp_audio,
+            word_timestamps=True,
+            language="es",
+            initial_prompt=clean_prompt,
+            condition_on_previous_text=False,
+            beam_size=5,
+            best_of=5,
+            temperature=(0.0, 0.2, 0.4),
+            no_speech_threshold=0.6,
+            logprob_threshold=-1.0,
+        )
+
+        words_rel = []
         for seg in result.get("segments", []):
+            if seg.get("no_speech_prob", 0.0) > 0.82:
+                continue
             for w in seg.get("words", []):
-                words_out.append({
-                    "word": w["word"].strip(),
-                    "start": req.start + w["start"],
-                    "end": req.start + w["end"]
+                w_txt = str(w.get("word", "")).strip()
+                if not w_txt:
+                    continue
+                prob = float(w.get("probability", 1.0) or 1.0)
+                w_s = float(w.get("start", 0.0))
+                w_e = float(w.get("end", w_s + 0.1))
+                # Filtrar alucinaciones de ruido muy improbables de 1-2 letras
+                if prob < 0.14 and len(w_txt.strip(".,?!¡¿")) <= 2:
+                    continue
+                words_rel.append({
+                    "word": w_txt,
+                    "start": max(0.0, w_s),
+                    "end": max(w_e, w_s + 0.06),
                 })
-                
+
+        if device == "cuda":
+            del whisper_model
+            torch.cuda.empty_cache()
+
+        # Paso 1.5: Alinear cada palabra al onset acústico real de la voz (elimina anticipación de Whisper tras pausas)
+        words_rel = align_words_to_voice_onset(temp_audio, words_rel)
+
+        words_out = [
+            {
+                "word": w["word"],
+                "start": round(req.start + w["start"], 2),
+                "end": round(req.start + max(w["end"], w["start"] + 0.08), 2),
+            }
+            for w in words_rel
+        ]
+
+        # Paso 2: Corrección fonética asistida por Gemini Flash-Lite escuchando el audio real
+        # (Mantiene INTACTOS los tiempos start/end de cada palabra de Whisper y solo corrige palabras mal entendidas o borra ruidos falsos)
+        api_key = ""
+        if os.path.exists(CONFIG_FILE):
+            try:
+                with open(CONFIG_FILE, "r", encoding="utf-8") as cf:
+                    api_key = json.load(cf).get("gemini_api_key", "").strip()
+            except Exception:
+                api_key = ""
+
+        if api_key and len(words_out) > 0:
+            temp_mp3 = os.path.join(TEMP_CLIPS_DIR, f"{req.clip_id}_verify.mp3")
+            try:
+                from google import genai
+                from google.genai import types
+                subprocess.run([
+                    FFMPEG_BIN, "-y", "-i", temp_audio,
+                    "-ac", "1", "-ar", "16000", "-c:a", "libmp3lame", "-b:a", "48k",
+                    temp_mp3
+                ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                with open(temp_mp3, "rb") as f_mp3:
+                    aud_part = types.Part.from_bytes(data=f_mp3.read(), mime_type="audio/mp3")
+
+                indexed_words = " | ".join(f"{idx}:{w['word']}" for idx, w in enumerate(words_out))
+                fix_prompt = (
+                    f"Sos un corrector experto de subtítulos en español argentino para un gameplay de '{game_title}'.\n"
+                    f"Escuchá el audio adjunto y revisá esta lista de palabras numeradas que transcribió Whisper:\n"
+                    f"{indexed_words}\n\n"
+                    f"REGLAS ESTRICTAS:\n"
+                    f"1. CADA ÍNDICE TIENE UN TIEMPO FIJO EN LA LÍNEA DE TIEMPO. PROHIBIDO correr palabras de un índice a otro.\n"
+                    f"2. Si una palabra en el índice 'i' fue mal entendida fonéticamente por Whisper (ej: puso 'bolita' en vez de 'boleta', 'apuertado' en vez de 'apretado', 'niza' en vez de nada, o escribió mal un término en español/inglés), devolvé su corrección exacta para ese mismo índice 'i'.\n"
+                    f"3. Si en un índice 'i' Whisper inventó una palabra donde solo había un grito puro ('aaah'), respiración, risa o ruido del juego sin palabra hablada, poné 'w': '' (vacío) en ese índice 'i' para eliminar esa alucinación.\n"
+                    f"4. Devolvé ÚNICAMENTE este JSON: {{\"fixes\": [{{\"i\": int, \"w\": \"palabra_corregida_o_vacio\"}}]}} (si todas están bien, devolvé {{\"fixes\": []}})."
+                )
+                client = genai.Client(api_key=api_key, http_options={'timeout': 45000})
+                resp = client.models.generate_content(
+                    model="gemini-3.5-flash-lite",
+                    contents=[aud_part, fix_prompt],
+                    config={"temperature": 0.1, "response_mime_type": "application/json"},
+                )
+                m = re.search(r"\{.*\}", resp.text or "", re.DOTALL)
+                if m:
+                    fix_data = json.loads(m.group(0))
+                    to_delete = set()
+                    fixes_list = fix_data.get("fixes", [])
+                    if isinstance(fixes_list, list):
+                        for fx in fixes_list:
+                            if not isinstance(fx, dict) or "i" not in fx:
+                                continue
+                            idx_f = int(fx["i"])
+                            if 0 <= idx_f < len(words_out):
+                                new_w = str(fx.get("w", "")).strip()
+                                if new_w == "":
+                                    to_delete.add(idx_f)
+                                else:
+                                    words_out[idx_f]["word"] = new_w
+                    if to_delete:
+                        words_out = [w for idx_w, w in enumerate(words_out) if idx_w not in to_delete]
+                    print(f"Subtítulos verificados con audio por IA: {len(fixes_list)} correcciones aplicadas.")
+            except Exception as e_fix:
+                print(f"Aviso en verificación de subtítulos con IA (usando Whisper directo): {e_fix}")
+            finally:
+                try:
+                    if os.path.exists(temp_mp3):
+                        os.remove(temp_mp3)
+                except Exception:
+                    pass
+
         return {"status": "success", "words": words_out}
     except Exception as e:
         return {"status": "error", "message": str(e), "trace": traceback.format_exc()}
@@ -1995,15 +2729,20 @@ def get_clip_audio_track(video_name: str, start: float, end: float, track_index:
         out_path = os.path.join(temp_dir, f'audio_track_{track_index}_{start}_{end}.wav')
         
         if not os.path.exists(out_path):
+            dur_track = max(0.1, float(end) - float(start))
             cmd = [
-                'ffmpeg', '-y', '-hide_banner', '-loglevel', 'error',
-                '-ss', str(start), '-to', str(end),
+                FFMPEG_BIN, '-y', '-hide_banner', '-loglevel', 'error',
+                '-accurate_seek', '-ss', str(start), '-t', str(dur_track),
                 '-i', video_path,
-                '-map', f'0:a:{track_index}',
+                '-vn', '-map', f'0:a:{track_index}',
                 '-c:a', 'pcm_s16le',
                 out_path
             ]
-            subprocess.run(cmd, check=True)
+            try:
+                subprocess.run(cmd, check=True)
+            except subprocess.CalledProcessError:
+                cmd[cmd.index('-map') + 1] = '0:a:0'
+                subprocess.run(cmd, check=True)
             
         return FileResponse(out_path)
     except Exception as e:

@@ -174,6 +174,67 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             border-radius: 2px;
             display: inline-block;
         }
+
+        /* Description / Reason Box */
+        .clip-reason-box {
+            position: relative;
+            margin-top: 6px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .clip-reason-textarea {
+            width: 100%;
+            font-size: 12.5px;
+            line-height: 1.45;
+            color: #e2e8f0;
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid #334155;
+            padding: 6px 28px 6px 8px;
+            border-radius: 6px;
+            outline: none;
+            resize: none;
+            box-sizing: border-box;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            overflow-y: hidden;
+            display: block;
+        }
+        .clip-reason-textarea:focus {
+            border-color: var(--accent-primary);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+        }
+        .clip-reason-textarea.collapsed {
+            height: 28px !important;
+            overflow: hidden !important;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding-right: 28px;
+        }
+        .clip-reason-toggle {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #94a3b8;
+            border-radius: 4px;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            padding: 0;
+            z-index: 2;
+        }
+        .clip-reason-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -228,8 +289,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             </div>
             
             <div style="margin-top: 15px; display: flex; align-items: center; justify-content: space-between;">
-                <label for="ai-max-clips" style="color: #ddd; font-size: 14px;">Cantidad máxima (0 = Automático):</label>
-                <input type="number" id="ai-max-clips" value="0" min="0" max="50" style="width: 60px; padding: 5px; border-radius: 4px; border: 1px solid #444; background: #222; color: white;">
+                <label for="ai-max-clips" style="color: #ddd; font-size: 14px;">🏆 Clips a entregar (solo los mejores):</label>
+                <input type="number" id="ai-max-clips" value="6" min="1" max="30" style="width: 60px; padding: 5px; border-radius: 4px; border: 1px solid #444; background: #222; color: white;">
             </div>
             <div style="margin-top: 10px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
                 <label style="color: #ddd; font-size: 14px;">Analizar desde:</label>
@@ -352,6 +413,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             <div id="completed-clip-list" style="margin-top: 10px;"></div>
             <h3 style="color: var(--danger); margin-top:30px; border-top: 1px solid var(--border-color); padding-top:20px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Clips Descartados</h3>
             <div id="rejected-clip-list" style="margin-top: 10px;"></div>
+            <h3 style="color: #888; margin-top:30px; border-top: 1px solid var(--border-color); padding-top:20px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; cursor:pointer;" onclick="toggleArchivedList()">📦 Archivados (no entraron en el top) <span id="archived-count"></span> <span id="archived-arrow">▸</span></h3>
+            <div id="archived-clip-list" style="margin-top: 10px; display:none;"></div>
         </div>
         <div id="main-timeline">
             <div style="flex: 1; background: #000; border-radius: var(--radius-lg); position: relative; overflow: hidden; box-shadow: var(--shadow-float); border: 1px solid var(--border-color);">
@@ -579,6 +642,15 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                             <option value="Montserrat">Montserrat</option>
                         </select>
                     </div>
+                    <div style="flex:1;">
+                        <label style="color:#aaa; font-size:12px; margin-bottom:5px; display:block;">Tamaño</label>
+                        <select id="hook-font-size" class="input-text" style="width:100%; padding: 6px;" onchange="updateHookText()">
+                            <option value="50">50px (Chico)</option>
+                            <option value="65" selected>65px (Recomendado)</option>
+                            <option value="80">80px (Grande)</option>
+                            <option value="95">95px (Muy Grande)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -684,6 +756,10 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     <label style="color:#aaa; font-size:12px; margin-bottom:5px; display:block;">Descripcin y Hashtags</label>
                     <textarea id="redes-desc" class="input-text" style="width:100%; height: 150px; padding: 6px;" placeholder="Ej: Suscrbete para ms! #gaming #terror" onblur="saveCurrentClipState()"></textarea>
                 </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color:#aaa; font-size:12px; margin-bottom:5px; display:block;">Tags de YouTube (separados por coma)</label>
+                    <textarea id="redes-tags" class="input-text" style="width:100%; height: 75px; padding: 6px; font-size:12px;" placeholder="Leito4Gaming, Nombre del Juego, gameplay español..." onblur="saveCurrentClipState()"></textarea>
+                </div>
             </div>
 
         </div>
@@ -694,7 +770,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom: 10px;">
                     <div id="workspace-source-info" style="color: #888; font-size: 12px;"></div>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="export-filename" placeholder="Nombre (opcional)" style="padding:5px; border-radius:4px; border:1px solid #444; background:#222; color:#fff; font-size:12px; flex: 1; min-width: 400px;">
+                        <input type="text" id="export-filename" placeholder="Nombre (ej: 48_Walking_Dead_2)" oninput="updateEditorClipBadgeFromFilename()" style="padding:5px; border-radius:4px; border:1px solid #444; background:#222; color:#fff; font-size:12px; flex: 1; min-width: 400px;">
                         <button id="btn-export" class="btn" style="background:#2080df; font-size: 12px; font-weight: bold; margin:0;" onclick="exportClip()">  Exportar a<br>FFmpeg</button>
                         <button class="btn" style="background:#28a745; font-size: 12px; font-weight: bold; margin:0;" onclick="approveClipFromEditor()">  Aprobar y<br>Guardar</button>
                         <button id="workspace-audio-btn" class="btn" style="background:#1155aa; font-size: 12px; margin:0;" onclick="toggleWorkspaceAudio()">Audio<br>Activado</button>
@@ -769,7 +845,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         <div style="grid-column: 2 / 5; grid-row: 2; background: #1a1a1a; padding: 10px 20px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 5px; position: relative;">
             <div id="timeline-resizer" style="position: absolute; top: -5px; left: 0; width: 100%; height: 10px; cursor: ns-resize; z-index: 100;"></div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="color: #aaa; font-size: 11px;">Multitrack: Escenas y Subtitulos | Duracion: <span id="editor-total-timer" style="color: #aa55ff; font-weight: bold;">0.0s</span></div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="color: #aaa; font-size: 11px;">Multitrack: Escenas y Subtitulos | Duracion: <span id="editor-total-timer" style="color: #aa55ff; font-weight: bold;">0.0s</span></div>
+                    <!-- Controles de Zoom -->
+                    <div style="display:flex; align-items:center; gap:4px; background:#111; padding:2px 6px; border-radius:4px; border:1px solid #333;">
+                        <span style="font-size:10px; color:#888; font-weight:bold;">🔍 Zoom:</span>
+                        <button type="button" onclick="setTimelineZoom(timelineZoomLevel - 0.5)" style="background:#262a36; color:#fff; border:1px solid #444; border-radius:3px; padding:2px 6px; font-size:11px; cursor:pointer;" title="Alejar timeline">-</button>
+                        <span id="timeline-zoom-label" style="font-size:10px; color:#f59e0b; font-weight:bold; min-width:26px; text-align:center;">1x</span>
+                        <button type="button" onclick="setTimelineZoom(timelineZoomLevel + 0.5)" style="background:#262a36; color:#fff; border:1px solid #444; border-radius:3px; padding:2px 6px; font-size:11px; cursor:pointer;" title="Acercar timeline (zoom in)">+</button>
+                        <button type="button" onclick="setTimelineZoom(1)" style="background:#333; color:#aaa; border:none; border-radius:3px; padding:2px 5px; font-size:9px; cursor:pointer;" title="Restablecer zoom normal">1x</button>
+                    </div>
+                </div>
                 <div style="display:flex; justify-content:center; gap:10px; width:auto;">
                     <button class="btn" style="background:#1155aa; padding: 4px 10px; font-size: 11px; margin:0;" onclick="rewindClip()">  Rebobinar</button>
                     <button class="btn" style="background:#c94c4c; padding: 4px 10px; font-size: 11px; margin:0;" onclick="splitScene()"> <br>Cortar<br>Escena</button>
@@ -778,34 +864,36 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 </div>
             </div>
             
-            <div id="editor-timeline-container" style="position: relative; width: 100%; flex: 1; background: #222; border-radius: 4px; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; border: 1px solid #444;">
-                <!-- Nuevo Scrubber Track -->
-                <div id="scrubber-track" style="position: relative; width: 100%; height: 15px; min-height: 15px; background: repeating-linear-gradient(90deg, #111, #111 4px, #555 4px, #555 5px); cursor: pointer; border-bottom: 1px solid #000; margin-bottom: 2px;" onclick="seekScrubber(event)">
-                    <div id="scrubber-head" style="position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: red; z-index: 10; pointer-events: none;"></div>
+            <div id="editor-timeline-container" style="position: relative; width: 100%; flex: 1; background: #222; border-radius: 4px; overflow-y: auto; overflow-x: auto; border: 1px solid #444;">
+                <div id="editor-timeline-content" style="position: relative; width: 100%; min-width: 100%; display: flex; flex-direction: column;">
+                    <!-- Nuevo Scrubber Track -->
+                    <div id="scrubber-track" style="position: relative; width: 100%; height: 15px; min-height: 15px; background: repeating-linear-gradient(90deg, #111, #111 4px, #555 4px, #555 5px); cursor: pointer; border-bottom: 1px solid #000; margin-bottom: 2px;" onclick="seekScrubber(event)">
+                        <div id="scrubber-head" style="position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: red; z-index: 10; pointer-events: none;"></div>
+                    </div>
+                    
+                    <!-- Escenas -->
+                    <div id="scene-track" style="position: relative; width: 100%; height: 20px; min-height: 20px; background: #222; margin-bottom: 2px; display:flex;">
+                        <!-- Bloques inyectados por JS -->
+                    </div>
+                    <!-- Subtitulos -->
+                    <div id="subs-track" style="position: relative; width: 100%; height: 35px; min-height: 35px; background: #181818; border-top: 1px solid #333; overflow-x: hidden;">
+                        <!-- Bloques inyectados por JS -->
+                    </div>
+                    <!-- Stickers -->
+                    <div id="stickers-track" style="position: relative; width: 100%; display: flex; flex-direction: column; min-height: 25px; background: #111; border-top: 1px solid #333; overflow-x: hidden;">
+                        <!-- Etiqueta de la pista -->
+                        <div style="position: absolute; left: 5px; top: 5px; font-size: 10px; color: #555; pointer-events: none;">Pista de Banners</div>
+                        <!-- Bloques inyectados por JS -->
+                    </div>
+                    <!-- Sounds -->
+                    <div id="sounds-track" style="position: relative; width: 100%; display: flex; flex-direction: column; min-height: 25px; background: #0a1128; border-top: 1px solid #333; overflow-x: hidden;">
+                        <!-- Etiqueta de la pista -->
+                        <div style="position: absolute; left: 5px; top: 5px; font-size: 10px; color: #555; pointer-events: none;">Pista de Sonidos</div>
+                        <!-- Bloques inyectados por JS -->
+                    </div>
+                    <!-- Playhead -->
+                    <div id="editor-playhead" style="position: absolute; top: 0; bottom: 0; width: 2px; background: red; z-index: 10; pointer-events: none;"></div>
                 </div>
-                
-                <!-- Escenas -->
-                <div id="scene-track" style="position: relative; width: 100%; height: 20px; min-height: 20px; background: #222; margin-bottom: 2px; display:flex;">
-                    <!-- Bloques inyectados por JS -->
-                </div>
-                <!-- Subtitulos -->
-                <div id="subs-track" style="position: relative; width: 100%; height: 35px; min-height: 35px; background: #181818; border-top: 1px solid #333; overflow-x: hidden;">
-                    <!-- Bloques inyectados por JS -->
-                </div>
-                <!-- Stickers -->
-                <div id="stickers-track" style="position: relative; width: 100%; display: flex; flex-direction: column; min-height: 25px; background: #111; border-top: 1px solid #333; overflow-x: hidden;">
-                    <!-- Etiqueta de la pista -->
-                    <div style="position: absolute; left: 5px; top: 5px; font-size: 10px; color: #555; pointer-events: none;">Pista de Banners</div>
-                    <!-- Bloques inyectados por JS -->
-                </div>
-                <!-- Sounds -->
-                <div id="sounds-track" style="position: relative; width: 100%; display: flex; flex-direction: column; min-height: 25px; background: #0a1128; border-top: 1px solid #333; overflow-x: hidden;">
-                    <!-- Etiqueta de la pista -->
-                    <div style="position: absolute; left: 5px; top: 5px; font-size: 10px; color: #555; pointer-events: none;">Pista de Sonidos</div>
-                    <!-- Bloques inyectados por JS -->
-                </div>
-                <!-- Playhead -->
-                <div id="editor-playhead" style="position: absolute; top: 0; bottom: 0; width: 2px; background: red; z-index: 10; pointer-events: none;"></div>
             </div>
         </div>
     </div>
@@ -901,6 +989,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         let completedClipsData = [];
         let completedRangesData = [];
         let rejectedClipsData = [];
+        let archivedClipsData = [];
         let currentClip = null;
         let videoName = "";
         let stopListener = null;
@@ -985,46 +1074,95 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             }
         }
         
-        function syncExportFilename() {
-            const title = document.getElementById('redes-titulo').value;
-            const nameInput = document.getElementById('export-filename');
-            if (nameInput) {
-                const videoName = document.getElementById('video-selector').value || "";
-                const sourceName = videoName.replace(/\.[^/.]+$/, "");
-                
-                let existingName = nameInput.value;
-                let currentGlobal = "";
-                let currentSource = "";
-                
-                if (existingName) {
-                    const prefixMatch = existingName.match(/^(\d+)_/);
-                    if (prefixMatch) currentGlobal = prefixMatch[1];
-                    const suffixMatch = existingName.match(/_(\d+)$/);
-                    if (suffixMatch) currentSource = suffixMatch[1];
-                }
-                
-                if (!currentGlobal) {
-                    let gNum = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
-                    currentGlobal = gNum.toString();
-                    localStorage.setItem('globalClipNumber', (gNum + 1).toString());
-                    if(document.getElementById('global-clip-number')) {
-                        document.getElementById('global-clip-number').value = gNum + 1;
-                    }
-                }
-                
-                if (!currentSource) {
-                    let sourceCounts = JSON.parse(localStorage.getItem('sourceVideoCounts') || '{}');
-                    let sCount = sourceCounts[sourceName] || 1;
-                    currentSource = sCount.toString();
-                    sourceCounts[sourceName] = sCount + 1;
-                    localStorage.setItem('sourceVideoCounts', JSON.stringify(sourceCounts));
-                }
-
-                let titleStr = title.replace(/[^a-zA-Z0-9]/gi, '_').replace(/_{2,}/g, '_').toLowerCase();
-                if(titleStr.length > 35) titleStr = titleStr.substring(0, 35);
-                
-                nameInput.value = `${currentGlobal}_${sourceName}_${titleStr}_${currentSource}`;
+        function getCleanGameNameJS(vName) {
+            if (!vName) return "Juego";
+            const norm = vName.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+            const parts = norm.split("/").map(p => p.trim()).filter(Boolean);
+            let rawGame = "Juego";
+            if (parts.length > 1 && !["gourmet", "raiz", "raíz"].includes(parts[0].toLowerCase())) {
+                rawGame = parts[0];
+            } else if (parts.length > 0) {
+                let base = parts[parts.length - 1].replace(/\.[^/.]+$/, "");
+                base = base.replace(/\s*-\s*\d{4}-\d{2}-\d{2}[_\s]\d{2}-\d{2}-\d{2}.*$/, "");
+                base = base.replace(/[\s_-]+(resumen|directo\s*\d*|leito.*|final.*)$/i, "");
+                base = base.replace(/_+\d+$/, "");
+                rawGame = base.trim() || "Juego";
             }
+            return rawGame.replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "Juego";
+        }
+
+        function getClipDisplayNumber(clip) {
+            if (!clip) return "";
+            if (clip.export_name) {
+                const m = String(clip.export_name).trim().match(/^(\d+)_/);
+                if (m) return m[1];
+            }
+            return String(clip.id || "").replace(/^clip_p?/, "");
+        }
+
+        function getClipDisplayId(clip) {
+            if (!clip) return "N/A";
+            if (clip.export_name) {
+                const m = String(clip.export_name).trim().match(/^(\d+)_/);
+                if (m) return `clip_${m[1]}`;
+            }
+            return clip.id || "N/A";
+        }
+
+        function updateEditorClipBadgeFromFilename() {
+            const sourceInfo = document.getElementById('workspace-source-info');
+            if (!sourceInfo || !currentClip) return;
+            const nameInput = document.getElementById('export-filename');
+            const val = nameInput ? nameInput.value.trim() : '';
+            const m = val.match(/^(\d+)_/);
+            const dispNum = m ? m[1] : getClipDisplayNumber(currentClip);
+            const dispId = m ? `clip_${m[1]}` : getClipDisplayId(currentClip);
+            const prevTimerText = document.getElementById('clip-timer') ? document.getElementById('clip-timer').innerText : '';
+            sourceInfo.innerHTML = `Video Principal <span style="color:#d09010; font-weight:bold;">Clip ${dispNum} (${dispId})</span> | Duración: <span id="clip-timer" style="color:#28a745; font-weight:bold;">${prevTimerText}</span>`;
+        }
+
+        function commitExportAssignment(expNameVal) {
+            if (!expNameVal || !currentClip) return;
+            const cleanExp = expNameVal.trim().replace(/\.mp4$/i, "");
+            const prefixMatch = cleanExp.match(/^(\d+)_/);
+            const suffixMatch = cleanExp.match(/_(\d+)$/);
+            let usedGlobalNum = prefixMatch ? parseInt(prefixMatch[1], 10) : parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
+            let suffixVal = suffixMatch ? parseInt(suffixMatch[1], 10) : 1;
+
+            currentClip.export_name = cleanExp;
+            if (prefixMatch) {
+                const assignKeyOld = `${videoName}::${currentClip.id}`;
+                const newId = `clip_${usedGlobalNum}`;
+                const assignKeyNew = `${videoName}::${newId}`;
+                let assignedData = JSON.parse(localStorage.getItem('clipAssignedDataV2') || '{}');
+                const entry = { globalNum: usedGlobalNum, gameCount: suffixVal, exportName: cleanExp };
+                assignedData[assignKeyOld] = entry;
+                assignedData[assignKeyNew] = entry;
+                localStorage.setItem('clipAssignedDataV2', JSON.stringify(assignedData));
+            }
+
+            let storedGlobal = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
+            if (usedGlobalNum >= storedGlobal) {
+                const nextG = usedGlobalNum + 1;
+                localStorage.setItem('globalClipNumber', nextG.toString());
+                const gNumEl = document.getElementById('global-clip-number');
+                if (gNumEl) gNumEl.value = nextG;
+            }
+            updateEditorClipBadgeFromFilename();
+        }
+
+        function syncExportFilename() {
+            // El nombre de archivo ahora mantiene estrictamente el formato:
+            // {NumeroClip}_{NombreJuego}_{ContadorJuego} (sin incluir el título de redes)
+            const nameInput = document.getElementById('export-filename');
+            if (!nameInput) return;
+            let existingName = nameInput.value.trim();
+            if (!existingName && currentClip) {
+                const gameName = getCleanGameNameJS(videoName || document.getElementById('video-selector')?.value || "");
+                const gNum = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
+                nameInput.value = `${gNum}_${gameName}_1`;
+            }
+            updateEditorClipBadgeFromFilename();
         }
 
         function formatTime(totalSeconds) {
@@ -1069,6 +1207,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 completedClipsData = json.data.completed_clips || [];
                 completedRangesData = json.data.completed_ranges || [];
                 rejectedClipsData = json.data.rejected_clips || [];
+                archivedClipsData = json.data.archived_clips || [];
                 videoName = json.data.video_name;
                 
                 const dynamicVideoUrl = window.location.origin + "/videos/" + videoName;
@@ -1088,8 +1227,16 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             } catch (err) {
                 showError("No se pudo conectar con FastAPI. " + err.message);
             }
-            let gNum = localStorage.getItem('globalClipNumber');
-            if(!gNum) { gNum = "1"; localStorage.setItem('globalClipNumber', gNum); }
+            let gNum = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
+            if (isNaN(gNum) || gNum < 1) gNum = 1;
+            try {
+                const infoRes = await fetch('/next_export_info?video_name=' + encodeURIComponent(videoName || ''));
+                const infoJson = await infoRes.json();
+                if (infoJson.status === "success" && infoJson.next_global_num && gNum < infoJson.next_global_num) {
+                    gNum = infoJson.next_global_num;
+                }
+            } catch (e) {}
+            localStorage.setItem('globalClipNumber', gNum.toString());
             const gNumEl = document.getElementById('global-clip-number');
             if(gNumEl) gNumEl.value = gNum;
         }
@@ -1188,17 +1335,22 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 return CLIP_CATEGORIES.chat;
             }
             
-            for (const k of ['susto', 'humor', 'streamer', 'gameplay']) {
+            const negSustoRegex = /(?:ning[uú]n|sin|no\s+hay|no\s+deber[ií]amos\s+tener\s+ning[uú]n|nada\s+de|no\s+me\s+da)\s+(?:susto|miedo|terror)/i;
+            const hasNegatedSusto = negSustoRegex.test(reason) || negSustoRegex.test(title) || negSustoRegex.test(transcript);
+
+            for (const k of ['humor', 'streamer', 'gameplay', 'susto']) {
+                if (k === 'susto' && hasNegatedSusto) continue;
                 if (CLIP_CATEGORIES[k].keywords.some(kw => reason.includes(kw))) {
                     return CLIP_CATEGORIES[k];
                 }
             }
-            for (const k of ['susto', 'humor', 'streamer', 'gameplay']) {
+            for (const k of ['humor', 'streamer', 'gameplay', 'susto']) {
+                if (k === 'susto' && hasNegatedSusto) continue;
                 if (CLIP_CATEGORIES[k].keywords.some(kw => title.includes(kw))) {
                     return CLIP_CATEGORIES[k];
                 }
             }
-            for (const k of ['susto', 'humor', 'streamer', 'gameplay']) {
+            for (const k of ['humor', 'streamer', 'gameplay']) {
                 if (CLIP_CATEGORIES[k].keywords.some(kw => transcript.includes(kw))) {
                     return CLIP_CATEGORIES[k];
                 }
@@ -1430,6 +1582,27 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             container.appendChild(playhead);
         }
 
+        function autoResizeReasonTextarea(textarea) {
+            if (!textarea || textarea.classList.contains('collapsed')) return;
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.max(34, textarea.scrollHeight) + 'px';
+        }
+
+        function toggleReasonCollapse(clipId, btn, e) {
+            if (e) e.stopPropagation();
+            const ta = document.getElementById(`reason-ta-${clipId}`);
+            if (!ta) return;
+            const isCollapsed = ta.classList.toggle('collapsed');
+            if (isCollapsed) {
+                btn.innerHTML = '▼';
+                btn.title = 'Expandir descripción';
+            } else {
+                btn.innerHTML = '▲';
+                btn.title = 'Colapsar descripción';
+                autoResizeReasonTextarea(ta);
+            }
+        }
+
         async function updateClipReason(id, value) {
             try {
                 await fetch('/update_clip_reason', {
@@ -1499,7 +1672,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             } else {
                 filteredClips.forEach((clip, idx) => {
                     const cat = getClipCategory(clip);
-                    const virality = clip.virality_score ? `<span style="color:#28a745; font-size: 13px;"> ${clip.virality_score}% Viral</span>` : '';
+                    const virality = (clip.rank_score !== undefined) ? `<span title="${String(clip.rank_why || '').replace(/"/g, '&quot;')}" style="color:#facc15; font-size: 13px; font-weight:bold;">🏆 #${clip.rank_position || '-'} · ${clip.rank_score}</span>` : (clip.virality_score ? `<span style="color:#28a745; font-size: 13px;"> ${clip.virality_score}% Viral</span>` : '');
                     const duration = (clip.end - clip.start).toFixed(1);
                     const el = document.createElement('div');
                     
@@ -1513,7 +1686,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         <div style="font-weight:bold; color:#007acc; font-size:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
                             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                                 <input type="checkbox" class="merge-checkbox" data-clip-id="${clip.id}" style="width:15px; height:15px; cursor:pointer;" onclick="event.stopPropagation()">
-                                <span>Clip ${clip.id.replace("clip_", "")} <span style="font-size:11px; color:#aaa;">(${clip.id})</span></span>
+                                <span>Clip ${getClipDisplayNumber(clip)} <span style="font-size:11px; color:#aaa;">(${getClipDisplayId(clip)})</span></span>
                                 <span style="background:${cat.badgeBg}; color:${cat.color}; border: 1px solid ${cat.badgeBorder}; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">${cat.name}</span>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px;">
@@ -1522,9 +1695,13 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                                 ${virality}
                             </div>
                         </div>
-                        <input type="text" value="${clip.reason || ''}" placeholder="Sugerencia de IA" 
-                                style="width:100%; font-size:13px; color:#ddd; margin-top:4px; font-style:italic; background:transparent; border:1px solid #444; padding:3px 5px; border-radius:3px; outline:none;" 
-                                onchange="updateClipReason('${clip.id}', this.value)" onclick="event.stopPropagation()">
+                        <div class="clip-reason-box" onclick="event.stopPropagation()">
+                            <textarea id="reason-ta-${clip.id}" class="clip-reason-textarea" placeholder="Sugerencia de IA (descripción del clip)..."
+                                      rows="1"
+                                      oninput="autoResizeReasonTextarea(this)"
+                                      onchange="updateClipReason('${clip.id}', this.value)">${(clip.reason || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                            <button type="button" class="clip-reason-toggle" title="Colapsar / Expandir" onclick="toggleReasonCollapse('${clip.id}', this, event)">▲</button>
+                        </div>
                         <div style="font-size:0.85em; color:#aaa; margin-top:5px;" id="times-${clip.id}">${formatTime(clip.start)} - ${formatTime(clip.end)} <span style="color:#fff; font-weight:bold;">(${duration}s)</span></div>
                         <div style="display: flex; gap: 10px; margin-top: 10px; align-items: stretch;">
                             <button class="btn" style="background:#cc3333; flex: 1; margin:0;" onclick="discardClip('${clip.id}', event)">Descartar</button>
@@ -1540,6 +1717,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     `;
                     el.onclick = () => focusClip(clip);
                     inner.appendChild(el);
+                    const reasonTa = document.getElementById(`reason-ta-${clip.id}`);
+                    if (reasonTa) autoResizeReasonTextarea(reasonTa);
                 });
             }
             
@@ -1565,10 +1744,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                             el.style.borderLeft = '3px solid #10b981';
                             el.innerHTML = `
                                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                                    <div style="font-weight:bold; color:#28a745; font-size:16px;">Clip ${(clip.id || '').replace('clip_', '')} <span style="font-size:11px; color:#aaa;">(${clip.id || 'N/A'})</span></div>
+                                    <div style="font-weight:bold; color:#28a745; font-size:16px;">Clip ${getClipDisplayNumber(clip)} <span style="font-size:11px; color:#aaa;">(${getClipDisplayId(clip)})</span></div>
                                     <span style="background:rgba(16, 185, 129, 0.2); color:#10b981; border: 1px solid #10b981; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Aprobado</span>
                                 </div>
-                                <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
+                                ${clip.export_name ? `<div style="font-size:11px; color:#d09010; margin-top:2px; font-weight:bold;">📁 ${clip.export_name}.mp4</div>` : ''}
+                                <div style="font-size:13px; color:#ddd; margin-top:4px; line-height:1.4; word-break:break-word;">"${clip.reason || ''}"</div>
                                 <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
                                 <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar / Re-editar</button>
                             `;
@@ -1600,10 +1780,10 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                             el.style.borderLeft = '3px solid #ef4444';
                             el.innerHTML = `
                                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                                    <div style="font-weight:bold; color:#f44336; font-size:16px;">Clip ${(clip.id || '').replace('clip_', '')} <span style="font-size:11px; color:#aaa;">(${clip.id || 'N/A'})</span></div>
+                                    <div style="font-weight:bold; color:#f44336; font-size:16px;">Clip ${getClipDisplayNumber(clip)} <span style="font-size:11px; color:#aaa;">(${getClipDisplayId(clip)})</span></div>
                                     <span style="background:rgba(239, 68, 68, 0.2); color:#ef4444; border: 1px solid #ef4444; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Descartado</span>
                                 </div>
-                                <div style="font-size:13px; color:#ddd; margin-top:4px;">"${clip.reason || ''}"</div>
+                                <div style="font-size:13px; color:#ddd; margin-top:4px; line-height:1.4; word-break:break-word;">"${clip.reason || ''}"</div>
                                 <div style="font-size:0.85em; color:#aaa; margin-top:5px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
                                 <button class="btn" style="background:#444; margin-top:10px; padding: 5px;" onclick="restoreClip('${clip.id}', event)"> Restaurar</button>
                             `;
@@ -1612,9 +1792,50 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     }
                 }
             }
+            renderArchivedList();
         }
         
-        function mergeSelectedClips() {
+        function toggleArchivedList() {
+            const el = document.getElementById('archived-clip-list');
+            const ar = document.getElementById('archived-arrow');
+            if (!el) return;
+            const show = el.style.display === 'none';
+            el.style.display = show ? 'block' : 'none';
+            if (ar) ar.textContent = show ? '▾' : '▸';
+        }
+
+        function renderArchivedList() {
+            const listEl = document.getElementById('archived-clip-list');
+            const cnt = document.getElementById('archived-count');
+            if (cnt) cnt.textContent = `(${archivedClipsData.length})`;
+            if (!listEl) return;
+            listEl.innerHTML = '';
+            if (archivedClipsData.length === 0) {
+                listEl.innerHTML = `<div style="color:#aaa;">No hay clips archivados.</div>`;
+                return;
+            }
+            [...archivedClipsData].sort((a, b) => (b.rank_score || 0) - (a.rank_score || 0)).forEach(clip => {
+                const duration = (clip.end - clip.start).toFixed(1);
+                const el = document.createElement('div');
+                el.className = 'clip-item';
+                el.style.opacity = '0.7';
+                el.style.borderLeft = '3px solid #666';
+                const score = (clip.rank_score !== undefined) ? `<span style="color:#aaa; font-size:12px;">Puntaje ${clip.rank_score}</span>` : '';
+                el.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="font-weight:bold; color:#aaa; font-size:14px;">${formatTime(clip.start)} - ${formatTime(clip.end)} (${duration}s)</div>
+                        ${score}
+                    </div>
+                    <div style="font-size:13px; color:#ccc; margin-top:4px; line-height:1.4; word-break:break-word;">"${(clip.reason || '').replace(/</g, '&lt;')}"</div>
+                    ${clip.archived_reason ? `<div style="font-size:11px; color:#888; margin-top:3px;">${clip.archived_reason.replace(/</g, '&lt;')}</div>` : ''}
+                    <button class="btn" style="background:#444; margin-top:8px; padding: 5px;" onclick="restoreClip('${clip.id}', event)">↩ Recuperar</button>
+                `;
+                el.onclick = () => { if (tlVideo) { tlVideo.currentTime = clip.start; } };
+                listEl.appendChild(el);
+            });
+        }
+
+        async function mergeSelectedClips() {
             const checkboxes = document.querySelectorAll('.merge-checkbox:checked');
             if (checkboxes.length < 2) {
                 alert("Selecciona al menos 2 clips para unirlos.");
@@ -1627,41 +1848,88 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 if (clip) selectedClips.push(clip);
             });
             
+            if (selectedClips.length < 2) return;
+            
             // Sort selected clips by start time
             selectedClips.sort((a, b) => a.start - b.start);
             
             const firstClip = selectedClips[0];
             const lastClip = selectedClips[selectedClips.length - 1];
             
-            const newClipId = "Merged_" + Date.now();
+            // Calcular el siguiente ID numérico disponible (ej: clip_17)
+            let maxNum = 0;
+            const allKnown = [...(clipsData || []), ...(window.completedClipsData || []), ...(window.rejectedClipsData || [])];
+            allKnown.forEach(c => {
+                const m = String(c.id || '').match(/clip_(\d+)/i);
+                if (m) {
+                    const val = parseInt(m[1], 10);
+                    if (val > maxNum) maxNum = val;
+                }
+            });
+            const nextNum = maxNum + 1;
+            const newClipId = `clip_${nextNum}`;
+            
+            const defaultCrop = {
+                splitY: 960,
+                face: {x: 0, y: 0, w: 1920, h: 1080},
+                game: {x: 0, y: 0, w: 1920, h: 1080},
+                subs: {x: 530, y: 744, w: 860, h: 336},
+                full: {x: 0, y: 0, w: 1920, h: 1080}
+            };
+            
             const newClip = {
                 id: newClipId,
                 start: firstClip.start,
                 end: lastClip.end,
-                reason: "Clips fusionados: " + selectedClips.map(c => c.id).join(", "),
+                reason: "Clips fusionados: " + selectedClips.map(c => c.id).join(" + "),
                 feedback: 'none',
+                category: firstClip.category || 'general',
+                template: firstClip.template || 'face_game',
+                cropState: firstClip.cropState || defaultCrop,
+                social_title: firstClip.social_title || `Clip ${nextNum}`,
+                social_desc: firstClip.social_desc || "",
+                yt_tags: firstClip.yt_tags || "Leito4Gaming, Clip",
                 virality_score: Math.max(...selectedClips.map(c => c.virality_score || 0))
             };
             
-            // Pre-populate editorScenes based on the selected clips
-            // The editor won't show it immediately in clipsData (unless we save it to the backend? No, the backend just serves clips list from analysis. We just push it to local clipsData for now).
             newClip.predefinedScenes = selectedClips.map((c, i) => {
                 return {
                     id: Date.now() + i,
                     start: c.start,
                     end: c.end,
-                    template: 'face_game',
-                    cropState: {
-                        face: {x: 0, y: 0, w: 100, h: 100},
-                        game: {x: 0, y: 0, w: 100, h: 100},
-                        subs: {x: 0, y: 0, w: 100, h: 100},
-                        full: {x: 0, y: 0, w: 100, h: 100}
-                    }
+                    template: c.template || 'face_game',
+                    cropState: c.cropState || defaultCrop
                 };
             });
             
-            clipsData.unshift(newClip);
+            // Eliminar los clips individuales seleccionados de clipsData
+            const selectedIds = new Set(selectedClips.map(c => c.id));
+            clipsData = clipsData.filter(c => !selectedIds.has(c.id));
+            
+            // Agregar el nuevo clip fusionado
+            clipsData.push(newClip);
+            clipsData.sort((a, b) => a.start - b.start);
+            
+            // Guardar cambios en el backend inmediatamente
+            const vidSelect = document.getElementById('video-selector');
+            if (vidSelect && vidSelect.value) {
+                try {
+                    await fetch('/save_all_clips', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            video_name: vidSelect.value,
+                            proposals: clipsData
+                        })
+                    });
+                } catch(e) {
+                    console.error("Error guardando clips tras fusion:", e);
+                }
+            }
+            
             renderSidebar();
+            drawTimelineDots();
+            focusClip(newClip);
         }
 
         function focusClip(clip) {
@@ -2285,6 +2553,19 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 const ph = document.getElementById('editor-playhead');
                 if (ph) ph.style.left = `${Math.max(0, Math.min(100, perc))}%`;
                 
+                // Auto-scroll timeline when playing at zoomed level
+                if (timelineZoomLevel > 1.0 && !workspaceVideo.paused) {
+                    const container = document.getElementById('editor-timeline-container');
+                    if (container && container.scrollWidth > container.clientWidth) {
+                        const playheadPx = (currRel / totalDur) * container.scrollWidth;
+                        const viewLeft = container.scrollLeft;
+                        const viewRight = viewLeft + container.clientWidth;
+                        if (playheadPx < viewLeft || playheadPx > viewRight - 60) {
+                            container.scrollLeft = playheadPx - (container.clientWidth / 2);
+                        }
+                    }
+                }
+                
                 // Gap skipping logic
                 let ct = workspaceVideo.currentTime;
                 let inScene = false;
@@ -2569,6 +2850,42 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         let editorScenes = [];
         let activeSceneId = 0;
         let editorWords = [];
+        let timelineZoomLevel = 1.0;
+
+        function setTimelineZoom(level) {
+            timelineZoomLevel = Math.max(1.0, Math.min(8.0, Math.round(level * 10) / 10));
+            const label = document.getElementById('timeline-zoom-label');
+            if (label) label.innerText = timelineZoomLevel + 'x';
+            renderTimelineTracks();
+            // Centrar scroll en la posición actual del playhead si hay zoom
+            const container = document.getElementById('editor-timeline-container');
+            const totalDur = getTimelineDuration();
+            if (container && totalDur > 0 && workspaceVideo) {
+                const currRel = absToRel(workspaceVideo.currentTime);
+                const perc = Math.max(0, Math.min(1, currRel / totalDur));
+                requestAnimationFrame(() => {
+                    const scrollTarget = (container.scrollWidth * perc) - (container.clientWidth / 2);
+                    container.scrollLeft = Math.max(0, scrollTarget);
+                });
+            }
+        }
+
+        function initTimelineWheelEvents() {
+            const tlContainer = document.getElementById('editor-timeline-container');
+            if (tlContainer && !tlContainer.dataset.zoomBound) {
+                tlContainer.dataset.zoomBound = "true";
+                tlContainer.addEventListener('wheel', (e) => {
+                    if (e.ctrlKey || e.altKey) {
+                        e.preventDefault();
+                        const delta = e.deltaY < 0 ? 0.5 : -0.5;
+                        setTimelineZoom(timelineZoomLevel + delta);
+                    } else if (e.deltaY !== 0 && tlContainer.scrollWidth > tlContainer.clientWidth) {
+                        e.preventDefault();
+                        tlContainer.scrollLeft += e.deltaY;
+                    }
+                }, { passive: false });
+            }
+        }
         
         function getTimelineDuration() {
             let dur = 0;
@@ -2609,59 +2926,55 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             const nameInput = document.getElementById('export-filename');
             if (nameInput) {
-                if (currentClip.export_name) {
-                    nameInput.value = currentClip.export_name;
+                let cleanGame = getCleanGameNameJS(videoName);
+                let gameCount = 1;
+                let existingExportName = null;
+                let nextGlobalFromBackend = null;
+
+                try {
+                    const infoRes = await fetch(`/next_export_info?video_name=${encodeURIComponent(videoName)}&clip_id=${encodeURIComponent(currentClip.id)}`);
+                    const infoJson = await infoRes.json();
+                    if (infoJson.status === "success") {
+                        cleanGame = infoJson.game_name || cleanGame;
+                        gameCount = infoJson.game_count || 1;
+                        existingExportName = infoJson.existing_export_name || null;
+                        nextGlobalFromBackend = infoJson.next_global_num || null;
+                    }
+                } catch (errInfo) {
+                    console.error("Error obteniendo next_export_info:", errInfo);
+                }
+
+                const assignKey = `${videoName}::${currentClip.id}`;
+                let assignedData = JSON.parse(localStorage.getItem('clipAssignedDataV2') || '{}');
+                let cData = assignedData[assignKey];
+
+                if (existingExportName) {
+                    nameInput.value = existingExportName;
+                } else if (cData && cData.globalNum) {
+                    const gCount = cData.gameCount || gameCount;
+                    nameInput.value = `${cData.globalNum}_${cleanGame}_${gCount}`;
                 } else {
-                    const sourceName = videoName.replace(/\.[^/.]+$/, ""); // remove extension
-                    
-                    // Remove date like " - 2026-06-21_19-18-16"
-                    const cleanSourceName = sourceName.replace(/\s*-\s*\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, "").replace(/\s+/g, "_");
-                    
-                    // Keep only first 3 words of reason
-                    const clipReason = currentClip.reason ? currentClip.reason.replace(/[^a-z0-9\s]/gi, '').trim().split(/\s+/).slice(0, 3).join('_').toLowerCase() : "clip";
-                    
-                    let assignedData = JSON.parse(localStorage.getItem('clipAssignedData') || '{}');
-                    let cData = assignedData[currentClip.id];
-                    
-                    let globalNum;
-                    let sourceCount;
-                    
-                    if (cData) {
-                        globalNum = cData.globalNum;
-                        sourceCount = cData.sourceCount;
-                    } else {
-                        let gNum = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
-                        globalNum = gNum.toString();
-                        
-                        let sourceCounts = JSON.parse(localStorage.getItem('sourceVideoCounts') || '{}');
-                        let sCount = sourceCounts[sourceName] || 1;
-                        sourceCount = sCount.toString();
-                        
-                        // Guardar la asignacin permanentemente para que no cambie
-                        assignedData[currentClip.id] = { globalNum: gNum, sourceCount: sCount };
-                        localStorage.setItem('clipAssignedData', JSON.stringify(assignedData));
-                        
-                        // Incrementar contadores globales para el prximo clip
-                        gNum++;
+                    let gNum = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
+                    if (isNaN(gNum) || gNum < 1) gNum = 1;
+                    if (nextGlobalFromBackend && gNum < nextGlobalFromBackend) {
+                        gNum = nextGlobalFromBackend;
                         localStorage.setItem('globalClipNumber', gNum.toString());
-                        if(document.getElementById('global-clip-number')) {
+                        if (document.getElementById('global-clip-number')) {
                             document.getElementById('global-clip-number').value = gNum;
                         }
-                        
-                        sourceCounts[sourceName] = sCount + 1;
-                        localStorage.setItem('sourceVideoCounts', JSON.stringify(sourceCounts));
                     }
-                    
-                    nameInput.value = `${globalNum}_${cleanSourceName}_${clipReason}_${sourceCount}`;
+                    nameInput.value = `${gNum}_${cleanGame}_${gameCount}`;
                 }
             }
             
-            const sourceInfo = document.getElementById('workspace-source-info');
-            if(sourceInfo) sourceInfo.innerHTML = 'Video Principal <span style="color:#d09010; font-weight:bold;">' + currentClip.id + '</span> |  Duracion: <span id="clip-timer" style="color:#28a745; font-weight:bold;"></span>';
+            updateEditorClipBadgeFromFilename();
             
             if (document.getElementById('redes-titulo')) {
                 document.getElementById('redes-titulo').value = currentClip.social_title || '';
                 document.getElementById('redes-desc').value = currentClip.social_desc || '';
+                if (document.getElementById('redes-tags')) {
+                    document.getElementById('redes-tags').value = currentClip.yt_tags || '';
+                }
             }
             
             let defaultCrop = currentClip.cropState ? currentClip.cropState : {
@@ -2719,21 +3032,25 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             workspaceVideo.muted = tlVideo ? tlVideo.muted : true;
             updateWorkspaceAudioBtn();
 
+            timelineZoomLevel = 1.0;
+            const zoomLbl = document.getElementById('timeline-zoom-label');
+            if (zoomLbl) zoomLbl.innerText = '1x';
+
             if (!currentClip.words || currentClip.words.length === 0) {
                 runAIAutoTranscribe();
             } else {
                 editorWords = currentClip.words;
                 document.getElementById('ass-text').value = currentClip.ass_text || editorWords.map(w => w.text).join(' ');
                 renderTimelineTracks();
-                syncSubtitlesFromText();
             }
             
             loadCustomTemplates();
-            document.getElementById('ass-text').addEventListener('input', syncSubtitlesFromText);
-            document.getElementById('ass-text').addEventListener('scroll', function() {
+            initTimelineWheelEvents();
+            document.getElementById('ass-text').oninput = syncSubtitlesFromText;
+            document.getElementById('ass-text').onscroll = function() {
                 const highlightDiv = document.getElementById('ass-text-highlight');
                 if (highlightDiv) highlightDiv.scrollTop = this.scrollTop;
-            });
+            };
             
             renderTimelineTracks();
             
@@ -2755,8 +3072,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             
             let vUrl = "/get_clip_audio_track?video_name=" + encodeURIComponent(videoName) + "&start=" + currentClip.start + "&end=" + currentClip.end + "&track_index=1";
             let jUrl = "/get_clip_audio_track?video_name=" + encodeURIComponent(videoName) + "&start=" + currentClip.start + "&end=" + currentClip.end + "&track_index=2";
-            document.getElementById('global-audio-voice').src = vUrl;
-            document.getElementById('global-audio-game').src = jUrl;
+            const vAudEl = document.getElementById('global-audio-voice');
+            const jAudEl = document.getElementById('global-audio-game');
+            vAudEl.src = vUrl;
+            jAudEl.src = jUrl;
+            vAudEl.setAttribute("data-loaded-clip", currentClip.id);
             attachAudioSync(workspaceVideo, currentClip.start);
             workspaceVideo.play();
             setTemplate(initialTemplate);
@@ -2931,7 +3251,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         track_juego: 3,
                         social_title: document.getElementById('redes-titulo') ? document.getElementById('redes-titulo').value : null,
                         social_desc: document.getElementById('redes-desc') ? document.getElementById('redes-desc').value : null,
-                        social_tags: currentClip.yt_tags || null,
+                        social_tags: (document.getElementById('redes-tags') && document.getElementById('redes-tags').value.trim()) ? document.getElementById('redes-tags').value.trim() : (currentClip.yt_tags || null),
                         fit_mode: window.fitMode,
                         split_ratio: editorScenes[0].cropState.splitRatio !== undefined ? editorScenes[0].cropState.splitRatio : 0.5,
                         scenes: editorScenes,
@@ -2945,7 +3265,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                             bevel: document.getElementById('style-bevel') ? document.getElementById('style-bevel').checked : false,
                             gradient: document.getElementById('style-gradient') ? document.getElementById('style-gradient').checked : false
                         },
-                        hook: hookTime !== null ? { time: hookTime, cropState: hookCropState, textTop: hookTextTop, textBottom: hookTextBottom, topY: hookTopY, bottomY: hookBottomY, color: (document.getElementById('hook-color') ? document.getElementById('hook-color').value : 'white'), font: (document.getElementById('hook-font') ? document.getElementById('hook-font').value : 'Arial Black') } : null,
+                        hook: hookTime !== null ? { time: hookTime, cropState: hookCropState, textTop: hookTextTop, textBottom: hookTextBottom, topY: hookTopY, bottomY: hookBottomY, color: (document.getElementById('hook-color') ? document.getElementById('hook-color').value : 'white'), font: (document.getElementById('hook-font') ? document.getElementById('hook-font').value : 'Arial Black'), fontSize: (document.getElementById('hook-font-size') ? parseInt(document.getElementById('hook-font-size').value) : 65) } : null,
                         outro: outroDataUrl ? { dataUrl: outroDataUrl } : null,
                         stickers: payloadStickers,
                         export_name: document.getElementById('export-filename') ? document.getElementById('export-filename').value.trim() : null
@@ -2954,19 +3274,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 
                 const expNameVal = document.getElementById('export-filename') ? document.getElementById('export-filename').value.trim() : null;
                 if (expNameVal) {
-                    let assignedData = JSON.parse(localStorage.getItem('clipAssignedData') || '{}');
-                    if (!assignedData[currentClip.id]) {
-                        const match = expNameVal.match(/_(\d+)$/);
-                        let suffixVal = match ? parseInt(match[1], 10) : 1;
-                        let globalNum = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
-                        
-                        let usedGlobalNum = globalNum;
-                        const prefixMatch = expNameVal.match(/^(\d+)_/);
-                        if (prefixMatch) usedGlobalNum = parseInt(prefixMatch[1], 10);
-                        
-                        assignedData[currentClip.id] = { globalNum: usedGlobalNum, sourceCount: suffixVal };
-                        localStorage.setItem('clipAssignedData', JSON.stringify(assignedData));
-                    }
+                    commitExportAssignment(expNameVal);
                 }
                 
                 if (!resExp.ok) {
@@ -2979,6 +3287,13 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 
                 const jExp = await resExp.json();
                 if(jExp.status === "error") throw new Error(jExp.message);
+                if (jExp.clip_id && currentClip) {
+                    currentClip.id = jExp.clip_id;
+                }
+                if (jExp.export_name && currentClip) {
+                    currentClip.export_name = jExp.export_name;
+                }
+                updateEditorClipBadgeFromFilename();
                 
                 btn.innerText = " Render Iniciado";
                 btn.style.background = "#28a745";
@@ -3065,6 +3380,13 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             const subsTrack = document.getElementById('subs-track');
             if(!sceneTrack || !subsTrack) return;
             
+            const content = document.getElementById('editor-timeline-content');
+            if (content) {
+                const widthPct = (timelineZoomLevel * 100) + '%';
+                content.style.width = widthPct;
+                content.style.minWidth = widthPct;
+            }
+
             const totalDur = getTimelineDuration();
             const editorTimerEl = document.getElementById('editor-total-timer');
             if (editorTimerEl) editorTimerEl.innerText = totalDur.toFixed(1) + 's';
@@ -3142,17 +3464,35 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         const sPerc = (s_rel / totalDur) * 100;
                         const wPerc = ((e_rel - s_rel) / totalDur) * 100;
                         const el = document.createElement('div');
-                        el.style = `position: absolute; left: ${sPerc}%; width: ${wPerc}%; height: 100%; background: #ffaa00; border: 1px solid #000; border-radius: 2px; color: #000; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; overflow: hidden;`;
+                        el.style = `position: absolute; left: ${sPerc}%; width: ${wPerc}%; height: 100%; background: #ffaa00; border: 1px solid #000; border-radius: 3px; color: #000; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; overflow: hidden; box-sizing: border-box; cursor: pointer;`;
+                        el.title = `${word.text} [${word.start.toFixed(2)}s - ${word.end.toFixed(2)}s]\n(Doble clic: reproducir | Clic derecho: borrar palabra)`;
+                        el.ondblclick = (e) => {
+                            e.stopPropagation();
+                            workspaceVideo.currentTime = word.start;
+                            workspaceVideo.play();
+                        };
+                        el.oncontextmenu = (e) => {
+                            deleteSingleSubtitleWord(word, e);
+                        };
                         const leftHandle = document.createElement('div');
-                        leftHandle.style = 'width: 5px; height: 100%; cursor: w-resize; background: rgba(0,0,0,0.2);';
+                        leftHandle.style = 'width: 6px; height: 100%; cursor: w-resize; background: rgba(0,0,0,0.25); flex-shrink: 0;';
+                        leftHandle.title = `Ajustar inicio: ${word.start.toFixed(2)}s`;
+                        leftHandle.onmouseover = () => { leftHandle.style.background = 'rgba(0,0,0,0.6)'; };
+                        leftHandle.onmouseout = () => { leftHandle.style.background = 'rgba(0,0,0,0.25)'; };
                         leftHandle.onmousedown = (e) => startWordDrag(e, word, 'left');
+
                         const centerLabel = document.createElement('div');
                         centerLabel.innerText = word.text;
-                        centerLabel.style = 'flex: 1; text-align: center; cursor: move; user-select: none;';
+                        centerLabel.style = 'flex: 1; text-align: center; cursor: move; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px;';
                         centerLabel.onmousedown = (e) => startWordDrag(e, word, 'move');
+
                         const rightHandle = document.createElement('div');
-                        rightHandle.style = 'width: 5px; height: 100%; cursor: e-resize; background: rgba(0,0,0,0.2);';
+                        rightHandle.style = 'width: 6px; height: 100%; cursor: e-resize; background: rgba(0,0,0,0.25); flex-shrink: 0;';
+                        rightHandle.title = `Ajustar fin: ${word.end.toFixed(2)}s`;
+                        rightHandle.onmouseover = () => { rightHandle.style.background = 'rgba(0,0,0,0.6)'; };
+                        rightHandle.onmouseout = () => { rightHandle.style.background = 'rgba(0,0,0,0.25)'; };
                         rightHandle.onmousedown = (e) => startWordDrag(e, word, 'right');
+
                         el.appendChild(leftHandle);
                         el.appendChild(centerLabel);
                         el.appendChild(rightHandle);
@@ -3330,24 +3670,200 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             loadCustomTemplates();
         }
 
-        function syncSubtitlesFromText() {
-            const rawText = document.getElementById('ass-text').value.trim();
-            if (!rawText) { editorWords = []; renderTimelineTracks(); return; }
-            const rawWords = rawText.split(/\s+/);
-            const wordDur = (currentClip.end - currentClip.start) / rawWords.length;
-            const newEditorWords = [];
-            rawWords.forEach((txt, i) => {
-                if (editorWords[i]) {
-                    newEditorWords.push({...editorWords[i], text: txt});
-                } else {
-                    newEditorWords.push({id: i, text: txt, start: currentClip.start + (i * wordDur), end: currentClip.start + ((i + 1) * wordDur)});
-                }
-            });
-            editorWords = newEditorWords;
+        let syncTextDebounceTimer = null;
+
+        function _normSubWord(w) {
+            return String(w || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9ñ]/g, '');
+        }
+
+        function _subWordSim(a, b) {
+            const na = _normSubWord(a);
+            const nb = _normSubWord(b);
+            if (!na && !nb) return 1.0;
+            if (!na || !nb) return 0.0;
+            if (na === nb) return 1.0;
+            if (na.includes(nb) || nb.includes(na)) {
+                return Math.min(na.length, nb.length) / Math.max(na.length, nb.length);
+            }
+            let matches = 0;
+            const minL = Math.min(na.length, nb.length);
+            for (let k = 0; k < minL; k++) {
+                if (na[k] === nb[k]) matches++;
+            }
+            return matches / Math.max(na.length, nb.length);
+        }
+
+        function deleteSingleSubtitleWord(wordObj, e) {
+            if (e) { e.stopPropagation(); e.preventDefault(); }
+            if (!editorWords || !wordObj) return;
+            pushHistoryState();
+            editorWords = editorWords.filter(w => w !== wordObj);
+            editorWords.forEach((w, idx) => { w.id = idx; });
+            const assArea = document.getElementById('ass-text');
+            if (assArea) {
+                assArea.value = editorWords.map(w => w.text).join(' ');
+            }
             renderTimelineTracks();
             saveCurrentClipState();
         }
-        
+
+        function syncSubtitlesFromText() {
+            const rawText = document.getElementById('ass-text').value.trim();
+            if (!rawText) {
+                editorWords = [];
+                renderTimelineTracks();
+                saveCurrentClipState();
+                return;
+            }
+            const rawWords = rawText.split(/\s+/);
+
+            if (editorWords && editorWords.length > 0) {
+                const N = editorWords.length;
+                const M = rawWords.length;
+
+                if (N === M) {
+                    // Misma cantidad de palabras: actualizar solo el texto manteniendo el 100% de los tiempos intactos
+                    for (let i = 0; i < N; i++) {
+                        editorWords[i].text = rawWords[i];
+                    }
+                } else {
+                    // Alineación de secuencia por Programación Dinámica (LCS) para que al borrar o agregar palabras
+                    // NUNCA se corran ni desfasen los tiempos de las palabras siguientes o anteriores.
+                    const dp = Array.from({ length: N + 1 }, () => new Int32Array(M + 1));
+                    for (let i = N - 1; i >= 0; i--) {
+                        const oNorm = _normSubWord(editorWords[i].text);
+                        for (let j = M - 1; j >= 0; j--) {
+                            const rNorm = _normSubWord(rawWords[j]);
+                            if ((oNorm && oNorm === rNorm) || editorWords[i].text === rawWords[j]) {
+                                dp[i][j] = 1 + dp[i + 1][j + 1];
+                            } else {
+                                dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+                            }
+                        }
+                    }
+
+                    // Recuperar anclas exactas [oldIdx, newIdx]
+                    const anchors = [[-1, -1]];
+                    let ci = 0, cj = 0;
+                    while (ci < N && cj < M) {
+                        const oNorm = _normSubWord(editorWords[ci].text);
+                        const rNorm = _normSubWord(rawWords[cj]);
+                        if ((oNorm && oNorm === rNorm) || editorWords[ci].text === rawWords[cj]) {
+                            anchors.push([ci, cj]);
+                            ci++;
+                            cj++;
+                        } else if (dp[ci + 1][cj] >= dp[ci][cj + 1]) {
+                            ci++;
+                        } else {
+                            cj++;
+                        }
+                    }
+                    anchors.push([N, M]);
+
+                    const alignedWords = [];
+                    const clipStart = currentClip ? currentClip.start : 0;
+                    const clipEnd = currentClip ? currentClip.end : (editorWords[N - 1].end + 2);
+
+                    for (let a = 0; a < anchors.length - 1; a++) {
+                        const [oldA, newA] = anchors[a];
+                        const [oldB, newB] = anchors[a + 1];
+                        const oldCount = oldB - oldA - 1;
+                        const newCount = newB - newA - 1;
+
+                        if (newCount > 0) {
+                            if (oldCount === newCount) {
+                                // Reemplazo 1 a 1 en el hueco: cada palabra editada conserva el timestamp exacto de su posición
+                                for (let k = 1; k <= newCount; k++) {
+                                    alignedWords.push({
+                                        ...editorWords[oldA + k],
+                                        text: rawWords[newA + k]
+                                    });
+                                }
+                            } else if (oldCount > newCount) {
+                                // Se borraron palabras y además se editó alguna en el mismo hueco:
+                                // Asignar cada palabra nueva a la palabra vieja más parecida dentro del hueco sin correr el resto
+                                let usedOld = new Set();
+                                const picked = [];
+                                for (let k = 1; k <= newCount; k++) {
+                                    const rw = rawWords[newA + k];
+                                    let bestO = -1;
+                                    let bestScore = -1;
+                                    for (let oIdx = oldA + 1; oIdx < oldB; oIdx++) {
+                                        if (usedOld.has(oIdx)) continue;
+                                        const sc = _subWordSim(editorWords[oIdx].text, rw);
+                                        if (sc > bestScore) {
+                                            bestScore = sc;
+                                            bestO = oIdx;
+                                        }
+                                    }
+                                    if (bestO === -1) bestO = oldA + k;
+                                    usedOld.add(bestO);
+                                    picked.push({ oldIdx: bestO, text: rw });
+                                }
+                                picked.sort((x, y) => x.oldIdx - y.oldIdx);
+                                picked.forEach(p => {
+                                    alignedWords.push({
+                                        ...editorWords[p.oldIdx],
+                                        text: p.text
+                                    });
+                                });
+                            } else {
+                                // Se insertaron palabras nuevas (o se dividió una palabra en dos):
+                                // Distribuir dentro de la ventana del hueco sin mover los anclas vecinos
+                                const gapStart = oldCount > 0
+                                    ? editorWords[oldA + 1].start
+                                    : (oldA >= 0 ? editorWords[oldA].end : clipStart);
+                                const gapEnd = oldCount > 0
+                                    ? editorWords[oldB - 1].end
+                                    : (oldB < N ? Math.max(gapStart + 0.15 * newCount, editorWords[oldB].start) : Math.min(clipEnd, gapStart + 0.4 * newCount));
+                                const span = Math.max(0.08 * newCount, gapEnd - gapStart);
+                                const step = span / newCount;
+                                for (let k = 0; k < newCount; k++) {
+                                    const ws = gapStart + k * step;
+                                    const we = ws + Math.max(0.06, step - 0.01);
+                                    alignedWords.push({
+                                        id: 0,
+                                        text: rawWords[newA + 1 + k],
+                                        start: Math.round(ws * 100) / 100,
+                                        end: Math.round(we * 100) / 100
+                                    });
+                                }
+                            }
+                        }
+                        // Si newCount === 0 (se borraron palabras), simplemente NO se agregan y el ancla oldB conserva su tiempo original exacto!
+
+                        if (oldB < N && newB < M) {
+                            alignedWords.push({
+                                ...editorWords[oldB],
+                                text: rawWords[newB]
+                            });
+                        }
+                    }
+
+                    alignedWords.forEach((w, idx) => { w.id = idx; });
+                    editorWords = alignedWords;
+                }
+            } else {
+                const totalDur = (currentClip.end - currentClip.start);
+                const wordDur = Math.max(0.2, totalDur / rawWords.length);
+                editorWords = rawWords.map((txt, i) => ({
+                    id: i,
+                    text: txt,
+                    start: Math.round((currentClip.start + (i * wordDur)) * 100) / 100,
+                    end: Math.round((currentClip.start + ((i + 1) * wordDur)) * 100) / 100
+                }));
+            }
+            renderTimelineTracks();
+            clearTimeout(syncTextDebounceTimer);
+            syncTextDebounceTimer = setTimeout(() => {
+                saveCurrentClipState();
+            }, 600);
+        }
+
         async function saveCurrentClipState() {
             if(!currentClip) return;
             if(editorStickers) localStorage.setItem('lastUsedStickers', JSON.stringify(editorStickers));
@@ -3360,6 +3876,9 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             if (document.getElementById('redes-titulo')) {
                 currentClip.social_title = document.getElementById('redes-titulo').value;
                 currentClip.social_desc = document.getElementById('redes-desc').value;
+                if (document.getElementById('redes-tags')) {
+                    currentClip.yt_tags = document.getElementById('redes-tags').value;
+                }
             }
             try {
                 await fetch('/update_clip', {
@@ -3371,6 +3890,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         words: currentClip.words, 
                         social_title: currentClip.social_title,
                         social_desc: currentClip.social_desc,
+                        yt_tags: currentClip.yt_tags,
                         video_name: document.getElementById('video-selector').value,
                         start: currentClip.start,
                         end: currentClip.end,
@@ -3389,6 +3909,24 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             } catch (err) { console.error("Error guardando state:", err); }
         }
         
+        let wordDragIndicator = null;
+        function showWordDragIndicator(word, x, y) {
+            if (!wordDragIndicator) {
+                wordDragIndicator = document.createElement('div');
+                wordDragIndicator.id = 'word-drag-indicator';
+                wordDragIndicator.style.cssText = 'position:fixed; background:rgba(0,0,0,0.88); color:#ffaa00; border:1px solid #ffaa00; border-radius:4px; padding:3px 8px; font-size:11px; font-weight:bold; pointer-events:none; z-index:99999; box-shadow:0 2px 6px rgba(0,0,0,0.5); font-family:monospace;';
+                document.body.appendChild(wordDragIndicator);
+            }
+            const dur = (word.end - word.start).toFixed(2);
+            wordDragIndicator.innerText = `"${word.text}" [${word.start.toFixed(2)}s - ${word.end.toFixed(2)}s] (${dur}s)`;
+            wordDragIndicator.style.left = (x + 12) + 'px';
+            wordDragIndicator.style.top = (y - 32) + 'px';
+            wordDragIndicator.style.display = 'block';
+        }
+        function hideWordDragIndicator() {
+            if (wordDragIndicator) wordDragIndicator.style.display = 'none';
+        }
+
         let draggingWord = null, draggingHandle = null, dragStartX = 0, dragStartVal = 0;
         function startWordDrag(e, word, handle) {
             e.stopPropagation(); e.preventDefault();
@@ -3396,37 +3934,48 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             if (handle === 'left') dragStartVal = word.start;
             else if (handle === 'right') dragStartVal = word.end;
             else dragStartVal = { s: word.start, e: word.end };
+            showWordDragIndicator(word, e.clientX, e.clientY);
             document.addEventListener('mousemove', onWordDrag);
             document.addEventListener('mouseup', onWordDragEnd);
         }
         function onWordDrag(e) {
             if(!draggingWord) return;
             const subsTrack = document.getElementById('subs-track');
-            const totalDur = currentClip.end - currentClip.start;
+            const totalDur = getTimelineDuration();
             const trackWidth = subsTrack.getBoundingClientRect().width;
             const dx = e.clientX - dragStartX;
             const dt = (dx / trackWidth) * totalDur;
-            if (draggingHandle === 'left') draggingWord.start = Math.max(currentClip.start, Math.min(draggingWord.end - 0.1, dragStartVal + dt));
-            else if (draggingHandle === 'right') draggingWord.end = Math.max(draggingWord.start + 0.1, Math.min(currentClip.end, dragStartVal + dt));
-            else if (draggingHandle === 'move') {
+            const clipStart = (editorScenes && editorScenes[0]) ? editorScenes[0].start : currentClip.start;
+            const clipEnd = (editorScenes && editorScenes.length > 0) ? editorScenes[editorScenes.length - 1].end : currentClip.end;
+
+            if (draggingHandle === 'left') {
+                draggingWord.start = Math.max(clipStart, Math.min(draggingWord.end - 0.05, Math.round((dragStartVal + dt) * 100) / 100));
+            } else if (draggingHandle === 'right') {
+                draggingWord.end = Math.max(draggingWord.start + 0.05, Math.min(clipEnd, Math.round((dragStartVal + dt) * 100) / 100));
+            } else if (draggingHandle === 'move') {
                 const w = dragStartVal.e - dragStartVal.s;
                 let newS = dragStartVal.s + dt;
                 let newE = dragStartVal.e + dt;
-                if (newS < currentClip.start) {
-                    newS = currentClip.start;
+                if (newS < clipStart) {
+                    newS = clipStart;
                     newE = newS + w;
                 }
-                if (newE > currentClip.end) {
-                    newE = currentClip.end;
+                if (newE > clipEnd) {
+                    newE = clipEnd;
                     newS = newE - w;
                 }
-                draggingWord.start = newS;
-                draggingWord.end = newE;
+                draggingWord.start = Math.round(newS * 100) / 100;
+                draggingWord.end = Math.round(newE * 100) / 100;
             }
+            showWordDragIndicator(draggingWord, e.clientX, e.clientY);
             renderTimelineTracks();
         }
         function onWordDragEnd() {
-            if(draggingWord) saveCurrentClipState();
+            hideWordDragIndicator();
+            if(draggingWord) {
+                editorWords.sort((a, b) => a.start - b.start);
+                saveCurrentClipState();
+            }
             draggingWord = null;
             document.removeEventListener('mousemove', onWordDrag);
             document.removeEventListener('mouseup', onWordDragEnd);
@@ -3577,6 +4126,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     if (data.social_desc) {
                         document.getElementById('redes-desc').value = data.social_desc;
                         currentClip.social_desc = data.social_desc;
+                    }
+                    if (data.yt_tags) {
+                        if (document.getElementById('redes-tags')) {
+                            document.getElementById('redes-tags').value = data.yt_tags;
+                        }
+                        currentClip.yt_tags = data.yt_tags;
                     }
                     saveCurrentClipState();
                 } else {
@@ -3747,10 +4302,9 @@ let transcribeController = null;
             tCtx.save();
             tCtx.textAlign = 'center';
             tCtx.textBaseline = 'middle';
-            let fSizeTop = 100;
-            let fSizeBot = 100;
+            const chosenFontSize = parseInt(document.getElementById('hook-font-size') ? document.getElementById('hook-font-size').value : '65') || 65;
             const font = document.getElementById('hook-font') ? document.getElementById('hook-font').value : 'Arial Black';
-            tCtx.font = `bold ${fSizeTop}px '${font}', sans-serif`;
+            tCtx.font = `bold ${chosenFontSize}px '${font}', sans-serif`;
             
             const colorSel = document.getElementById('hook-color') ? document.getElementById('hook-color').value : 'white';
             let fillC = '#ffffff';
@@ -3758,31 +4312,54 @@ let transcribeController = null;
             else if(colorSel.includes('erde') || colorSel === 'green') fillC = '#00ff00';
             else if(colorSel.includes('ojo') || colorSel === 'red') fillC = '#ff0000';
             
-            tCtx.lineWidth = 15;
+            tCtx.lineWidth = Math.max(6, Math.round(chosenFontSize * 0.18));
             tCtx.strokeStyle = '#000';
             tCtx.fillStyle = fillC;
             
+            function wrapTextCanvas(ctx, text, maxWidth) {
+                if(!text) return [];
+                const paragraphs = text.split('\n');
+                const allLines = [];
+                paragraphs.forEach(p => {
+                    const words = p.split(' ');
+                    let currentLine = '';
+                    for (let n = 0; n < words.length; n++) {
+                        const testLine = currentLine ? currentLine + ' ' + words[n] : words[n];
+                        const metrics = ctx.measureText(testLine);
+                        if (metrics.width > maxWidth && n > 0) {
+                            allLines.push(currentLine);
+                            currentLine = words[n];
+                        } else {
+                            currentLine = testLine;
+                        }
+                    }
+                    if (currentLine) allLines.push(currentLine);
+                });
+                return allLines;
+            }
+
             const tTop = document.getElementById('hook-text-top') ? document.getElementById('hook-text-top').value.trim() : "";
             if (tTop) {
-                while (tCtx.measureText(tTop).width > 950 && fSizeTop > 40) {
-                    fSizeTop -= 5;
-                    tCtx.font = `bold ${fSizeTop}px '${font}', sans-serif`;
-                }
-                const yPos = (hookTopY / 100) * 1920 + 50; 
-                tCtx.strokeText(tTop, 540, yPos);
-                tCtx.fillText(tTop, 540, yPos);
+                const topLines = wrapTextCanvas(tCtx, tTop, 960);
+                const lineHeight = Math.round(chosenFontSize * 1.25);
+                const startY = (hookTopY / 100) * 1920;
+                topLines.forEach((l, idx) => {
+                    const yPos = startY + (idx * lineHeight);
+                    tCtx.strokeText(l, 540, yPos);
+                    tCtx.fillText(l, 540, yPos);
+                });
             }
             
-            tCtx.font = `bold ${fSizeBot}px '${font}', sans-serif`;
             const tBot = document.getElementById('hook-text-bottom') ? document.getElementById('hook-text-bottom').value.trim() : "";
             if (tBot) {
-                while (tCtx.measureText(tBot).width > 950 && fSizeBot > 40) {
-                    fSizeBot -= 5;
-                    tCtx.font = `bold ${fSizeBot}px '${font}', sans-serif`;
-                }
-                const yPos = (hookBottomY / 100) * 1920 + 50;
-                tCtx.strokeText(tBot, 540, yPos);
-                tCtx.fillText(tBot, 540, yPos);
+                const botLines = wrapTextCanvas(tCtx, tBot, 960);
+                const lineHeight = Math.round(chosenFontSize * 1.25);
+                const startY = (hookBottomY / 100) * 1920;
+                botLines.forEach((l, idx) => {
+                    const yPos = startY + (idx * lineHeight);
+                    tCtx.strokeText(l, 540, yPos);
+                    tCtx.fillText(l, 540, yPos);
+                });
             }
             tCtx.restore();
             
@@ -3807,11 +4384,25 @@ let transcribeController = null;
             
             const color = document.getElementById('hook-color') ? document.getElementById('hook-color').value : 'white';
             const font = document.getElementById('hook-font') ? document.getElementById('hook-font').value : 'Arial Black';
+            const fontSize = parseInt(document.getElementById('hook-font-size') ? document.getElementById('hook-font-size').value : '65') || 65;
+            
+            const scale = 250 / 1080;
+            const previewPx = Math.max(10, Math.round(fontSize * scale));
             
             tTop.style.color = color;
             tBottom.style.color = color;
             tTop.style.fontFamily = `'${font}', sans-serif`;
             tBottom.style.fontFamily = `'${font}', sans-serif`;
+            tTop.style.fontSize = previewPx + 'px';
+            tBottom.style.fontSize = previewPx + 'px';
+            tTop.style.lineHeight = '1.25';
+            tBottom.style.lineHeight = '1.25';
+            tTop.style.whiteSpace = 'pre-wrap';
+            tBottom.style.whiteSpace = 'pre-wrap';
+            tTop.style.wordBreak = 'break-word';
+            tBottom.style.wordBreak = 'break-word';
+            tTop.style.display = 'block';
+            tBottom.style.display = 'block';
             
             if(!hookTextTop) vTop.style.opacity = '0.3'; else vTop.style.opacity = '1';
             if(!hookTextBottom) vBottom.style.opacity = '0.3'; else vBottom.style.opacity = '1';
@@ -4985,8 +5576,15 @@ let transcribeController = null;
                 }, 800);
                 
             } catch (err) {
-                alert(" Error de IA: " + err.message);
                 loadingScreen.classList.add('hidden');
+                try {
+                    fetchCosts();
+                    await init();
+                    await enforceNoOverlaps();
+                } catch (reloadErr) {
+                    console.error("Error recargando clips tras error:", reloadErr);
+                }
+                alert("⚠️ Aviso de IA: " + err.message);
             }
         }
 
@@ -5000,7 +5598,7 @@ let transcribeController = null;
             checkbox.disabled = true;
             
             let clip = clipsData.find(c => c.id === clipId);
-            if (!clip && currentClip && currentClip.id === clipId) {
+            if (!clip && currentClip && (currentClip.id === clipId || getClipDisplayId(currentClip) === clipId)) {
                 clip = currentClip;
             }
             if (!clip) {
@@ -5009,19 +5607,47 @@ let transcribeController = null;
             }
             
             try {
+                const vName = document.getElementById('video-selector') ? document.getElementById('video-selector').value : videoName;
+                let expName = document.getElementById('export-filename') ? document.getElementById('export-filename').value.trim() : "";
+                if (!expName && clip.export_name) {
+                    expName = clip.export_name;
+                }
+                if (!expName) {
+                    try {
+                        const infoRes = await fetch(`/next_export_info?video_name=${encodeURIComponent(vName)}&clip_id=${encodeURIComponent(clip.id)}`);
+                        const infoJson = await infoRes.json();
+                        if (infoJson.status === "success") {
+                            let gNum = parseInt(localStorage.getItem('globalClipNumber') || "1", 10);
+                            if (infoJson.next_global_num && gNum < infoJson.next_global_num) {
+                                gNum = infoJson.next_global_num;
+                            }
+                            expName = infoJson.existing_export_name || `${gNum}_${infoJson.game_name}_${infoJson.game_count}`;
+                        }
+                    } catch (e) {}
+                }
+                if (expName) {
+                    const prevCurrent = currentClip;
+                    currentClip = clip;
+                    commitExportAssignment(expName);
+                    currentClip = prevCurrent;
+                }
+
                 const res = await fetch('/mark_clip_done', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ 
-                        clip_id: clipId, 
+                        clip_id: clip.id, 
                         start: clip.start, 
                         end: clip.end, 
-                        export_name: document.getElementById('export-filename') ? document.getElementById('export-filename').value : null,
-                        video_name: document.getElementById('video-selector').value 
+                        export_name: expName || null,
+                        video_name: vName 
                     })
                 });
                 const json = await res.json();
                 if (json.status === "error") throw new Error(json.message);
+                if (json.clip_id && clip) {
+                    clip.id = json.clip_id;
+                }
                 
                 // Forzar recarga visual para mover a completados y pintar de azul
                 init();
@@ -5355,8 +5981,8 @@ let transcribeController = null;
                         tr.innerHTML = `
                             <td style="padding: 10px; width: 140px;">
                                 <img src="${thumbUrl}" style="width:120px; aspect-ratio:16/9; object-fit:cover; border-radius:4px; margin-bottom:5px; background:#000;" onerror="this.style.display='none'">
-                                <div style="color: #007acc; font-weight:bold; font-size:12px;">Clip ${(clip.id || '').replace('clip_', '')}</div>
-                                <div style="color: #555; font-size:10px;">(${clip.id || 'N/A'})</div>
+                                <div style="color: #007acc; font-weight:bold; font-size:12px;">Clip ${getClipDisplayNumber(clip)}</div>
+                                <div style="color: #555; font-size:10px;">(${getClipDisplayId(clip)})</div>
                                 <div style="color: #d09010; font-size: 10px; margin-top: 3px; word-wrap:break-word; max-width:120px;">${clip.export_name || 'Sin Exportar'}</div>
                             </td>
                             <td style="padding: 10px; color: #fff;">
@@ -5388,19 +6014,19 @@ let transcribeController = null;
                                 </div>
                             </td>
                             <td style="padding: 10px;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                                    <div id="pub-yt-text-${clip.id}" style="color: ${clip.pub_yt ? '#00e676' : '#888'}; font-size:11px;">${clip.pub_yt || 'No'}</div>
-                                    <button onclick="syncDatesFromYT('${clip.id}', '${clip.db_file}', this)" style="background:#2080df; color:#fff; border:none; border-radius:3px; padding:2px 5px; font-size:9px; cursor:pointer;" title="Copiar fecha a IG y TikTok">Copiar</button>
-                                </div>
-                                <input type="date" value="${clip.pub_yt || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:3px; padding:2px; font-size:10px; width:100%;" onchange="savePublishDate('${clip.id}', '${clip.db_file}', 'yt', this.value, this)">
+                                <div id="pub-yt-text-${clip.id}" style="color: ${clip.pub_yt ? '#00e676' : '#888'}; font-size:11px; margin-bottom:5px;">${clip.pub_yt || 'No'}</div>
+                                <input type="date" value="${clip.pub_yt || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:3px; padding:3px; font-size:11px; width:100%; box-sizing:border-box;" onchange="savePublishDate('${clip.id}', '${clip.db_file}', 'yt', this.value, this)">
+                                <button onclick="syncDatesToAll('${clip.id}', '${clip.db_file}', this)" style="background:#f59e0b; color:#000; font-weight:bold; border:none; border-radius:4px; padding:4px 6px; font-size:10px; cursor:pointer; width:100%; margin-top:5px; display:flex; align-items:center; justify-content:center; gap:3px;" title="Copiar esta misma fecha a las 3 redes">📅 Copiar a todas</button>
                             </td>
                             <td style="padding: 10px;">
                                 <div id="pub-ig-text-${clip.id}" style="color: ${clip.pub_ig ? '#00e676' : '#888'}; font-size:11px; margin-bottom:5px;">${clip.pub_ig || 'No'}</div>
-                                <input type="date" value="${clip.pub_ig || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:3px; padding:2px; font-size:10px; width:100%;" onchange="savePublishDate('${clip.id}', '${clip.db_file}', 'ig', this.value, this)">
+                                <input type="date" value="${clip.pub_ig || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:3px; padding:3px; font-size:11px; width:100%; box-sizing:border-box;" onchange="savePublishDate('${clip.id}', '${clip.db_file}', 'ig', this.value, this)">
+                                <button onclick="syncDatesToAll('${clip.id}', '${clip.db_file}', this)" style="background:#f59e0b; color:#000; font-weight:bold; border:none; border-radius:4px; padding:4px 6px; font-size:10px; cursor:pointer; width:100%; margin-top:5px; display:flex; align-items:center; justify-content:center; gap:3px;" title="Copiar esta misma fecha a las 3 redes">📅 Copiar a todas</button>
                             </td>
                             <td style="padding: 10px;">
                                 <div id="pub-tt-text-${clip.id}" style="color: ${clip.pub_tiktok ? '#00e676' : '#888'}; font-size:11px; margin-bottom:5px;">${clip.pub_tiktok || 'No'}</div>
-                                <input type="date" value="${clip.pub_tiktok || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:3px; padding:2px; font-size:10px; width:100%;" onchange="savePublishDate('${clip.id}', '${clip.db_file}', 'tiktok', this.value, this)">
+                                <input type="date" value="${clip.pub_tiktok || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:3px; padding:3px; font-size:11px; width:100%; box-sizing:border-box;" onchange="savePublishDate('${clip.id}', '${clip.db_file}', 'tiktok', this.value, this)">
+                                <button onclick="syncDatesToAll('${clip.id}', '${clip.db_file}', this)" style="background:#f59e0b; color:#000; font-weight:bold; border:none; border-radius:4px; padding:4px 6px; font-size:10px; cursor:pointer; width:100%; margin-top:5px; display:flex; align-items:center; justify-content:center; gap:3px;" title="Copiar esta misma fecha a las 3 redes">📅 Copiar a todas</button>
                             </td>
                             <td style="padding: 10px;">
                                 ${!clip.is_published ? `<button onclick="markAsPublished('${clip.id}', '${clip.video_name}')" style="background:#00e676; color:#000; border:none; border-radius:4px; padding:5px 10px; font-weight:bold; cursor:pointer; font-size:11px;">Marcar como Subido </button>` : `<span style="color:#00e676; font-size:11px;">Subido</span>`}
@@ -5556,14 +6182,61 @@ let transcribeController = null;
             });
         }
         
-        function syncDatesFromYT(clipId, dbFile, btnElement) {
+        async function syncDatesToAll(clipId, dbFile, btnElement) {
             const row = btnElement.closest('tr');
             const inputs = row.querySelectorAll('input[type="date"]');
-            const ytDate = inputs[0].value;
-            inputs[1].value = ytDate;
-            inputs[2].value = ytDate;
-            savePublishDate(clipId, dbFile, 'ig', ytDate, inputs[1]);
-            savePublishDate(clipId, dbFile, 'tiktok', ytDate, inputs[2]);
+            const currentCell = btnElement.closest('td');
+            const cellInput = currentCell.querySelector('input[type="date"]');
+            
+            let chosenDate = cellInput && cellInput.value ? cellInput.value : '';
+            if (!chosenDate) {
+                for (let inp of inputs) {
+                    if (inp.value) { chosenDate = inp.value; break; }
+                }
+            }
+            
+            if (!chosenDate) {
+                alert("Por favor selecciona primero una fecha en el calendario antes de presionar 'Copiar a todas'.");
+                return;
+            }
+            
+            inputs[0].value = chosenDate;
+            inputs[1].value = chosenDate;
+            inputs[2].value = chosenDate;
+            
+            try {
+                await fetch('/update_publish_dates', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        clip_id: clipId,
+                        db_file: dbFile,
+                        pub_yt: chosenDate,
+                        pub_ig: chosenDate,
+                        pub_tiktok: chosenDate
+                    })
+                });
+                
+                ['pub-yt-text-', 'pub-ig-text-', 'pub-tt-text-'].forEach(prefix => {
+                    const txt = document.getElementById(prefix + clipId);
+                    if (txt) { txt.innerText = chosenDate; txt.style.color = '#00e676'; }
+                });
+                
+                const orig = btnElement.innerText;
+                btnElement.innerText = "✅ ¡Copiado!";
+                btnElement.style.background = "#10b981";
+                btnElement.style.color = "#fff";
+                setTimeout(() => {
+                    btnElement.innerText = orig;
+                    btnElement.style.background = "#f59e0b";
+                    btnElement.style.color = "#000";
+                }, 2000);
+            } catch(e) {
+                console.error("Error al sincronizar fechas:", e);
+            }
+        }
+        function syncDatesFromYT(clipId, dbFile, btnElement) {
+            return syncDatesToAll(clipId, dbFile, btnElement);
         }
         
         async function savePublishDate(clipId, dbFile, network, dateValue, inputElement) {
@@ -5688,26 +6361,49 @@ let transcribeController = null;
             videoEl.muted = true;
             let vAudio = document.getElementById('global-audio-voice');
             let jAudio = document.getElementById('global-audio-game');
-            
-            videoEl.onplay = () => { vAudio.play().catch(e=>{}); jAudio.play().catch(e=>{}); };
+
+            const getRelTime = () => {
+                const baseStart = (typeof currentClip !== 'undefined' && currentClip) ? currentClip.start : clipStart;
+                return Math.max(0, videoEl.currentTime - baseStart);
+            };
+
+            const syncSingleAudio = (audioEl, forceSeek = false) => {
+                if (!audioEl) return;
+                try {
+                    if (audioEl.readyState > 0) {
+                        const targetRel = getRelTime();
+                        if (forceSeek || Math.abs(audioEl.currentTime - targetRel) > 0.08) {
+                            audioEl.currentTime = targetRel;
+                        }
+                        if (!videoEl.paused && audioEl.paused) {
+                            audioEl.play().catch(() => {});
+                        } else if (videoEl.paused && !audioEl.paused) {
+                            audioEl.pause();
+                        }
+                    }
+                } catch (e) {}
+            };
+
+            [vAudio, jAudio].forEach(aud => {
+                if (!aud) return;
+                aud.onloadedmetadata = () => syncSingleAudio(aud, true);
+                aud.oncanplay = () => syncSingleAudio(aud, false);
+            });
+
+            videoEl.onplay = () => {
+                syncSingleAudio(vAudio, true);
+                syncSingleAudio(jAudio, true);
+                vAudio.play().catch(e=>{});
+                jAudio.play().catch(e=>{});
+            };
             videoEl.onpause = () => { vAudio.pause(); jAudio.pause(); };
             videoEl.onseeked = () => {
-                let rel = videoEl.currentTime - clipStart;
-                if (rel < 0) rel = 0;
-                const seekAudio = (audioEl) => {
-                    try {
-                        if(audioEl.readyState > 0) {
-                            audioEl.currentTime = rel;
-                        } else {
-                            audioEl.addEventListener('loadedmetadata', function onL() {
-                                audioEl.currentTime = rel;
-                                audioEl.removeEventListener('loadedmetadata', onL);
-                            });
-                        }
-                    } catch(e) {}
-                };
-                seekAudio(vAudio);
-                seekAudio(jAudio);
+                syncSingleAudio(vAudio, true);
+                syncSingleAudio(jAudio, true);
+            };
+            videoEl.ontimeupdate = () => {
+                syncSingleAudio(vAudio, false);
+                syncSingleAudio(jAudio, false);
             };
             videoEl.onratechange = () => {
                 vAudio.playbackRate = videoEl.playbackRate;
