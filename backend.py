@@ -662,15 +662,214 @@ def run_ffmpeg(cmd, clip_id, total_duration, alias_id=None):
         except Exception as write_err:
             print(f"Failed to write ffmpeg_error.log: {write_err}")
 
+def get_video_recording_window(video_path: str):
+    """
+    Calcula la ventana real (inicio, fin, duracion_seg) en que se grabó un video en OBS,
+    incluso si el archivo fue movido de C: a D:, renombrado con prefijo 'Juego_N - YYYY-MM-DD HH-MM-SS',
+    o remuxeado de .mkv a .mp4 al terminar el stream.
+    """
+    import datetime
+    import subprocess
+
+    stat = os.stat(video_path)
+    ctime = datetime.datetime.fromtimestamp(stat.st_ctime)
+    mtime = datetime.datetime.fromtimestamp(stat.st_mtime)
+
+    dur_sec = 0.0
+    try:
+        ffprobe_bin = FFMPEG_BIN.replace("ffmpeg.exe", "ffprobe.exe") if "ffmpeg.exe" in FFMPEG_BIN.lower() else "ffprobe"
+        out = subprocess.check_output(
+            [ffprobe_bin, "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", video_path],
+            stderr=subprocess.DEVNULL
+        ).decode("utf-8", errors="ignore").strip()
+        dur_sec = float(out)
+    except Exception:
+        dur_sec = 0.0
+
+    bname = os.path.basename(video_path)
+    # 1. Prioridad máxima: fecha y hora de OBS en el nombre (ej: Juego_1 - 2026-10-24 21-05-51.mp4)
+    m = re.search(r"(20\d{2}-\d{2}-\d{2})[\s_-]*(\d{2}-\d{2}-\d{2})", bname)
+    if m:
+        try:
+            start_dt = datetime.datetime.strptime(f"{m.group(1)} {m.group(2).replace('-', ':')}", "%Y-%m-%d %H:%M:%S")
+            if dur_sec > 0:
+                end_dt = start_dt + datetime.timedelta(seconds=dur_sec)
+            else:
+                end_dt = max(mtime, start_dt)
+            return start_dt, end_dt, dur_sec
+        except Exception:
+            pass
+
+    # 2. Fallback si se borró la fecha del nombre: usar duración real de ffprobe + mtime/ctime
+    if dur_sec > 0:
+        span_fs = (mtime - ctime).total_seconds()
+        if ctime > mtime or abs(span_fs - dur_sec) < 900:
+            end_dt = mtime
+            start_dt = end_dt - datetime.timedelta(seconds=dur_sec)
+            return start_dt, end_dt, dur_sec
+        elif 0 <= span_fs < dur_sec * 0.4:
+            # Remuxeado a .mp4 justo al terminar de grabar
+            end_dt = ctime
+            start_dt = end_dt - datetime.timedelta(seconds=dur_sec)
+            return start_dt, end_dt, dur_sec
+
+    return min(ctime, mtime), max(ctime, mtime), dur_sec
+
+
+def sync_streamdeck_markers(video_name: str, data: dict = None, analysis_file: str = None) -> dict:
+    """
+    Sincroniza los marcadores manuales de db/markers.txt que correspondan a la ventana real de grabación
+    del video, sin importar si fue movido de C: a D:, renombrado o pasado a .mp4.
+    """
+    import datetime
+    from pipeline import extract_game_title
+
+    if not video_name:
+        return data or {}
+
+    if analysis_file is None:
+        analysis_file = get_analysis_file(video_name)
+    if data is None:
+        if analysis_file and os.path.exists(analysis_file):
+            with open(analysis_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {"video": video_name, "proposals": [], "completed_proposals": [], "completed_ranges": [], "rejected_proposals": []}
+
+    markers_file = os.path.join(DB_DIR, "markers.txt")
+    if not os.path.exists(markers_file):
+        return data
+
+    video_path = find_video_path(video_name)
+    if not video_path or not os.path.exists(video_path):
+        return data
+
+    try:
+        video_start_time, video_end_time, dur_sec = get_video_recording_window(video_path)
+        with open(markers_file, "r", encoding="utf-8") as f:
+            markers_lines = [ln.strip() for ln in f if ln.strip()]
+
+        synced_set = set(data.get("synced_markers", []))
+        all_existing = (
+            data.get("proposals", [])
+            + data.get("completed_proposals", [])
+            + data.get("rejected_proposals", [])
+            + data.get("archived_proposals", [])
+        )
+
+        max_id_val = 0
+        for ex in all_existing:
+            if str(ex.get("id", "")).startswith("clip_"):
+                try:
+                    num = int(ex["id"].split("_")[1])
+                    if num > max_id_val:
+                        max_id_val = num
+                except Exception:
+                    pass
+
+        game_title = extract_game_title(video_name)
+        added_any = False
+        last_marker_rel = -999.0
+
+        for line in markers_lines:
+            raw_ts = line.split("|")[0].strip()
+            if raw_ts in synced_set:
+                continue
+            try:
+                marker_time = datetime.datetime.strptime(raw_ts, "%Y-%m-%d %H:%M:%S")
+            except Exception:
+                continue
+
+            if video_start_time <= marker_time <= video_end_time:
+                rel_seconds = (marker_time - video_start_time).total_seconds()
+                synced_set.add(raw_ts)
+
+                # Ignorar doble click del botón de Streamdeck en menos de 15 segundos
+                if abs(rel_seconds - last_marker_rel) < 15.0:
+                    added_any = True
+                    continue
+                last_marker_rel = rel_seconds
+
+                # Cuando presionás el botón en vivo, la acción acaba de ocurrir (40s antes a 20s después)
+                c_start = round(max(0.0, rel_seconds - 40.0), 2)
+                c_end = round(min(dur_sec if dur_sec > 0 else rel_seconds + 20.0, rel_seconds + 20.0), 2)
+                if c_end - c_start < 20.0:
+                    c_end = round(c_start + 35.0, 2)
+
+                # Verificar si ya existe un clip manual/aprobado/rechazado en ese mismo momento
+                already_covered = False
+                for p in all_existing:
+                    ps, pe = float(p.get("start", 0)), float(p.get("end", 0))
+                    if p.get("category") == "manual" and max(c_start, ps) < min(c_end, pe):
+                        already_covered = True
+                        break
+                    if ps <= rel_seconds <= pe:
+                        already_covered = True
+                        break
+
+                if already_covered:
+                    added_any = True
+                    continue
+
+                max_id_val += 1
+                mm = int(rel_seconds // 60)
+                ss = int(rel_seconds % 60)
+                hh = mm // 60
+                mm_rem = mm % 60
+                t_label = f"{hh:02d}:{mm_rem:02d}:{ss:02d}" if hh > 0 else f"{mm_rem:02d}:{ss:02d}"
+
+                c = {
+                    "id": f"clip_{max_id_val}",
+                    "start": c_start,
+                    "end": c_end,
+                    "category": "manual",
+                    "reason": f"📌 Marcador manual Streamdeck (marcado en {t_label})",
+                    "virality_score": 100,
+                    "transcript": "Marcador insertado manualmente durante la grabación.",
+                    "social_title": f"Momento en {game_title}",
+                    "social_desc": f"Jugando a {game_title} pasó esto en directo. #{re.sub(r'[^a-zA-Z0-9]', '', game_title.title())} #Leito4Gaming #Gaming",
+                    "yt_title": f"Momento en {game_title}",
+                    "yt_desc": f"Jugando a {game_title} en vivo.",
+                    "yt_tags": f"Leito4Gaming, Leito4GamingPlus, {game_title}, gameplay español, shorts",
+                    "template": "face_game",
+                    "cropState": {
+                        "splitY": 960,
+                        "face": {"x": 58, "y": 808, "w": 384, "h": 216},
+                        "game": {"x": 0, "y": 0, "w": 1920, "h": 1080},
+                        "full": {"x": 0, "y": 0, "w": 1920, "h": 1080},
+                        "subs": {"x": 530, "y": 744, "w": 860, "h": 336}
+                    }
+                }
+                data.setdefault("proposals", []).append(c)
+                all_existing.append(c)
+                added_any = True
+
+        if added_any:
+            data["synced_markers"] = sorted(synced_set)
+            data["proposals"].sort(key=lambda x: x.get("start", 0))
+            if analysis_file:
+                atomic_write_json(analysis_file, data)
+    except Exception as e_mk:
+        print(f"Error en sync_streamdeck_markers para {video_name}: {e_mk}")
+
+    return data
+
+
 @app.get("/clips")
 def get_clips(video_name: str = ""):
     try:
         analysis_file = get_analysis_file(video_name)
-        if not analysis_file or not os.path.exists(analysis_file):
+        if not analysis_file:
             return {"status": "success", "data": {"clips": [], "completed_clips": [], "video_name": video_name}}
-            
-        with open(analysis_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
+
+        if os.path.exists(analysis_file):
+            with open(analysis_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {"video": video_name, "proposals": [], "completed_proposals": [], "completed_ranges": [], "rejected_proposals": []}
+
+        # Sincronizar automáticamente marcadores de Streamdeck aunque el video haya sido movido de C: a D: o renombrado
+        data = sync_streamdeck_markers(video_name, data, analysis_file)
             
         proposals_raw = data.get("proposals", [])
         
@@ -892,10 +1091,8 @@ def _generate_clips_task(req: GenerateClipsRequest):
         sb_chat_file = os.path.join(DB_DIR, 'chat.txt')
         if os.path.exists(sb_chat_file):
             try:
-                stat = os.stat(video_path)
                 import datetime
-                video_start_time = datetime.datetime.fromtimestamp(stat.st_ctime)
-                video_end_time = datetime.datetime.fromtimestamp(stat.st_mtime)
+                video_start_time, video_end_time, _ = get_video_recording_window(video_path)
                 
                 with open(sb_chat_file, 'r', encoding='utf-8') as f:
                     chat_lines = f.readlines()
@@ -943,52 +1140,8 @@ def _generate_clips_task(req: GenerateClipsRequest):
             except Exception as e:
                 print(f"Error procesando chat de Streamer.bot: {e}")
 
-        # Procesar marcadores de Streamdeck
-        import datetime
-        markers_file = os.path.join(DB_DIR, 'markers.txt')
-        if os.path.exists(markers_file):
-            try:
-                stat = os.stat(video_path)
-                video_start_time = datetime.datetime.fromtimestamp(stat.st_ctime)
-                video_end_time = datetime.datetime.fromtimestamp(stat.st_mtime)
-                
-                with open(markers_file, 'r', encoding='utf-8') as f:
-                    markers_lines = f.readlines()
-                
-                remaining_markers = []
-                for line in markers_lines:
-                    line = line.strip()
-                    if not line: continue
-                    try:
-                        marker_time = datetime.datetime.strptime(line, '%Y-%m-%d %H:%M:%S')
-                        # Si el marcador esta dentro del periodo de grabacion
-                        if video_start_time <= marker_time <= video_end_time:
-                            rel_seconds = (marker_time - video_start_time).total_seconds()
-                            c = {
-                                "start": max(0, rel_seconds - 30),
-                                "end": rel_seconds + 30,
-                                "category": "manual",
-                                "reason": "Marcador manual desde Streamdeck",
-                                "virality_score": 100,
-                                "transcript": "Marcador insertado manualmente durante la grabacion.",
-                                "social_title": "Clip Manual (Streamdeck)",
-                                "social_desc": "Clip marcado manualmente en vivo.",
-                                "yt_title": "Clip Manual (Streamdeck)",
-                                "yt_desc": "Clip marcado manualmente en vivo.",
-                                "yt_tags": "Leito4Gaming, Clip"
-                            }
-                            incremental_save(c)
-                            # Actualizar zonas de exclusion para que la IA no lo repita
-                            exclusion_zones.append((c["start"], c["end"]))
-                        else:
-                            remaining_markers.append(line)
-                    except:
-                        remaining_markers.append(line)
-                        
-                # Opcional: sobreescribir el archivo de marcadores solo con los que no se usaron
-                # (Para no procesarlos de nuevo en otros videos, aunque el check de tiempo ya los filtra)
-            except Exception as e:
-                print(f"Error procesando marcadores: {e}")
+        # Procesar marcadores de Streamdeck (usando fecha en nombre + duración real de ffprobe)
+        data = sync_streamdeck_markers(video_file_name, data, analysis_file)
         for p in data.get("proposals", []):
             exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
         for p in data.get("completed_proposals", []):
