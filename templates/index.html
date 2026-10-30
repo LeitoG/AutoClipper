@@ -5,9 +5,54 @@
         function saveAudioPreset() {
             let vv = document.getElementById('vol-voz') ? document.getElementById('vol-voz').value : '1.0';
             let vj = document.getElementById('vol-juego') ? document.getElementById('vol-juego').value : '1.0';
+            let vo = (typeof getVoiceOffsetSec === 'function') ? String(getVoiceOffsetSec()) : '0.0';
             localStorage.setItem('default_vol_voz', vv);
             localStorage.setItem('default_vol_juego', vj);
-            alert("Configuracion de audio guardada como predeterminada.");
+            localStorage.setItem('default_voice_offset', vo);
+            alert("Configuracion de audio y desfase guardada como predeterminada.");
+        }
+
+        function getVoiceOffsetSec() {
+            const numEl = document.getElementById('offset-voz-num');
+            const rngEl = document.getElementById('offset-voz');
+            const raw = numEl ? numEl.value : (rngEl ? rngEl.value : '0');
+            const val = parseFloat(raw);
+            return isNaN(val) ? 0.0 : val;
+        }
+
+        function setVoiceOffset(val, skipLiveSeek) {
+            let num = parseFloat(val);
+            if (isNaN(num)) num = 0.0;
+            num = Math.round(num * 100) / 100;
+            const rngEl = document.getElementById('offset-voz');
+            const numEl = document.getElementById('offset-voz-num');
+            const lblEl = document.getElementById('lbl-offset-voz');
+            if (rngEl) rngEl.value = Math.max(-3.0, Math.min(3.0, num));
+            if (numEl && document.activeElement !== numEl) numEl.value = num.toFixed(2);
+            else if (numEl && skipLiveSeek) numEl.value = num.toFixed(2);
+            if (lblEl) lblEl.innerText = (num > 0 ? '+' : '') + num.toFixed(2) + 's';
+            if (typeof currentClip !== 'undefined' && currentClip) {
+                currentClip.voice_offset = num;
+            }
+            if (!skipLiveSeek && typeof workspaceVideo !== 'undefined' && workspaceVideo && currentClip) {
+                const vAudio = document.getElementById('global-audio-voice');
+                if (vAudio && vAudio.readyState > 0) {
+                    const rel = Math.max(0, workspaceVideo.currentTime - currentClip.start);
+                    const targetV = rel - num;
+                    if (targetV >= 0) {
+                        vAudio.currentTime = targetV;
+                        if (!workspaceVideo.paused && vAudio.paused) vAudio.play().catch(()=>{});
+                    } else {
+                        vAudio.pause();
+                        vAudio.currentTime = 0;
+                    }
+                }
+            }
+        }
+
+        function nudgeVoiceOffset(delta) {
+            const cur = getVoiceOffsetSec();
+            setVoiceOffset(Math.round((cur + delta) * 100) / 100, false);
         }
 
 window.onerror = function(msg, url, lineNo, columnNo, error) {
@@ -728,6 +773,28 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     </div>
                 </div>
 
+                <div class="setting-group" style="margin-top: 14px; padding: 10px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.28); border-radius: 8px;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+                        <span>🎙️ Desfase de Voz / Cámara (seg)</span>
+                        <span id="lbl-offset-voz" style="color: var(--accent-primary); font-weight: 700; font-size: 12px;">0.00s</span>
+                    </label>
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom: 8px;">
+                        <input type="range" id="offset-voz" min="-3.0" max="3.0" step="0.05" value="0.0" style="flex:1;" oninput="setVoiceOffset(this.value)">
+                        <input type="number" id="offset-voz-num" min="-10.0" max="10.0" step="0.05" value="0.00" class="input-text" style="width: 72px; padding: 4px 6px; text-align: center; font-size: 12px;" oninput="setVoiceOffset(this.value)">
+                    </div>
+                    <div style="display:flex; gap:4px; margin-bottom: 6px;">
+                        <button type="button" class="btn" style="flex:1; padding:4px 0; font-size:11px; margin:0; background:var(--bg-card);" onclick="nudgeVoiceOffset(-0.10)">-0.10s</button>
+                        <button type="button" class="btn" style="flex:1; padding:4px 0; font-size:11px; margin:0; background:var(--bg-card);" onclick="nudgeVoiceOffset(-0.05)">-0.05s</button>
+                        <button type="button" class="btn" style="flex:1; padding:4px 0; font-size:11px; margin:0; background:var(--bg-hover); color:#fff;" onclick="setVoiceOffset(0)">0.00s</button>
+                        <button type="button" class="btn" style="flex:1; padding:4px 0; font-size:11px; margin:0; background:var(--bg-card);" onclick="nudgeVoiceOffset(0.05)">+0.05s</button>
+                        <button type="button" class="btn" style="flex:1; padding:4px 0; font-size:11px; margin:0; background:var(--bg-card);" onclick="nudgeVoiceOffset(0.10)">+0.10s</button>
+                    </div>
+                    <div style="font-size: 11px; color: #94a3b8; line-height: 1.35;">
+                        <div>• <b>Negativo (-0.30s):</b> Adelanta tu voz (si se escucha <i>después</i> de mover la boca).</div>
+                        <div>• <b>Positivo (+0.30s):</b> Retrasa tu voz (si se escucha <i>antes</i> de mover la boca).</div>
+                    </div>
+                </div>
+
                 <button class="btn" style="background: var(--bg-hover); width:100%; margin-top:10px; border: 1px dashed var(--accent-primary); color: var(--accent-primary);" onclick="saveAudioPreset()"> Guardar Configuracion</button>
                 
                 <div id="audio-preview-container" style="display:none; margin-top:15px; padding:10px; background:#111; border-radius:8px;">
@@ -946,9 +1013,54 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         function saveAudioPreset() {
             let vv = document.getElementById('vol-voz') ? document.getElementById('vol-voz').value : '1.0';
             let vj = document.getElementById('vol-juego') ? document.getElementById('vol-juego').value : '1.0';
+            let vo = (typeof getVoiceOffsetSec === 'function') ? String(getVoiceOffsetSec()) : '0.0';
             localStorage.setItem('default_vol_voz', vv);
             localStorage.setItem('default_vol_juego', vj);
-            alert("Configuracion de audio guardada como predeterminada.");
+            localStorage.setItem('default_voice_offset', vo);
+            alert("Configuracion de audio y desfase guardada como predeterminada.");
+        }
+
+        function getVoiceOffsetSec() {
+            const numEl = document.getElementById('offset-voz-num');
+            const rngEl = document.getElementById('offset-voz');
+            const raw = numEl ? numEl.value : (rngEl ? rngEl.value : '0');
+            const val = parseFloat(raw);
+            return isNaN(val) ? 0.0 : val;
+        }
+
+        function setVoiceOffset(val, skipLiveSeek) {
+            let num = parseFloat(val);
+            if (isNaN(num)) num = 0.0;
+            num = Math.round(num * 100) / 100;
+            const rngEl = document.getElementById('offset-voz');
+            const numEl = document.getElementById('offset-voz-num');
+            const lblEl = document.getElementById('lbl-offset-voz');
+            if (rngEl) rngEl.value = Math.max(-3.0, Math.min(3.0, num));
+            if (numEl && document.activeElement !== numEl) numEl.value = num.toFixed(2);
+            else if (numEl && skipLiveSeek) numEl.value = num.toFixed(2);
+            if (lblEl) lblEl.innerText = (num > 0 ? '+' : '') + num.toFixed(2) + 's';
+            if (typeof currentClip !== 'undefined' && currentClip) {
+                currentClip.voice_offset = num;
+            }
+            if (!skipLiveSeek && typeof workspaceVideo !== 'undefined' && workspaceVideo && currentClip) {
+                const vAudio = document.getElementById('global-audio-voice');
+                if (vAudio && vAudio.readyState > 0) {
+                    const rel = Math.max(0, workspaceVideo.currentTime - currentClip.start);
+                    const targetV = rel - num;
+                    if (targetV >= 0) {
+                        vAudio.currentTime = targetV;
+                        if (!workspaceVideo.paused && vAudio.paused) vAudio.play().catch(()=>{});
+                    } else {
+                        vAudio.pause();
+                        vAudio.currentTime = 0;
+                    }
+                }
+            }
+        }
+
+        function nudgeVoiceOffset(delta) {
+            const cur = getVoiceOffsetSec();
+            setVoiceOffset(Math.round((cur + delta) * 100) / 100, false);
         }
 
         window.onload = async () => {
@@ -1294,12 +1406,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             },
             manual: {
                 id: 'manual',
-                name: 'Manual / Streamdeck',
-                color: '#06b6d4',
-                shadow: 'rgba(6, 182, 212, 0.8)',
-                badgeBg: 'rgba(6, 182, 212, 0.2)',
-                badgeBorder: '#06b6d4',
-                icon: '🔷',
+                name: 'Marca Streamdeck',
+                color: '#00ffaa',
+                shadow: 'rgba(0, 255, 170, 0.95)',
+                badgeBg: 'rgba(0, 255, 170, 0.22)',
+                badgeBorder: '#00ffaa',
+                icon: '📌',
                 keywords: ['manual', 'streamdeck']
             },
             general: {
@@ -1417,7 +1529,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 html += `
                     <label class="timeline-filter-chip ${activeTimelineFilters[k] ? 'active' : ''}" title="Filtrar ${cat.name}">
                         <input type="checkbox" ${isChecked} onchange="toggleTimelineFilter('${k}', this.checked)">
-                        <span class="filter-dot-sample" style="background:${cat.color}; box-shadow: 0 0 5px ${cat.shadow};"></span>
+                        <span class="filter-dot-sample" style="background:${cat.color}; box-shadow: 0 0 6px ${cat.shadow}; ${k === 'manual' ? 'border-radius:2px; transform:rotate(45deg); border:1.5px solid #fff;' : ''}"></span>
                         <span>${cat.name} (${count})</span>
                     </label>
                 `;
@@ -1547,16 +1659,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     dot.dataset.end = clip.end;
                     dot.style.position = 'absolute';
                     dot.style.left = `${percStart + (widthPerc/2)}%`;
-                    dot.style.top = '-3px';
+                    const isManualPin = (cat.id === 'manual');
+                    dot.style.top = isManualPin ? '-4px' : '-3px';
                     dot.style.width = '20px';
                     dot.style.height = '20px';
-                    dot.style.borderRadius = '50%';
+                    dot.style.borderRadius = isManualPin ? '4px' : '50%';
                     dot.style.background = cat.color;
-                    dot.style.border = '2px solid #ffffff';
-                    dot.style.transform = 'translateX(-50%)';
+                    dot.style.border = isManualPin ? '2.5px solid #ffffff' : '2px solid #ffffff';
+                    dot.style.transform = isManualPin ? 'translateX(-50%) rotate(45deg)' : 'translateX(-50%)';
                     dot.style.cursor = 'pointer';
-                    dot.style.boxShadow = `0 0 8px ${cat.shadow}`;
-                    dot.style.zIndex = '5';
+                    dot.style.boxShadow = isManualPin ? `0 0 12px ${cat.shadow}, 0 0 4px #ffffff` : `0 0 8px ${cat.shadow}`;
+                    dot.style.zIndex = isManualPin ? '8' : '5';
                     dot.title = `[${cat.name}] ${clip.reason || clip.id} (${formatTime(clip.start)} - ${formatTime(clip.end)})`;
                     dot.onclick = (e) => {
                         e.stopPropagation();
@@ -2356,7 +2469,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                         syncOnLoad(jAudio);
                     } else {
                         let rel = workspaceVideo.currentTime - currentClip.start;
-                        if (rel >= 0) { vAudio.currentTime = rel; jAudio.currentTime = rel; }
+                        let vOff = (typeof getVoiceOffsetSec === 'function') ? getVoiceOffsetSec() : 0.0;
+                        if (rel >= 0) {
+                            vAudio.currentTime = Math.max(0, rel - vOff);
+                            jAudio.currentTime = rel;
+                        }
                     }
                 }
                 workspaceVideo.play();
@@ -2990,12 +3107,17 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                 if (volVozStr && document.getElementById('vol-voz')) document.getElementById('vol-voz').value = volVozStr;
                 const volJuegoStr = localStorage.getItem('default_vol_juego');
                 if (volJuegoStr && document.getElementById('vol-juego')) document.getElementById('vol-juego').value = volJuegoStr;
+                const savedOff = (currentClip && currentClip.voice_offset !== undefined) ? currentClip.voice_offset : (localStorage.getItem('default_voice_offset') || '0.0');
+                if (typeof setVoiceOffset === 'function') setVoiceOffset(savedOff, true);
                 updateAudioVolumes();
                 
                 const lastCropStr = localStorage.getItem('lastUsedCrop');
                 if (lastCropStr) {
                     try { defaultCrop = JSON.parse(lastCropStr); } catch(e) {}
                 }
+            } else {
+                const clipOff = (currentClip && currentClip.voice_offset !== undefined) ? currentClip.voice_offset : (localStorage.getItem('default_voice_offset') || '0.0');
+                if (typeof setVoiceOffset === 'function') setVoiceOffset(clipOff, true);
             }
 
             if (defaultCrop.fitMode) {
@@ -3247,6 +3369,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                                                 export_track: document.getElementById('export-track') ? document.getElementById('export-track').value : "mix",
                         vol_voz: document.getElementById('vol-voz') ? parseFloat(document.getElementById('vol-voz').value) : 1.0,
                         vol_juego: document.getElementById('vol-juego') ? parseFloat(document.getElementById('vol-juego').value) : 1.0,
+                        voice_offset: (typeof getVoiceOffsetSec === 'function') ? getVoiceOffsetSec() : 0.0,
                         track_voz: 2,
                         track_juego: 3,
                         social_title: document.getElementById('redes-titulo') ? document.getElementById('redes-titulo').value : null,
@@ -6304,9 +6427,54 @@ let transcribeController = null;
         function saveAudioPreset() {
             let vv = document.getElementById('vol-voz') ? document.getElementById('vol-voz').value : '1.0';
             let vj = document.getElementById('vol-juego') ? document.getElementById('vol-juego').value : '1.0';
+            let vo = (typeof getVoiceOffsetSec === 'function') ? String(getVoiceOffsetSec()) : '0.0';
             localStorage.setItem('default_vol_voz', vv);
             localStorage.setItem('default_vol_juego', vj);
-            alert("Configuracion de audio guardada como predeterminada.");
+            localStorage.setItem('default_voice_offset', vo);
+            alert("Configuracion de audio y desfase guardada como predeterminada.");
+        }
+
+        function getVoiceOffsetSec() {
+            const numEl = document.getElementById('offset-voz-num');
+            const rngEl = document.getElementById('offset-voz');
+            const raw = numEl ? numEl.value : (rngEl ? rngEl.value : '0');
+            const val = parseFloat(raw);
+            return isNaN(val) ? 0.0 : val;
+        }
+
+        function setVoiceOffset(val, skipLiveSeek) {
+            let num = parseFloat(val);
+            if (isNaN(num)) num = 0.0;
+            num = Math.round(num * 100) / 100;
+            const rngEl = document.getElementById('offset-voz');
+            const numEl = document.getElementById('offset-voz-num');
+            const lblEl = document.getElementById('lbl-offset-voz');
+            if (rngEl) rngEl.value = Math.max(-3.0, Math.min(3.0, num));
+            if (numEl && document.activeElement !== numEl) numEl.value = num.toFixed(2);
+            else if (numEl && skipLiveSeek) numEl.value = num.toFixed(2);
+            if (lblEl) lblEl.innerText = (num > 0 ? '+' : '') + num.toFixed(2) + 's';
+            if (typeof currentClip !== 'undefined' && currentClip) {
+                currentClip.voice_offset = num;
+            }
+            if (!skipLiveSeek && typeof workspaceVideo !== 'undefined' && workspaceVideo && currentClip) {
+                const vAudio = document.getElementById('global-audio-voice');
+                if (vAudio && vAudio.readyState > 0) {
+                    const rel = Math.max(0, workspaceVideo.currentTime - currentClip.start);
+                    const targetV = rel - num;
+                    if (targetV >= 0) {
+                        vAudio.currentTime = targetV;
+                        if (!workspaceVideo.paused && vAudio.paused) vAudio.play().catch(()=>{});
+                    } else {
+                        vAudio.pause();
+                        vAudio.currentTime = 0;
+                    }
+                }
+            }
+        }
+
+        function nudgeVoiceOffset(delta) {
+            const cur = getVoiceOffsetSec();
+            setVoiceOffset(Math.round((cur + delta) * 100) / 100, false);
         }
 
         let audioCtx;
@@ -6371,7 +6539,14 @@ let transcribeController = null;
                 if (!audioEl) return;
                 try {
                     if (audioEl.readyState > 0) {
-                        const targetRel = getRelTime();
+                        const isVoice = (audioEl.id === 'global-audio-voice');
+                        const vOffset = isVoice ? getVoiceOffsetSec() : 0.0;
+                        const targetRel = getRelTime() - vOffset;
+                        if (targetRel < 0) {
+                            if (!audioEl.paused) audioEl.pause();
+                            audioEl.currentTime = 0;
+                            return;
+                        }
                         if (forceSeek || Math.abs(audioEl.currentTime - targetRel) > 0.08) {
                             audioEl.currentTime = targetRel;
                         }

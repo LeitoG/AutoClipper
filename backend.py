@@ -136,6 +136,7 @@ class ExportRequest(BaseModel):
     export_track: Optional[str] = "mix"
     vol_voz: float = 1.0
     vol_juego: float = 1.0
+    voice_offset: float = 0.0
     track_voz: int = 2
     track_juego: int = 3
 
@@ -145,6 +146,7 @@ class AudioPreviewRequest(BaseModel):
     end: float
     vol_voz: float = 1.0
     vol_juego: float = 1.0
+    voice_offset: float = 0.0
     track_voz: int = 2
     track_juego: int = 3
 
@@ -823,6 +825,9 @@ def sync_streamdeck_markers(video_name: str, data: dict = None, analysis_file: s
                     "start": c_start,
                     "end": c_end,
                     "category": "manual",
+                    "is_streamdeck": True,
+                    "marker_sec": round(rel_seconds, 2),
+                    "needs_ai_refine": True,
                     "reason": f"📌 Marcador manual Streamdeck (marcado en {t_label})",
                     "virality_score": 100,
                     "transcript": "Marcador insertado manualmente durante la grabación.",
@@ -843,6 +848,17 @@ def sync_streamdeck_markers(video_name: str, data: dict = None, analysis_file: s
                 data.setdefault("proposals", []).append(c)
                 all_existing.append(c)
                 added_any = True
+
+        for p in data.get("proposals", []):
+            r_low = str(p.get("reason", "")).lower()
+            t_low = str(p.get("transcript", "")).lower()
+            if "streamdeck" in r_low or "marcador manual" in r_low or "insertado manualmente" in t_low:
+                if p.get("category") != "manual":
+                    p["category"] = "manual"
+                    added_any = True
+                if "insertado manualmente" in t_low and "needs_ai_refine" not in p:
+                    p["needs_ai_refine"] = True
+                    added_any = True
 
         if added_any:
             data["synced_markers"] = sorted(synced_set)
@@ -921,6 +937,7 @@ def _generate_clips_task(req: GenerateClipsRequest):
         import uuid
         import subprocess
         import re
+        import datetime
         
         video_file_name = req.video_name
         if not video_file_name:
@@ -1011,9 +1028,14 @@ def _generate_clips_task(req: GenerateClipsRequest):
             nonlocal max_id_val, saved_clips_count
             s, e = c['start'], c['end']
             overlap = False
-            for p in data.get("proposals", []) + data.get("completed_proposals", []) + data.get("completed_ranges", []) + data.get("rejected_proposals", []) + data.get("archived_proposals", []):
+            for p in data.get("proposals", []) + data.get("completed_proposals", []) + data.get("completed_ranges", []) + data.get("rejected_proposals", []):
                 if max(s, p['start']) < min(e, p['end']): overlap = True
             if overlap: return
+            if "archived_proposals" in data:
+                data["archived_proposals"] = [
+                    ap for ap in data["archived_proposals"]
+                    if not (max(s, ap.get("start", 0)) < min(e, ap.get("end", 0)))
+                ]
 
             max_id_val += 1
             c["id"] = f"clip_{max_id_val}"
@@ -1091,7 +1113,6 @@ def _generate_clips_task(req: GenerateClipsRequest):
         sb_chat_file = os.path.join(DB_DIR, 'chat.txt')
         if os.path.exists(sb_chat_file):
             try:
-                import datetime
                 video_start_time, video_end_time, _ = get_video_recording_window(video_path)
                 
                 with open(sb_chat_file, 'r', encoding='utf-8') as f:
@@ -1142,6 +1163,30 @@ def _generate_clips_task(req: GenerateClipsRequest):
 
         # Procesar marcadores de Streamdeck (usando fecha en nombre + duración real de ffprobe)
         data = sync_streamdeck_markers(video_file_name, data, analysis_file)
+
+        all_new_clips = []
+        total_in = 0
+        total_out = 0
+
+        # Si hay marcas manuales de Streamdeck sin analizar por la IA, usarlas como guía VIP para encuadrar y titular
+        unrefined_manuals = [
+            p for p in data.get("proposals", [])
+            if p.get("category") == "manual" and (
+                p.get("needs_ai_refine") or "insertado manualmente" in str(p.get("transcript", "")).lower()
+            )
+        ]
+        if unrefined_manuals:
+            try:
+                from pipeline import refine_manual_markers
+                m_in, m_out = refine_manual_markers(video_path, unrefined_manuals, gemini_api_key, TEMP_CLIPS_DIR, progress_cb)
+                total_in += m_in
+                total_out += m_out
+                data["proposals"].sort(key=lambda x: x.get("start", 0))
+                if analysis_file:
+                    atomic_write_json(analysis_file, data)
+            except Exception as e_mref:
+                print(f"Aviso en refine_manual_markers: {e_mref}")
+
         for p in data.get("proposals", []):
             exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
         for p in data.get("completed_proposals", []):
@@ -1150,21 +1195,26 @@ def _generate_clips_task(req: GenerateClipsRequest):
             exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
         for p in data.get("rejected_proposals", []):
             exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
-        for p in data.get("archived_proposals", []):
-            exclusion_zones.append((p.get("start", 0), p.get("end", 0)))
-            
-        all_new_clips = []
-        total_in = 0
-        total_out = 0
-        
-        # === TORNEO: se generan candidatos y solo se guardan los MEJORES ===
-        final_n = req.max_clips if req.max_clips and req.max_clips > 0 else 6
-        candidate_budget = max(12, final_n * 2)
+
+        # === TORNEO ESCALADO POR DURACIÓN DEL VIDEO ===
+        _, _, video_dur_sec = get_video_recording_window(video_path)
+        if req.max_clips and req.max_clips > 0:
+            final_n = req.max_clips
+        else:
+            if video_dur_sec >= 8400:      # > 2h 20m
+                final_n = 15
+            elif video_dur_sec >= 5100:    # 1h 25m a 2h 20m (~2 horas)
+                final_n = 12
+            elif video_dur_sec >= 2700:    # 45m a 1h 25m
+                final_n = 9
+            else:                          # < 45m
+                final_n = 6
+        candidate_budget = max(24, int(final_n * 2.2))
         candidate_pool = []
 
         def collect_candidate(c):
             cs, ce = c.get("start", 0), c.get("end", 0)
-            for p in data.get("proposals", []) + data.get("completed_proposals", []) + data.get("completed_ranges", []) + data.get("rejected_proposals", []) + data.get("archived_proposals", []):
+            for p in data.get("proposals", []) + data.get("completed_proposals", []) + data.get("completed_ranges", []) + data.get("rejected_proposals", []):
                 if max(cs, p.get("start", 0)) < min(ce, p.get("end", 0)):
                     return
             candidate_pool.append(c)
@@ -1710,6 +1760,7 @@ class ExportRequest(BaseModel):
     export_track: Optional[str] = "mix"
     vol_voz: float = 1.0
     vol_juego: float = 1.0
+    voice_offset: float = 0.0
     track_voz: int = 2
     track_juego: int = 3
 
@@ -2233,8 +2284,26 @@ def export_clip(req: ExportRequest):
                         valid_tracks.append((a_idx, 1.0))
                 
                 mix_inputs = []
+                voice_offset = float(getattr(req, "voice_offset", 0.0) or 0.0)
+                s_dur = max(0.05, s_end - s_start)
                 for idx_in_valid, (a_idx, vol) in enumerate(valid_tracks):
-                    filter_parts.append(f"[0:a:{a_idx}]atrim=start={s_start:.6f}:end={s_end:.6f},asetpts=PTS-STARTPTS,volume={vol}[a_s{i}_t{a_idx}]")
+                    if a_idx == tv and abs(voice_offset) >= 0.005:
+                        shifted_start = s_start - voice_offset
+                        shifted_end = s_end - voice_offset
+                        if shifted_start >= 0.0:
+                            filter_parts.append(
+                                f"[0:a:{a_idx}]atrim=start={shifted_start:.6f}:end={max(shifted_start + 0.01, shifted_end):.6f},"
+                                f"asetpts=PTS-STARTPTS,apad=whole_dur={s_dur:.6f},atrim=0:{s_dur:.6f},volume={vol}[a_s{i}_t{a_idx}]"
+                            )
+                        else:
+                            delay_ms = int(round((-shifted_start) * 1000))
+                            trim_end = max(0.01, shifted_end)
+                            filter_parts.append(
+                                f"[0:a:{a_idx}]atrim=start=0.000000:end={trim_end:.6f},"
+                                f"asetpts=PTS-STARTPTS,adelay={delay_ms}:all=1,apad=whole_dur={s_dur:.6f},atrim=0:{s_dur:.6f},volume={vol}[a_s{i}_t{a_idx}]"
+                            )
+                    else:
+                        filter_parts.append(f"[0:a:{a_idx}]atrim=start={s_start:.6f}:end={s_end:.6f},asetpts=PTS-STARTPTS,volume={vol}[a_s{i}_t{a_idx}]")
                     mix_inputs.append(f"[a_s{i}_t{a_idx}]")
                 
                 mix_str = "".join(mix_inputs)
@@ -2250,7 +2319,25 @@ def export_clip(req: ExportRequest):
                     a_idx = 0
                 if a_idx >= num_audio_streams or a_idx < 0:
                     a_idx = 0
-                filter_parts.append(f"[0:a:{a_idx}]atrim=start={s_start:.6f}:end={s_end:.6f},asetpts=PTS-STARTPTS,volume={req.vol_voz}[a_s{i}]")
+                voice_offset = float(getattr(req, "voice_offset", 0.0) or 0.0)
+                s_dur = max(0.05, s_end - s_start)
+                if abs(voice_offset) >= 0.005:
+                    shifted_start = s_start - voice_offset
+                    shifted_end = s_end - voice_offset
+                    if shifted_start >= 0.0:
+                        filter_parts.append(
+                            f"[0:a:{a_idx}]atrim=start={shifted_start:.6f}:end={max(shifted_start + 0.01, shifted_end):.6f},"
+                            f"asetpts=PTS-STARTPTS,apad=whole_dur={s_dur:.6f},atrim=0:{s_dur:.6f},volume={req.vol_voz}[a_s{i}]"
+                        )
+                    else:
+                        delay_ms = int(round((-shifted_start) * 1000))
+                        trim_end = max(0.01, shifted_end)
+                        filter_parts.append(
+                            f"[0:a:{a_idx}]atrim=start=0.000000:end={trim_end:.6f},"
+                            f"asetpts=PTS-STARTPTS,adelay={delay_ms}:all=1,apad=whole_dur={s_dur:.6f},atrim=0:{s_dur:.6f},volume={req.vol_voz}[a_s{i}]"
+                        )
+                else:
+                    filter_parts.append(f"[0:a:{a_idx}]atrim=start={s_start:.6f}:end={s_end:.6f},asetpts=PTS-STARTPTS,volume={req.vol_voz}[a_s{i}]")
             format_scene(f"v_s{i}", scene, f"out_{i}")
             inputs_concat.append(f"[out_{i}]")
             inputs_concat_a.append(f"[a_s{i}]")
@@ -2882,7 +2969,9 @@ def get_clip_audio_track(video_name: str, start: float, end: float, track_index:
         out_path = os.path.join(temp_dir, f'audio_track_{track_index}_{start}_{end}.wav')
         
         if not os.path.exists(out_path):
-            dur_track = max(0.1, float(end) - float(start))
+            # Agregar 6s extra en pista de voz por si el usuario adelanta el audio (desfase negativo) en el monitoreo en vivo
+            extra_pad = 6.0 if int(track_index) == 1 else 0.5
+            dur_track = max(0.1, float(end) - float(start) + extra_pad)
             cmd = [
                 FFMPEG_BIN, '-y', '-hide_banner', '-loglevel', 'error',
                 '-accurate_seek', '-ss', str(start), '-t', str(dur_track),

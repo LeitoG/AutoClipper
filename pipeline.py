@@ -445,7 +445,7 @@ def get_taste_profile(api_key: str, force: bool = False) -> str:
     return cached.get("profile", "")
 
 
-def rank_and_select_best(candidates, api_key, video_basename, top_n=6, min_score=65):
+def rank_and_select_best(candidates, api_key, video_basename, top_n=6, min_score=52):
     """
     TORNEO FINAL + AUDITORÍA DE SENTIDO Y CORTE:
     Evalúa todos los candidatos juntos verificando:
@@ -456,6 +456,14 @@ def rank_and_select_best(candidates, api_key, video_basename, top_n=6, min_score
     if not candidates:
         return [], [], 0, 0
     top_n = max(1, int(top_n))
+    max_cand_t = max((float(c.get("end", 0)) for c in candidates), default=0.0)
+    if top_n <= 6:
+        if max_cand_t >= 8400 or len(candidates) >= 20:
+            top_n = 15
+        elif max_cand_t >= 5100 or len(candidates) >= 14:
+            top_n = 12
+        elif max_cand_t >= 2700 or len(candidates) >= 10:
+            top_n = 9
     tin = tout = 0
     evals = {}
 
@@ -472,12 +480,13 @@ def rank_and_select_best(candidates, api_key, video_basename, top_n=6, min_score
         )
 
     sys_prompt = (
-        "Sos el Editor Jefe de Leito4Gaming. Leito se queja de que muchos clips propuestos por la IA son ABURRIDOS, "
-        "NO TIENEN SENTIDO por sí solos, o empiezan con 20 segundos de caminata/lectura antes de que pase algo.\n"
-        f"De esta lista solo se entregarán los {top_n} MEJORES. Sé implacable:\n"
-        "1. SENTIDO COMPLETO (ESTRUCTURA): Un buen clip DEBE tener Gancho claro (qué está por pasar), Clímax (susto real, pelea caótica, bug bizarro, carcajada o remate gracioso) y Cierre. Si la transcripción es una charla a medias sin remate, lectura de un cartel/documento, menú/inventario, o caminata sin gracia -> poné score < 40.\n"
-        "2. DETECCIÓN DE RELLENO: Si el clip es muy bueno pero en la transcripción se nota que los primeros 10-20 segundos son relleno aburrido antes del momento real, podés sugerir 'trim_start_add' (segundos a recortar del inicio, entre 0 y 20).\n"
-        "3. ESCALA ESTRICTA: < 50 = malo/aburrido/sin sentido (se descarta); 50-64 = flojo; 65-79 = buen clip; 80-100 = clip excelente que Leito sube directo sin tener que rehacerlo a mano."
+        "Sos el Editor Jefe de Leito4Gaming. Tu objetivo es seleccionar los MEJORES clips repartidos a lo largo del stream "
+        "y descartar únicamente los que sean relleno aburrido o no tengan sentido.\n"
+        f"De esta lista de {len(candidates)} candidatos, el objetivo ideal es entregar hasta {top_n} buenos clips:\n"
+        "1. SENTIDO COMPLETO (ESTRUCTURA): Un buen clip tiene Gancho/Contexto -> Clímax (susto, tensión, pelea, bug, risa, reacción genuina, escena turbia/bizarra o anécdota/comentario interesante) -> Remate. Si la transcripción es solo leer un menú en voz monótona o una frase cortada sin sentido -> poné score < 45.\n"
+        "2. RESPETAR LA EVIDENCIA VISUAL Y DE AUDIO DE ETAPA 1: La Etapa 1 YA ESCUCHÓ EL AUDIO Y VIO LOS FOTOGRAMAS del video. Si la 'razón propuesta' indica que apareció un monstruo, hubo una escena sangrienta/perturbadora, un susto o una reacción fuerte, NO le bajes el puntaje solo porque en la transcripción escrita parezca que venía charlando de otra cosa antes del susto.\n"
+        "3. DETECCIÓN DE RELLENO AL INICIO: Si el clip tiene un buen momento pero arranca 10-20 segundos antes con caminata o charla previa, NO lo rechaces: poné buen score y sugerí 'trim_start_add' (segundos a recortar del inicio, entre 0 y 20).\n"
+        "4. ESCALA DE PUNTAJE: < 48 = aburrido/sin sentido (se descarta); 50-68 = buen clip entretenido (aprobable); 69-84 = muy buen clip; 85-100 = clip excelente/viral."
     )
     sys_prompt += get_feedback_injection(video_basename, api_key)
     user_prompt = (
@@ -521,15 +530,19 @@ def rank_and_select_best(candidates, api_key, video_basename, top_n=6, min_score
         print(f"Torneo final falló, uso virality_score como respaldo: {e}")
 
     for i, c in enumerate(candidates):
+        v_sc = int(c.get("virality_score", 0) or 0)
         if i in evals:
             sc, trim_add, why = evals[i]
+            # Proteger clips donde la Etapa 1 (que vio los frames y escuchó el audio) detectó un momento muy fuerte (>=82)
+            if v_sc >= 82 and sc < 58:
+                sc = max(sc, int(v_sc * 0.68))
             c["rank_score"] = sc
             c["rank_why"] = why
             if 3.0 <= trim_add <= 22.0 and (c["end"] - (c["start"] + trim_add)) >= 32.0:
                 c["start"] = round(c["start"] + trim_add, 2)
         else:
-            c["rank_score"] = int(c.get("virality_score", 0) or 0) - 25
-            c["rank_why"] = c.get("rank_why", "Sin puntaje del torneo")
+            c["rank_score"] = max(55, v_sc - 18)
+            c["rank_why"] = c.get("rank_why", "Puntaje validado por Etapa 1")
 
     ordered = sorted(candidates, key=lambda c: c["rank_score"], reverse=True)
     winners, losers = [], []
@@ -599,18 +612,37 @@ def _extract_voice_or_mix_wav(video_path: str, temp_wav_voice: str, temp_wav_mix
     """
     Intenta extraer primero el Track 2 de OBS (0:a:1 = micrófono puro del streamer)
     para detectar reacciones/gritos reales sin ruido de disparos o música del juego.
-    Si el video no tiene Track 2 o está vacío, usa la pista general (0:a:0).
+    IMPORTANTE: Verifica que Track 2 realmente tenga energía de voz (p95_rms >= 300) y no sea
+    una pista secundaria con ambiente bajito del juego (como ocurre en algunos videos donde la voz está en Track 1).
     """
-    if os.path.exists(temp_wav_voice) and os.path.getsize(temp_wav_voice) > 1000:
+    def _track_has_real_voice(wav_path: str) -> bool:
         try:
-            with wave.open(temp_wav_voice, "rb") as wf:
-                sample_bytes = wf.readframes(min(wf.getnframes(), 16000 * 120))
+            with wave.open(wav_path, "rb") as wf:
+                fr = wf.getframerate() or 16000
+                # Muestrear hasta 6 minutos para evaluar energía real de voz
+                sample_bytes = wf.readframes(min(wf.getnframes(), fr * 360))
                 arr = np.frombuffer(sample_bytes, dtype=np.int16).astype(np.float64)
-                if len(arr) > 0 and np.max(np.abs(arr)) > 200:
-                    print("Audio de voz (Track 2) en caché válido.")
-                    return temp_wav_voice
+                if len(arr) < fr * 5:
+                    return False
+                n_s = len(arr) // fr
+                sec_rms = np.array([np.sqrt(np.mean(arr[i*fr:(i+1)*fr]**2)) for i in range(n_s)])
+                p95 = float(np.percentile(sec_rms, 95))
+                max_pk = float(np.max(np.abs(arr)))
+                # Una pista con micrófono real supera holgadamente p95 >= 300 y peak >= 2000 en 16-bit PCM
+                return p95 >= 300.0 and max_pk >= 2000.0
         except Exception:
-            pass
+            return False
+
+    if os.path.exists(temp_wav_voice) and os.path.getsize(temp_wav_voice) > 1000:
+        if _track_has_real_voice(temp_wav_voice):
+            print("Audio de voz (Track 2) en caché válido.")
+            return temp_wav_voice
+        else:
+            print("Aviso: caché de Track 2 tiene volumen muy bajo (ambiente sin micrófono); se usará Track 1.")
+            try:
+                os.remove(temp_wav_voice)
+            except Exception:
+                pass
 
     try:
         res = subprocess.run([
@@ -620,22 +652,26 @@ def _extract_voice_or_mix_wav(video_path: str, temp_wav_voice: str, temp_wav_mix
             "-y", temp_wav_voice
         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if res.returncode == 0 and os.path.exists(temp_wav_voice) and os.path.getsize(temp_wav_voice) > 1000:
-            with wave.open(temp_wav_voice, "rb") as wf:
-                sample_bytes = wf.readframes(min(wf.getnframes(), 16000 * 120))
-                arr = np.frombuffer(sample_bytes, dtype=np.int16).astype(np.float64)
-                if len(arr) > 0 and np.max(np.abs(arr)) > 200:
-                    print("Audio de micrófono aislado (Track 2 / 0:a:1) extraído con éxito.")
-                    return temp_wav_voice
+            if _track_has_real_voice(temp_wav_voice):
+                print("Audio de micrófono aislado (Track 2 / 0:a:1) extraído con éxito.")
+                return temp_wav_voice
+            else:
+                print("Track 2 (0:a:1) no contiene la voz principal (nivel muy bajo); cambiando a Track 1 (0:a:0).")
+                try:
+                    os.remove(temp_wav_voice)
+                except Exception:
+                    pass
     except Exception:
         pass
 
     if os.path.exists(temp_wav_mix) and os.path.getsize(temp_wav_mix) > 1000:
-        print("Audio general ya extraído, utilizando caché...")
+        print("Audio general (Track 1) ya extraído, utilizando caché...")
         return temp_wav_mix
 
-    print("Extrayendo audio general (Track 1) para análisis RMS...")
+    print("Extrayendo audio general (Track 1 / 0:a:0) para análisis RMS...")
     subprocess.run([
         "ffmpeg", "-i", video_path,
+        "-map", "0:a:0",
         "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
         "-y", temp_wav_mix
     ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -644,14 +680,13 @@ def _extract_voice_or_mix_wav(video_path: str, temp_wav_voice: str, temp_wav_mix
 
 ANTI_FALSE_SUSTO_RULES = (
     "\n\nREGLAS ESTRICTAS ANTIFALSOS POSITIVOS (ESPECIALMENTE EN CATEGORÍA 'susto'):\n"
-    "1. PROHIBIDO INVENTAR O EXAGERAR SUSTOS: Que el streamer hable fuerte, eleve el tono de voz, lea con énfasis, diga '¡uh!', '¡ah, mirá!', '¡ah, no, ya entendí!', festeje resolver algo o putee por un menú NO ES UN SUSTO.\n"
-    "2. CUÁNDO USAR 'category': 'susto': ÚNICAMENTE cuando haya un JUMPSCARE REAL, un grito brusco de pánico/terror genuino, la aparición repentina de un enemigo/monstruo que asuste de verdad al streamer, o una persecución desesperada con pánico real.\n"
-    "3. SITUACIONES QUE DEBES RECHAZAR SIEMPRE (NO SON CLIPS NI SUSTOS):\n"
-    "   - Leer cartas, notas, archivos médicos o documentos del juego en voz alta (aunque el texto sea macabro o el streamer diga '¡uh!').\n"
-    "   - Resolver cajas fuertes, combinaciones, acertijos o puzzles diciendo números en voz alta sin que ocurra un ataque o susto real.\n"
-    "   - Ordenar el inventario, combinar objetos, guardar partida o quejarse de que no hay espacio en el inventario.\n"
-    "   - Configurar el stream, OBS, sonidos o alertas (ej. decir 'no deberíamos tener ningún susto con las alertas').\n"
-    "4. PROHIBIDO MENTIR EN 'reason', 'social_title' O 'yt_title': Jamás escribas 'Me pegué un susto...' si en el audio/transcripción el streamer solo estaba abriendo una caja fuerte, leyendo una nota o hablando fuerte. Si el momento no tiene un susto real ni es genuinamente gracioso/épico, RECHÁZALO.\n"
+    "1. PROHIBIDO INVENTAR O EXAGERAR SUSTOS: Que el streamer hable fuerte, eleve el tono de voz, lea con énfasis, diga '¡uh!', '¡ah, mirá!', '¡ah, no, ya entendí!', festeje resolver algo o putee por un menú NO ES UN SUSTO (usa 'humor', 'streamer' o 'gameplay' si el momento es entretenido, pero nunca 'susto').\n"
+    "2. CUÁNDO USAR 'category': 'susto': ÚNICAMENTE cuando haya un JUMPSCARE REAL, un grito/salto de sorpresa o terror genuino, la aparición repentina de un monstruo/escena sangrienta perturbadora que haga reaccionar al streamer, o una persecución con tensión real.\n"
+    "3. SITUACIONES QUE DEBES RECHAZAR (NO SON CLIPS):\n"
+    "   - Leer textos/documentos largos en tono plano/aburrido sin ningún remate gracioso, reacción ni giro perturbador.\n"
+    "   - OJO EN JUEGOS NARRATIVOS / AVENTURAS GRÁFICAS (ej. Fran Bow): Si el streamer lee un diálogo corto o interactúa con un objeto/personaje bizarro y tira un buen chiste, comentario irónico, reacción de asco/sorpresa o descubre algo re turbio, ¡SÍ ES UN BUEN CLIP! Apruébalo como 'humor', 'streamer' o 'susto' según corresponda.\n"
+    "   - Ordenar el inventario en silencio, guardar partida o configurar OBS/alertas.\n"
+    "4. PROHIBIDO MENTIR EN 'reason', 'social_title' O 'yt_title': Describe siempre con total honestidad lo que realmente ocurre o dice el streamer en el clip.\n"
 )
 
 
@@ -702,7 +737,7 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
     # Calcular línea base local (mediana móvil de 30s) ANTES de anular zonas excluidas
     active_nonzero = rms_array[rms_array > 50]
     global_median = float(np.median(active_nonzero)) if len(active_nonzero) > 0 else 100.0
-    baseline_floor = max(80.0, global_median * 0.6)
+    baseline_floor = max(35.0, global_median * 0.55)
 
     spike_ratio_array = np.zeros_like(rms_array)
     n_secs = len(rms_array)
@@ -727,15 +762,33 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
 
     nonzero_rms = rms_array[rms_array > 0]
     if len(nonzero_rms) > 0:
-        threshold_90 = float(np.percentile(nonzero_rms, 90))
-        threshold_95 = float(np.percentile(nonzero_rms, 95))
+        t88_global = float(np.percentile(nonzero_rms, 88))
+        t93_global = float(np.percentile(nonzero_rms, 93))
     else:
-        threshold_90 = 999999.0
-        threshold_95 = 999999.0
+        t88_global = 999999.0
+        t93_global = 999999.0
 
-    # Detectar segundos fuertes: ya sea por volumen alto (p90) con contraste, o por pico súbito agudo (grito corto)
+    # Umbrales adaptativos por bloques de 15 minutos (900s) para que una hora final ruidosa
+    # nunca deje ciega la primera hora del stream en videos largos (1h a 3h).
+    BLOCK_S = 900
+    local_p88 = np.full(n_secs, t88_global, dtype=np.float64)
+    local_p93 = np.full(n_secs, t93_global, dtype=np.float64)
+    for b_start in range(0, n_secs, BLOCK_S):
+        b_end = min(n_secs, b_start + BLOCK_S)
+        b_nz = rms_array[b_start:b_end]
+        b_nz = b_nz[b_nz > 50]
+        if len(b_nz) >= 30:
+            local_p88[b_start:b_end] = float(np.percentile(b_nz, 88))
+            local_p93[b_start:b_end] = float(np.percentile(b_nz, 93))
+
+    eff_p88 = np.minimum(t88_global, local_p88 * 1.05)
+    eff_p93 = np.minimum(t93_global, local_p93 * 1.05)
+
+    # Detectar segundos fuertes: ya sea por volumen alto local/global o por pico súbito de reacción (contraste >= 2.0x)
     loud_seconds = np.where(
-        (rms_array > threshold_90) | ((rms_array > threshold_90 * 0.85) & (spike_ratio_array >= 2.5))
+        (rms_array > eff_p88)
+        | ((rms_array > eff_p88 * 0.78) & (spike_ratio_array >= 2.0))
+        | ((rms_array > global_median * 1.6) & (spike_ratio_array >= 2.4))
     )[0]
 
     segments = []
@@ -768,15 +821,14 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         max_spike_val = float(np.max(seg_spikes))
         peak_rel_idx = int(np.argmax(seg_rms * np.maximum(seg_spikes, 1.0)))
         peak_sec = s_raw + peak_rel_idx
+        loc_93 = float(eff_p93[min(peak_sec, n_secs - 1)])
 
-        # Filtrar falsos positivos de lectura en voz alta monótona vs gritos/reacciones reales:
-        # 1) Grito o susto corto (1 a 4 segs): requiere pico intenso (>= p95 o salto brusco >= 2.3x sobre la base local)
+        # Filtrar falsos positivos de lectura monótona, manteniendo reacciones/sustos cortos y momentos intensos:
         if length < 4:
-            if max_rms_val < threshold_95 and max_spike_val < 2.3:
+            if max_rms_val < loc_93 and max_spike_val < 1.85:
                 continue
         else:
-            # 2) Habla fuerte sostenida (>= 4 segs): descartar si es volumen plano/monótono sin picos expresivos
-            if max_spike_val < 1.75 and max_rms_val < threshold_95:
+            if max_spike_val < 1.45 and max_rms_val < loc_93:
                 continue
 
         pad_before = 18  # 18s previos (setup directo sin 40s de caminata aburrida)
@@ -788,15 +840,17 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         if clip_end - clip_start > 120:
             clip_end = clip_start + 120
 
-        # Puntaje combinado que premia contrastes bruscos (gritos/risas explosivas) por encima de hablar fuerte constante
-        reaction_score = max_rms_val * min(max(max_spike_val, 1.0), 4.5)
+        # Puntaje normalizado respecto al bloque local para que todas las etapas del stream compitan en igualdad
+        norm_rms = max_rms_val / max(loc_93, 200.0)
+        reaction_score = norm_rms * min(max(max_spike_val, 1.0), 4.5) * 100.0
         candidate_segments.append({
             "start": clip_start,
             "end": clip_end,
             "peak_sec": peak_sec,
             "max_spike": round(max_spike_val, 2),
             "raw_len": length,
-            "score": reaction_score
+            "score": reaction_score,
+            "block": peak_sec // BLOCK_S,
         })
 
     print(f"Se detectaron {len(candidate_segments)} picos acústicos con contraste de reacción.")
@@ -816,16 +870,47 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
     print(f"Tras aplicar filtros de tiempo quedan {len(valid_segments_filtered)} picos.")
 
     if len(valid_segments_filtered) > 0:
-        valid_segments_filtered.sort(key=lambda seg: seg["score"], reverse=True)
-        limit = max_clips if max_clips > 0 else 18
-        deduped_segments = []
+        auto_budget = max(24, min(36, int((n_secs / 900.0) * 3.2)))
+        limit = auto_budget if (max_clips <= 0 or (max_clips == 12 and n_secs >= 2700)) else max_clips
+        num_blocks = max(1, (n_secs + BLOCK_S - 1) // BLOCK_S)
+        per_block_quota = max(2, limit // num_blocks)
+
+        by_block = {}
         for seg in valid_segments_filtered:
+            b = seg.get("block", seg["peak_sec"] // BLOCK_S)
+            by_block.setdefault(b, []).append(seg)
+        for b in by_block:
+            by_block[b].sort(key=lambda seg: seg["score"], reverse=True)
+
+        deduped_segments = []
+
+        def _can_add(seg):
             s, e = seg["start"], seg["end"]
-            if any(max(s, ds["start"]) < min(e, ds["end"]) - 15 for ds in deduped_segments):
-                continue
-            deduped_segments.append(seg)
+            return not any(max(s, ds["start"]) < min(e, ds["end"]) - 15 for ds in deduped_segments)
+
+        # Paso 1: garantizar cobertura temporal en cada bloque de 15 minutos
+        for b in sorted(by_block.keys()):
+            taken = 0
+            for seg in by_block[b]:
+                if _can_add(seg):
+                    deduped_segments.append(seg)
+                    taken += 1
+                    if taken >= per_block_quota or len(deduped_segments) >= limit:
+                        break
             if len(deduped_segments) >= limit:
                 break
+
+        # Paso 2: completar el presupuesto con los mejores puntajes restantes de todo el video
+        if len(deduped_segments) < limit:
+            remaining = sorted(valid_segments_filtered, key=lambda seg: seg["score"], reverse=True)
+            for seg in remaining:
+                if seg in deduped_segments:
+                    continue
+                if _can_add(seg):
+                    deduped_segments.append(seg)
+                    if len(deduped_segments) >= limit:
+                        break
+
         deduped_segments.sort(key=lambda x: x["start"])
         valid_segments_filtered = deduped_segments
 
@@ -848,15 +933,15 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
         f"NUNCA asumas que no jugaste el juego ('Me contaron'). Escribe como un gamer con actitud, en PRIMERA PERSONA. "
         f"Recibes el audio del segmento y una imagen collage (3x2) con 6 fotogramas clave concentrados alrededor del pico de voz. "
         f"Evalúa con criterio estricto si el segmento realmente vale la pena como clip viral según el prompt.\n"
-        f"CÓMO RECHAZAR SEGMENTOS SIN VALOR (MUY IMPORTANTE): Como respondes en formato JSON, si el segmento es silencio, charla rutinaria, "
-        f"lectura de documentos/notas, resolución tranquila de puzzles/cajas fuertes, ordenar inventario, configurar alertas, o simplemente hablar fuerte "
-        f"SIN un susto real, chiste gracioso o jugada épica, DEBES RECHAZARLO devolviendo exactamente este JSON:\n"
+        f"CÓMO RECHAZAR SEGMENTOS SIN VALOR (MUY IMPORTANTE): Como respondes en formato JSON, si el segmento es silencio, charla rutinaria sin remate, "
+        f"lectura monótona sin reacción, ordenar inventario en silencio, configurar alertas, o hablar plano "
+        f"SIN un susto/reacción real, escena turbia/bizarra, comentario gracioso o jugada interesante, DEBES RECHAZARLO devolviendo exactamente este JSON:\n"
         f"{{\"rejected\": true, \"reason\": \"Explicación breve de por qué se rechaza\"}}\n"
-        f"Si y solo si el clip tiene verdadero valor viral (virality_score >= 78), devuelve JSON con: "
+        f"Si el clip tiene valor como momento entretenido, gracioso, tenso, interesante o de reacción/susto (virality_score >= 68), devuelve JSON con: "
         f"'rejected' (false), 'start' (float, inicio relativo al video original), 'end' (float, fin relativo al video original), "
         f"'category' (string: 'susto' SOLO si hay miedo/grito/jumpscare real, 'streamer' si es charla/anécdota/explicación/lore interesante, "
         f"'humor' si es chiste/broma/fail gracioso, 'gameplay' si es jugada/combate/boss/muerte épica), "
-        f"'reason' (string honesto describiendo qué pasa realmente), 'virality_score' (int 78-99), 'transcript' (string), "
+        f"'reason' (string honesto describiendo qué pasa realmente), 'virality_score' (int 68-99), 'transcript' (string), "
         f"'social_title' (string, Título ingenioso y directo que resuma EXACTAMENTE lo que pasa o se dice en el clip), "
         f"'social_desc' (string, descripción normal y conversacional (1 o 2 oraciones cortas, 10 a 22 palabras), SIN insultos y sin sonar exagerado, contando como hablarías vos qué pasó en el clip. {link_instruction} Luego pon solo 3 hashtags populares del juego), "
         f"'yt_title' (string, llamativo para YT Shorts), 'yt_desc' (string, descripción CORTA), "
@@ -1027,7 +1112,7 @@ def analyze_video_local_first(video_path, prompt, api_key, temp_dir, progress_ca
                             or str(c.get("reason", "")).strip().upper().startswith("RECHAZADO")
                         ):
                             print(f"Clip {idx} RECHAZADO por la IA: {c.get('reason', 'Sin valor viral')}")
-                        elif int(c.get("virality_score", 0) or 0) < 75:
+                        elif int(c.get("virality_score", 0) or 0) < 65:
                             print(f"Clip {idx} descartado por virality_score bajo ({c.get('virality_score')}): {c.get('reason')}")
                         else:
                             c.pop("rejected", None)
@@ -1310,7 +1395,7 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
                     if (
                         c.get("rejected") is True
                         or str(c.get("category", "")).lower() in ("rechazado", "rejected", "none", "null")
-                        or int(c.get("virality_score", 0) or 0) < 75
+                        or int(c.get("virality_score", 0) or 0) < 65
                     ):
                         continue
                     c.pop("rejected", None)
@@ -1354,3 +1439,156 @@ def analyze_video_semantic(video_path, prompt, api_key, temp_dir, progress_callb
     if progress_callback:
         progress_callback(100, "¡Proceso semántico terminado!")
     return final_clips, total_input_tokens, total_output_tokens
+
+
+def refine_manual_markers(video_path: str, manual_clips: list, api_key: str, temp_dir: str, progress_callback=None):
+    """
+    Usa las marcas manuales del botón Streamdeck como guía VIP para la IA:
+    - Toma el momento donde Leito apretó el botón (ventana amplia de -48s a +24s alrededor de la marca).
+    - Extrae el audio y un collage 3x2 de fotogramas.
+    - Le pide a Gemini que encuentre exactamente dónde empieza la situación, qué pasó en ese momento y dónde termina el remate,
+      ajustando 'start' y 'end' y generando título, descripción, transcripción y tags reales.
+    - NUNCA rechaza ni descarta la marca manual: conserva siempre 'category' = 'manual' e 'is_streamdeck' = True.
+    """
+    if not manual_clips or not api_key:
+        return 0, 0
+
+    try:
+        from google import genai
+        from google.genai import types
+    except ImportError:
+        return 0, 0
+
+    client = genai.Client(api_key=api_key.strip(), http_options={'timeout': 120000})
+    video_basename = extract_game_title(video_path)
+    link_instruction = "que SIEMPRE termine con 'Podes ver el video completo haciendo click en el link' seguida de los " if "gourmet" in video_path.lower() else ""
+
+    cap = cv2.VideoCapture(video_path)
+    fps = cap.get(cv2.CAP_PROP_FPS) or 60.0
+    frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0
+    total_dur = (frame_count / fps) if frame_count > 0 else 999999.0
+
+    tin = tout = 0
+    for idx, clip in enumerate(manual_clips):
+        try:
+            if progress_callback:
+                progress_callback(12 + int(10 * (idx / max(1, len(manual_clips)))), f"📌 Refinando con IA marca Streamdeck {idx+1}/{len(manual_clips)}...")
+
+            orig_start = float(clip.get("start", 0))
+            orig_end = float(clip.get("end", orig_start + 60))
+            marker_sec = float(clip.get("marker_sec", orig_start + 40.0))
+
+            win_start = max(0.0, marker_sec - 48.0)
+            win_end = min(total_dur, marker_sec + 24.0)
+            if win_end - win_start < 40.0:
+                win_end = min(total_dur, win_start + 55.0)
+
+            temp_audio = os.path.join(temp_dir, f"temp_manual_sd_{idx}.mp3")
+            subprocess.run([
+                "ffmpeg", "-y", "-ss", str(win_start), "-t", str(win_end - win_start),
+                "-i", video_path, "-vn", "-ac", "1", "-ar", "16000",
+                "-c:a", "libmp3lame", "-b:a", "32k", temp_audio
+            ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            collage_img = None
+            try:
+                tile_w, tile_h = 256, 144
+                grid_canvas = np.zeros((tile_h * 2, tile_w * 3, 3), dtype=np.uint8)
+                offsets = [-22, -14, -8, -3, 2, 8]
+                sample_times = [min(max(win_start + 1, marker_sec + off), max(win_start + 2, win_end - 1)) for off in offsets]
+                for f_i, t_sec in enumerate(sample_times):
+                    cap.set(cv2.CAP_PROP_POS_MSEC, float(t_sec) * 1000.0)
+                    ret, frame = cap.read()
+                    if ret and frame is not None:
+                        resized = cv2.resize(frame, (tile_w, tile_h))
+                        label = f"{int(t_sec)}s (MARCA)" if off == -3 else f"{int(t_sec)}s"
+                        cv2.putText(resized, label, (8, 22), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 2)
+                        r_idx = f_i // 3
+                        c_idx = f_i % 3
+                        grid_canvas[r_idx*tile_h:(r_idx+1)*tile_h, c_idx*tile_w:(c_idx+1)*tile_w] = resized
+                collage_img = PIL.Image.fromarray(cv2.cvtColor(grid_canvas, cv2.COLOR_BGR2RGB))
+            except Exception:
+                collage_img = None
+
+            with open(temp_audio, "rb") as f_aud:
+                audio_part = types.Part.from_bytes(data=f_aud.read(), mime_type="audio/mp3")
+
+            sys_prompt = (
+                f"Eres Leito4Gaming (streamer argentino, hablás de VOS en español rioplatense natural, CERO insultos, CERO frases infantiles). "
+                f"Durante la grabación de {video_basename}, presionaste tu botón físico de STREAMDECK en el segundo {marker_sec:.1f} "
+                f"porque acababa de pasar algo que querías clipear sí o sí.\n"
+                f"Recibes el audio desde el segundo {win_start:.1f} hasta {win_end:.1f} y un collage de fotogramas.\n"
+                f"PROHIBIDO RECHAZAR ESTE CLIP: como fue marcado manualmente por vos en vivo, SIEMPRE debes devolver sus datos listos.\n"
+                f"Tu tarea es escuchar qué pasó justo antes y alrededor del segundo {marker_sec:.1f}, encuadrar el 'start' y 'end' "
+                f"(entre {win_start:.1f} y {win_end:.1f}, duración ideal de 35 a 65 segundos, arrancando cuando empieza la situación/frase y terminando tras el remate/reacción), "
+                f"y redactar los metadatos reales en JSON:\n"
+                f"{{\"start\": float, \"end\": float, \"reason\": \"Descripción clara de qué pasó en este momento marcado\", "
+                f"\"transcript\": \"Transcripción de lo que se dice en el segmento\", "
+                f"\"social_title\": \"Título directo e ingenioso en primera persona\", "
+                f"\"social_desc\": \"Descripción natural y conversacional (1 o 2 oraciones, 10 a 22 palabras, sin insultos). {link_instruction} Seguido de 3 hashtags del juego\", "
+                f"\"yt_title\": \"Título llamativo para YouTube Shorts\", "
+                f"\"yt_desc\": \"Descripción corta en primera persona\", "
+                f"\"yt_tags\": \"8 a 12 etiquetas separadas por coma incluyendo Leito4Gaming y {video_basename}\"}}"
+            )
+
+            contents_payload = [audio_part]
+            if collage_img is not None:
+                contents_payload.append(collage_img)
+            contents_payload.append(sys_prompt)
+
+            resp = client.models.generate_content(
+                model='gemini-3.5-flash-lite',
+                contents=contents_payload,
+                config={"temperature": 0.2, "response_mime_type": "application/json"},
+            )
+            if hasattr(resp, "usage_metadata") and resp.usage_metadata:
+                tin += getattr(resp.usage_metadata, "prompt_token_count", 0) or 0
+                tout += (getattr(resp.usage_metadata, "candidates_token_count", 0) or 0) + (getattr(resp.usage_metadata, "thoughts_token_count", 0) or 0)
+
+            match = re.search(r"\{.*\}", resp.text or "", re.DOTALL)
+            if match:
+                c_ai = json.loads(match.group(0))
+                if isinstance(c_ai, list) and c_ai:
+                    c_ai = c_ai[0]
+                if isinstance(c_ai, dict):
+                    new_s = float(c_ai.get("start", orig_start) or orig_start)
+                    new_e = float(c_ai.get("end", orig_end) or orig_end)
+                    if new_s < win_start - 5:
+                        new_s += win_start
+                        new_e += win_start
+                    new_s = max(win_start, min(new_s, marker_sec - 8.0))
+                    new_e = min(win_end, max(new_e, marker_sec + 5.0))
+                    if new_e - new_s < 35.0:
+                        diff = 35.0 - (new_e - new_s)
+                        new_s = max(0.0, new_s - diff * 0.6)
+                        new_e = min(total_dur, new_e + diff * 0.4)
+
+                    clip["start"] = round(new_s, 2)
+                    clip["end"] = round(new_e, 2)
+                    raw_reason = str(c_ai.get("reason", "")).strip()
+                    if raw_reason:
+                        clean_r = re.sub(r"^📌\s*(\[Marca Streamdeck\]\s*)?", "", raw_reason).strip()
+                        clip["reason"] = f"📌 [Marca Streamdeck] {clean_r}"
+                    if c_ai.get("transcript"):
+                        clip["transcript"] = str(c_ai["transcript"]).strip()
+                    for k in ("social_title", "social_desc", "yt_title", "yt_desc", "yt_tags"):
+                        if c_ai.get(k):
+                            clip[k] = c_ai[k]
+                    clip["category"] = "manual"
+                    clip["is_streamdeck"] = True
+                    clip["needs_ai_refine"] = False
+                    clip["virality_score"] = 100
+                    sanitize_and_format_metadata(clip, video_path)
+                    clip["category"] = "manual"
+                    print(f"📌 Marca Streamdeck refinada por IA: {clip['start']}s - {clip['end']}s | {clip['reason']}")
+        except Exception as e_ref:
+            print(f"Aviso refinando marca Streamdeck {idx}: {e_ref}")
+        finally:
+            try:
+                if os.path.exists(temp_audio):
+                    os.remove(temp_audio)
+            except Exception:
+                pass
+
+    cap.release()
+    return tin, tout
