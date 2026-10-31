@@ -871,6 +871,261 @@ def sync_streamdeck_markers(video_name: str, data: dict = None, analysis_file: s
     return data
 
 
+def _format_guion_time_label(sec_val: float) -> str:
+    sec_i = max(0, int(round(sec_val)))
+    hh = sec_i // 3600
+    mm = (sec_i % 3600) // 60
+    ss = sec_i % 60
+    return f"{hh:02d}:{mm:02d}:{ss:02d}" if hh > 0 else f"{mm:02d}:{ss:02d}"
+
+
+def sync_guion_markers(video_name: str, data: dict, analysis_file: str = ""):
+    """
+    Sincroniza los marcadores de GUION ('guion_markers.txt') con el video seleccionado.
+    Estos marcadores son independientes de los clips cortos y se muestran solo en la pestaña 'Guion'.
+    """
+    if not video_name or not isinstance(data, dict):
+        return data
+
+    video_path = find_video_path(video_name)
+    if not video_path or not os.path.exists(video_path):
+        return data
+
+    candidate_files = [
+        os.path.join(DB_DIR, "guion_markers.txt"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "db", "guion_markers.txt"),
+    ]
+    markers_lines = []
+    seen_files = set()
+    for mf in candidate_files:
+        norm_mf = os.path.normcase(os.path.abspath(mf))
+        if norm_mf in seen_files or not os.path.exists(mf):
+            continue
+        seen_files.add(norm_mf)
+        try:
+            with open(mf, "r", encoding="utf-8") as f:
+                for ln in f:
+                    ln_s = ln.strip()
+                    if ln_s:
+                        markers_lines.append(ln_s)
+        except Exception:
+            pass
+
+    if not markers_lines:
+        return data
+
+    try:
+        video_start_time, video_end_time, dur_sec = get_video_recording_window(video_path)
+        synced_set = set(data.get("synced_guion_markers", []))
+        guion_list = data.setdefault("guion_markers", [])
+
+        max_gid = 0
+        for gm in guion_list:
+            gid_str = str(gm.get("id", ""))
+            if gid_str.startswith("guion_"):
+                try:
+                    num = int(gid_str.split("_")[1])
+                    if num > max_gid:
+                        max_gid = num
+                except Exception:
+                    pass
+
+        added_any = False
+        last_rel = -999.0
+
+        for line in markers_lines:
+            raw_ts = line.split("|")[0].strip()
+            if raw_ts in synced_set:
+                continue
+            try:
+                marker_time = datetime.datetime.strptime(raw_ts, "%Y-%m-%d %H:%M:%S")
+            except Exception:
+                continue
+
+            if video_start_time <= marker_time <= video_end_time:
+                rel_seconds = (marker_time - video_start_time).total_seconds()
+                synced_set.add(raw_ts)
+
+                # Ignorar doble click accidental en menos de 8 segundos
+                if abs(rel_seconds - last_rel) < 8.0:
+                    added_any = True
+                    continue
+                last_rel = rel_seconds
+
+                # Retroceder 5s para caer justo al comienzo del momento marcado en vivo
+                target_t = round(max(0.0, rel_seconds - 5.0), 1)
+                if any(abs(float(gm.get("time", -999)) - target_t) < 6.0 for gm in guion_list):
+                    added_any = True
+                    continue
+
+                max_gid += 1
+                t_label = _format_guion_time_label(target_t)
+                guion_list.append({
+                    "id": f"guion_{max_gid}",
+                    "time": target_t,
+                    "time_label": t_label,
+                    "title": f"Momento {max_gid} ({t_label})",
+                    "note": "",
+                    "source": "streamdeck",
+                    "created_at": raw_ts
+                })
+                added_any = True
+
+        if added_any:
+            data["synced_guion_markers"] = sorted(synced_set)
+            data["guion_markers"].sort(key=lambda x: float(x.get("time", 0)))
+            if analysis_file:
+                atomic_write_json(analysis_file, data)
+    except Exception as e_gm:
+        print(f"Error en sync_guion_markers para {video_name}: {e_gm}")
+
+    return data
+
+
+class GuionSaveMarkerRequest(BaseModel):
+    video_name: str
+    marker_id: str
+    note: str = ""
+    title: Optional[str] = None
+    time: Optional[float] = None
+
+
+class GuionAddMarkerRequest(BaseModel):
+    video_name: str
+    time: float
+    title: Optional[str] = None
+    note: str = ""
+
+
+class GuionDeleteMarkerRequest(BaseModel):
+    video_name: str
+    marker_id: str
+
+
+@app.get("/guion")
+def get_guion(video_name: str = ""):
+    try:
+        analysis_file = get_analysis_file(video_name)
+        if not analysis_file:
+            return {"status": "success", "data": {"video_name": video_name, "markers": []}}
+
+        if os.path.exists(analysis_file):
+            with open(analysis_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {"video": video_name, "proposals": [], "completed_proposals": [], "completed_ranges": [], "rejected_proposals": [], "guion_markers": []}
+
+        data = sync_guion_markers(video_name, data, analysis_file)
+        markers = data.get("guion_markers", [])
+        markers.sort(key=lambda x: float(x.get("time", 0)))
+        for idx, m in enumerate(markers, 1):
+            m["time_label"] = _format_guion_time_label(float(m.get("time", 0)))
+            if not m.get("title"):
+                m["title"] = f"Momento {idx} ({m['time_label']})"
+
+        return {"status": "success", "data": {"video_name": video_name, "markers": markers}}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/save_guion_marker")
+def save_guion_marker(req: GuionSaveMarkerRequest):
+    try:
+        analysis_file = get_analysis_file(req.video_name)
+        if not analysis_file:
+            return {"status": "error", "message": "Video inválido"}
+
+        if os.path.exists(analysis_file):
+            with open(analysis_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {"video": req.video_name, "proposals": [], "guion_markers": []}
+
+        markers = data.setdefault("guion_markers", [])
+        found = None
+        for m in markers:
+            if m.get("id") == req.marker_id:
+                m["note"] = req.note
+                if req.title is not None:
+                    m["title"] = req.title
+                if req.time is not None:
+                    m["time"] = round(max(0.0, float(req.time)), 1)
+                    m["time_label"] = _format_guion_time_label(m["time"])
+                found = m
+                break
+
+        if not found:
+            return {"status": "error", "message": "Marcador de guion no encontrado"}
+
+        markers.sort(key=lambda x: float(x.get("time", 0)))
+        atomic_write_json(analysis_file, data)
+        return {"status": "success", "marker": found, "markers": markers}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/add_guion_marker")
+def add_guion_marker(req: GuionAddMarkerRequest):
+    try:
+        analysis_file = get_analysis_file(req.video_name)
+        if not analysis_file:
+            return {"status": "error", "message": "Video inválido"}
+
+        if os.path.exists(analysis_file):
+            with open(analysis_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {"video": req.video_name, "proposals": [], "guion_markers": []}
+
+        markers = data.setdefault("guion_markers", [])
+        max_gid = 0
+        for gm in markers:
+            gid_str = str(gm.get("id", ""))
+            if gid_str.startswith("guion_"):
+                try:
+                    num = int(gid_str.split("_")[1])
+                    if num > max_gid:
+                        max_gid = num
+                except Exception:
+                    pass
+        max_gid += 1
+        t_val = round(max(0.0, float(req.time)), 1)
+        t_label = _format_guion_time_label(t_val)
+        new_m = {
+            "id": f"guion_{max_gid}",
+            "time": t_val,
+            "time_label": t_label,
+            "title": req.title.strip() if (req.title and req.title.strip()) else f"Momento {max_gid} ({t_label})",
+            "note": req.note or "",
+            "source": "manual",
+            "created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        markers.append(new_m)
+        markers.sort(key=lambda x: float(x.get("time", 0)))
+        atomic_write_json(analysis_file, data)
+        return {"status": "success", "marker": new_m, "markers": markers}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/delete_guion_marker")
+def delete_guion_marker(req: GuionDeleteMarkerRequest):
+    try:
+        analysis_file = get_analysis_file(req.video_name)
+        if not analysis_file or not os.path.exists(analysis_file):
+            return {"status": "error", "message": "Archivo no encontrado"}
+
+        with open(analysis_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        markers = data.get("guion_markers", [])
+        data["guion_markers"] = [m for m in markers if m.get("id") != req.marker_id]
+        atomic_write_json(analysis_file, data)
+        return {"status": "success", "markers": data["guion_markers"]}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
 @app.get("/clips")
 def get_clips(video_name: str = ""):
     try:

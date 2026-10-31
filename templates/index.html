@@ -412,9 +412,10 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     <div id="view-timeline">
         <div id="sidebar">
             <h2 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 20px; text-align: center;">Secuencia 1: Menu Principal (Auto Clipper V12)</h2>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="btn" style="background: var(--bg-card); box-shadow: none; border: 1px solid var(--border-color); flex: 1; padding: 10px 5px; font-size: 13px; margin: 0; color: var(--text-muted);" onclick="openConfigModal()"> Config</button>
-                <button class="btn" style="background: var(--bg-hover); box-shadow: none; border: 1px solid var(--border-color); flex: 2; padding: 10px 5px; font-size: 13px; margin: 0; color: var(--text-main);" onclick="openHistoryView()"> Historial y Redes</button>
+            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                <button class="btn" style="background: var(--bg-card); box-shadow: none; border: 1px solid var(--border-color); flex: 1; padding: 10px 5px; font-size: 13px; margin: 0; color: var(--text-muted);" onclick="openConfigModal()">⚙️ Config</button>
+                <button class="btn" style="background: var(--bg-hover); box-shadow: none; border: 1px solid var(--border-color); flex: 1.5; padding: 10px 5px; font-size: 13px; margin: 0; color: var(--text-main);" onclick="openHistoryView()">📅 Historial y Redes</button>
+                <button class="btn" style="background: rgba(245, 158, 11, 0.16); box-shadow: none; border: 1px solid #f59e0b; flex: 1.2; padding: 10px 5px; font-size: 13px; font-weight: 700; margin: 0; color: #fbbf24;" onclick="openGuionView()">📝 Guion</button>
             </div>
             
             <div id="cost-tracker-widget" style="margin-bottom: 15px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.3); cursor: pointer; transition: var(--transition);" onclick="alert('Historial detallado:\\n' + JSON.stringify(costHistoryData, null, 2))" title="Haz clic para ver el historial mensual">
@@ -1006,6 +1007,78 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
                     <!-- Filas dinmicas subidas -->
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- VISTA GUION (MOMENTOS IMPORTANTES PARA VIDEO LARGO DE YOUTUBE) -->
+    <div id="view-guion" style="display: none; height: 100vh; background: var(--bg-base); overflow: hidden;">
+        <!-- Sidebar Izquierda de Guion -->
+        <div style="width: 380px; background: var(--bg-panel); padding: 20px; overflow-y: auto; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 14px; box-shadow: var(--shadow-lg); z-index: 10;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: #fbbf24; margin: 0; font-size: 18px; display:flex; align-items:center; gap:8px;">📝 Guion (Video Largo)</h2>
+                <button class="btn" style="background: var(--bg-card); border: 1px solid var(--border-color); width: auto; margin: 0; padding: 6px 12px; font-size: 12px;" onclick="closeGuionView()">← Volver a Clips</button>
+            </div>
+
+            <div style="padding: 14px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <label style="margin-bottom: 6px; display: block; font-size: 12px; color: var(--text-muted);">Juego / Carpeta:</label>
+                <select id="guion-folder-selector" class="input-text" style="margin-bottom: 12px;" onchange="onGuionFolderChange()">
+                    <option value="">Selecciona un Juego...</option>
+                </select>
+                <label style="margin-bottom: 6px; display: block; font-size: 12px; color: var(--text-muted);">Video Seleccionado:</label>
+                <select id="guion-video-selector" class="input-text" onchange="onGuionVideoChange()">
+                    <option value="">Selecciona un Video...</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+                <button class="btn" style="flex: 1.3; margin: 0; padding: 10px 8px; font-size: 12px; background: linear-gradient(135deg, #d97706, #f59e0b); color: #000; font-weight: 700;" onclick="addManualGuionMarkerAtCurrentTime()">📍 + Marcar Momento Actual</button>
+                <button class="btn" style="flex: 1; margin: 0; padding: 10px 8px; font-size: 12px; background: var(--bg-card); border: 1px solid var(--border-color);" onclick="copyFullGuionToClipboard()">📋 Copiar Guion</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                <h3 style="color: #fbbf24; margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.8px;">Momentos Marcados (<span id="guion-markers-count">0</span>)</h3>
+                <span style="font-size: 11px; color: var(--text-muted);">Botón: <code style="color:#fbbf24;">marcar_guion.bat</code></span>
+            </div>
+
+            <div id="guion-markers-list" style="display: flex; flex-direction: column; gap: 10px; flex: 1;">
+                <div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 25px 10px;">Selecciona un video para ver sus marcas de guion.</div>
+            </div>
+        </div>
+
+        <!-- Panel Principal Derecho: Video + Timeline de Marcas + Textbox de Guion -->
+        <div style="flex: 1; display: flex; flex-direction: column; padding: 20px 26px; gap: 14px; overflow-y: auto;">
+            <!-- Video Player -->
+            <div style="flex: 1; min-height: 300px; background: #000; border-radius: var(--radius-lg); position: relative; overflow: hidden; box-shadow: var(--shadow-float); border: 1px solid var(--border-color);">
+                <video id="guion-video" controls style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; object-fit: contain;"></video>
+            </div>
+
+            <!-- Barra de Tiempo de Marcas de Guion -->
+            <div style="background: var(--bg-panel); padding: 16px 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-float);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--text-muted);">
+                    <span>Línea de Tiempo del Video (Haz clic en cualquier marca dorada 📝 para ir al momento y editar su nota)</span>
+                    <span id="guion-current-time-display" style="color: #fbbf24; font-weight: 700;">00:00</span>
+                </div>
+                <div id="guion-timeline-dots" style="position: relative; width: 100%; height: 16px; background: var(--bg-base); border-radius: 8px; cursor: pointer; box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);" onclick="seekGuionTimeline(event)">
+                    <div id="guion-timeline-playhead" style="position: absolute; top: -5px; bottom: -5px; width: 2px; background: #ffffff; box-shadow: 0 0 6px #fbbf24; left: 0%; pointer-events: none; z-index: 20;"></div>
+                </div>
+            </div>
+
+            <!-- Cuadro de Escritura de Guion para la Marca Seleccionada -->
+            <div style="background: var(--bg-panel); padding: 18px 20px; border-radius: var(--radius-lg); border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: var(--shadow-float); display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span id="guion-selected-badge" style="background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #fbbf24; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 700;">Ninguna marca seleccionada</span>
+                        <input type="text" id="guion-marker-title" class="input-text" placeholder="Título corto del momento (ej: Primera aparición del jefe)..." style="width: 300px; padding: 6px 10px; font-size: 13px;" oninput="scheduleSaveGuionMarker()" onblur="saveSelectedGuionMarkerNow()" disabled>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <button type="button" class="btn" style="width: auto; margin: 0; padding: 5px 10px; font-size: 11px; background: var(--bg-card);" onclick="nudgeSelectedGuionMarkerTime(-5)" title="Retroceder marca 5 segundos">⏪ -5s</button>
+                        <button type="button" class="btn" style="width: auto; margin: 0; padding: 5px 10px; font-size: 11px; background: var(--bg-card);" onclick="nudgeSelectedGuionMarkerTime(5)" title="Adelantar marca 5 segundos">⏩ +5s</button>
+                        <button type="button" class="btn" style="width: auto; margin: 0; padding: 5px 10px; font-size: 11px; background: var(--bg-hover);" onclick="setSelectedGuionMarkerToCurrentVideoTime()" title="Mover la marca al segundo actual del reproductor">📍 Mover al tiempo actual</button>
+                        <span id="guion-save-status" style="font-size: 12px; color: var(--success); font-weight: 600; min-width: 110px; text-align: right;"></span>
+                    </div>
+                </div>
+                <textarea id="guion-marker-note" class="input-text" style="width: 100%; height: 120px; resize: vertical; font-size: 14px; line-height: 1.5; padding: 12px;" placeholder="Selecciona una marca de la izquierda (o de la barra de tiempo) y escribe acá tu explicación o guion de este momento... Todo se guarda automáticamente." oninput="scheduleSaveGuionMarker()" onblur="saveSelectedGuionMarkerNow()" disabled></textarea>
+            </div>
         </div>
     </div>
 
@@ -6008,6 +6081,7 @@ let transcribeController = null;
             document.getElementById('view-timeline').style.display = 'none';
             document.getElementById('view-editor').style.display = 'none';
             document.getElementById('view-trimmer').style.display = 'none';
+            if (document.getElementById('view-guion')) document.getElementById('view-guion').style.display = 'none';
             document.getElementById('view-history').style.display = 'flex';
             loadHistory();
         }
@@ -6015,6 +6089,436 @@ let transcribeController = null;
         function closeHistoryView() {
             document.getElementById('view-history').style.display = 'none';
             document.getElementById('view-timeline').style.display = 'flex';
+        }
+
+        // --- GUION VIEW LOGIC (MOMENTOS IMPORTANTES PARA VIDEO LARGO) ---
+        let guionMarkersData = [];
+        let selectedGuionMarkerId = null;
+        let guionVideoName = "";
+        let guionSaveTimeout = null;
+
+        function openGuionView() {
+            if (tlVideo && !tlVideo.paused) tlVideo.pause();
+            document.getElementById('view-timeline').style.display = 'none';
+            document.getElementById('view-editor').style.display = 'none';
+            document.getElementById('view-trimmer').style.display = 'none';
+            document.getElementById('view-history').style.display = 'none';
+            const vg = document.getElementById('view-guion');
+            vg.style.display = 'flex';
+
+            populateGuionSelectorsFromMain();
+        }
+
+        function closeGuionView() {
+            saveSelectedGuionMarkerNow();
+            const gv = document.getElementById('guion-video');
+            if (gv && !gv.paused) gv.pause();
+            document.getElementById('view-guion').style.display = 'none';
+            document.getElementById('view-timeline').style.display = 'flex';
+        }
+
+        function populateGuionSelectorsFromMain() {
+            const mainFolderSel = document.getElementById('folder-selector');
+            const mainVideoSel = document.getElementById('video-selector');
+            const gFolderSel = document.getElementById('guion-folder-selector');
+            const gVideoSel = document.getElementById('guion-video-selector');
+            if (!gFolderSel || !gVideoSel) return;
+
+            gFolderSel.innerHTML = mainFolderSel ? mainFolderSel.innerHTML : '<option value="">Selecciona un Juego...</option>';
+            if (mainFolderSel && mainFolderSel.value) {
+                gFolderSel.value = mainFolderSel.value;
+            }
+            updateGuionVideoDropdown(mainVideoSel ? mainVideoSel.value : "");
+        }
+
+        function updateGuionVideoDropdown(preferredVideo = "") {
+            const folder = document.getElementById('guion-folder-selector').value;
+            const gVideoSel = document.getElementById('guion-video-selector');
+            gVideoSel.innerHTML = '<option value="">Selecciona un Video...</option>';
+            if (!folder) return;
+
+            const filtered = allVideosList.filter(v => {
+                const parts = v.name.split('/');
+                const vFolder = parts.length > 1 ? parts[0] : "Raz";
+                return vFolder === folder;
+            });
+
+            filtered.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.name;
+                const parts = v.name.split('/');
+                opt.innerText = parts[parts.length - 1];
+                if (preferredVideo && v.name === preferredVideo) opt.selected = true;
+                gVideoSel.appendChild(opt);
+            });
+
+            if (!gVideoSel.value && gVideoSel.options.length > 1) {
+                gVideoSel.selectedIndex = 1;
+            }
+            if (gVideoSel.value) {
+                loadGuionForVideo(gVideoSel.value);
+            }
+        }
+
+        function onGuionFolderChange() {
+            saveSelectedGuionMarkerNow();
+            updateGuionVideoDropdown("");
+        }
+
+        function onGuionVideoChange() {
+            saveSelectedGuionMarkerNow();
+            const v = document.getElementById('guion-video-selector').value;
+            if (v) loadGuionForVideo(v);
+        }
+
+        async function loadGuionForVideo(vName) {
+            guionVideoName = vName;
+            selectedGuionMarkerId = null;
+            const gv = document.getElementById('guion-video');
+            if (gv) {
+                const targetSrc = window.location.origin + "/videos/" + encodeURIComponent(vName);
+                if (gv.src !== targetSrc) {
+                    gv.src = targetSrc;
+                }
+                gv.onloadedmetadata = () => {
+                    drawGuionTimelineDots();
+                };
+                gv.ontimeupdate = () => {
+                    const ph = document.getElementById('guion-timeline-playhead');
+                    if (ph && gv.duration) {
+                        ph.style.left = `${(gv.currentTime / gv.duration) * 100}%`;
+                    }
+                    const disp = document.getElementById('guion-current-time-display');
+                    if (disp) disp.innerText = formatTime(gv.currentTime);
+                };
+            }
+
+            try {
+                const res = await fetch(`/guion?video_name=${encodeURIComponent(vName)}`);
+                const json = await res.json();
+                guionMarkersData = (json.data && json.data.markers) ? json.data.markers : [];
+            } catch (e) {
+                console.error("Error cargando guion:", e);
+                guionMarkersData = [];
+            }
+
+            renderGuionSidebar();
+            drawGuionTimelineDots();
+            if (guionMarkersData.length > 0) {
+                selectGuionMarker(guionMarkersData[0].id, false);
+            } else {
+                clearGuionEditorBox();
+            }
+        }
+
+        function clearGuionEditorBox() {
+            const badge = document.getElementById('guion-selected-badge');
+            const titleIn = document.getElementById('guion-marker-title');
+            const noteTa = document.getElementById('guion-marker-note');
+            const statusEl = document.getElementById('guion-save-status');
+            if (badge) badge.innerText = "Ninguna marca seleccionada";
+            if (titleIn) { titleIn.value = ""; titleIn.disabled = true; }
+            if (noteTa) { noteTa.value = ""; noteTa.disabled = true; }
+            if (statusEl) statusEl.innerText = "";
+        }
+
+        function renderGuionSidebar() {
+            const countEl = document.getElementById('guion-markers-count');
+            if (countEl) countEl.innerText = guionMarkersData.length;
+            const listEl = document.getElementById('guion-markers-list');
+            if (!listEl) return;
+
+            if (!guionMarkersData.length) {
+                listEl.innerHTML = `<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 25px 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);">No hay marcas de guion todavía en este video.<br><br>Usa <code style="color:#fbbf24;">marcar_guion.bat</code> en tu Streamdeck mientras grabas o el botón <b>"📍 + Marcar Momento Actual"</b> arriba.</div>`;
+                return;
+            }
+
+            let html = '';
+            guionMarkersData.forEach((m, idx) => {
+                const isSel = (m.id === selectedGuionMarkerId);
+                const hasNote = Boolean(m.note && m.note.trim().length > 0);
+                const borderCol = isSel ? '#fbbf24' : (hasNote ? 'rgba(16, 185, 129, 0.45)' : 'var(--border-color)');
+                const bgCol = isSel ? 'rgba(245, 158, 11, 0.14)' : 'var(--bg-card)';
+                const notePreview = hasNote
+                    ? m.note.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    : '<i style="color:#64748b;">Sin explicación escrita aún (clic para redactar)...</i>';
+                const statusBadge = hasNote
+                    ? `<span style="background:rgba(16,185,129,0.18); color:#10b981; border:1px solid #10b981; font-size:10px; padding:1px 6px; border-radius:4px; font-weight:700;">✓ Escrito</span>`
+                    : `<span style="background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.5); font-size:10px; padding:1px 6px; border-radius:4px;">Pendiente</span>`;
+
+                html += `
+                    <div onclick="selectGuionMarker('${m.id}', true)" style="padding: 12px; background: ${bgCol}; border: 2px solid ${borderCol}; border-radius: 8px; cursor: pointer; transition: 0.15s;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="background:#f59e0b; color:#000; font-weight:800; font-size:11px; padding:2px 7px; border-radius:4px;">#${idx + 1} • ${m.time_label || formatTime(m.time)}</span>
+                                ${statusBadge}
+                            </div>
+                            <button type="button" onclick="deleteGuionMarker('${m.id}', event)" style="background:transparent; border:none; color:#ef4444; cursor:pointer; font-size:14px; font-weight:bold; padding:2px 6px;" title="Eliminar esta marca">✕</button>
+                        </div>
+                        <div style="font-weight:700; font-size:13px; color:#f8fafc; margin-bottom:4px;">${(m.title || `Momento ${idx+1}`).replace(/</g, '&lt;')}</div>
+                        <div style="font-size:12px; color:#cbd5e1; line-height:1.4; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${notePreview}</div>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html;
+        }
+
+        function drawGuionTimelineDots() {
+            const container = document.getElementById('guion-timeline-dots');
+            const gv = document.getElementById('guion-video');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const dur = (gv && gv.duration && !isNaN(gv.duration)) ? gv.duration : 0;
+            if (dur > 0) {
+                guionMarkersData.forEach((m, idx) => {
+                    const perc = Math.max(0, Math.min(100, (m.time / dur) * 100));
+                    const isSel = (m.id === selectedGuionMarkerId);
+                    const hasNote = Boolean(m.note && m.note.trim().length > 0);
+                    const dot = document.createElement('div');
+                    dot.style.position = 'absolute';
+                    dot.style.left = `${perc}%`;
+                    dot.style.top = isSel ? '-5px' : '-3px';
+                    dot.style.width = isSel ? '24px' : '20px';
+                    dot.style.height = isSel ? '24px' : '20px';
+                    dot.style.borderRadius = '4px';
+                    dot.style.transform = 'translateX(-50%) rotate(45deg)';
+                    dot.style.background = hasNote ? '#10b981' : '#f59e0b';
+                    dot.style.border = isSel ? '3px solid #ffffff' : '2px solid #ffffff';
+                    dot.style.boxShadow = isSel ? '0 0 14px #fbbf24, 0 0 5px #ffffff' : '0 0 8px rgba(245, 158, 11, 0.8)';
+                    dot.style.cursor = 'pointer';
+                    dot.style.zIndex = isSel ? '12' : '6';
+                    dot.title = `#${idx + 1} (${m.time_label || formatTime(m.time)}) - ${m.title || ''}\n${m.note || 'Sin nota aún'}`;
+                    dot.onclick = (e) => {
+                        e.stopPropagation();
+                        selectGuionMarker(m.id, true);
+                    };
+                    container.appendChild(dot);
+                });
+            }
+
+            const playhead = document.createElement('div');
+            playhead.id = 'guion-timeline-playhead';
+            playhead.style.position = 'absolute';
+            playhead.style.top = '-5px';
+            playhead.style.bottom = '-5px';
+            playhead.style.width = '2px';
+            playhead.style.background = '#ffffff';
+            playhead.style.boxShadow = '0 0 6px #fbbf24';
+            playhead.style.left = (gv && dur > 0) ? `${(gv.currentTime / dur) * 100}%` : '0%';
+            playhead.style.pointerEvents = 'none';
+            playhead.style.zIndex = '20';
+            container.appendChild(playhead);
+        }
+
+        function seekGuionTimeline(e) {
+            const gv = document.getElementById('guion-video');
+            if (!gv || !gv.duration) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const perc = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            gv.currentTime = perc * gv.duration;
+        }
+
+        async function selectGuionMarker(markerId, seekVideo = true) {
+            if (selectedGuionMarkerId && selectedGuionMarkerId !== markerId) {
+                await saveSelectedGuionMarkerNow();
+            }
+            const m = guionMarkersData.find(x => x.id === markerId);
+            if (!m) return;
+            selectedGuionMarkerId = markerId;
+            const idx = guionMarkersData.indexOf(m) + 1;
+
+            const badge = document.getElementById('guion-selected-badge');
+            const titleIn = document.getElementById('guion-marker-title');
+            const noteTa = document.getElementById('guion-marker-note');
+            const statusEl = document.getElementById('guion-save-status');
+
+            if (badge) badge.innerText = `📝 Marca #${idx} — ${m.time_label || formatTime(m.time)}`;
+            if (titleIn) {
+                titleIn.disabled = false;
+                titleIn.value = m.title || `Momento ${idx} (${m.time_label || formatTime(m.time)})`;
+            }
+            if (noteTa) {
+                noteTa.disabled = false;
+                noteTa.value = m.note || "";
+            }
+            if (statusEl) statusEl.innerText = "";
+
+            renderGuionSidebar();
+            drawGuionTimelineDots();
+
+            if (seekVideo) {
+                const gv = document.getElementById('guion-video');
+                if (gv) {
+                    gv.currentTime = m.time;
+                }
+                if (noteTa) noteTa.focus();
+            }
+        }
+
+        function scheduleSaveGuionMarker() {
+            const m = guionMarkersData.find(x => x.id === selectedGuionMarkerId);
+            if (!m) return;
+            const titleIn = document.getElementById('guion-marker-title');
+            const noteTa = document.getElementById('guion-marker-note');
+            if (titleIn) m.title = titleIn.value;
+            if (noteTa) m.note = noteTa.value;
+
+            const statusEl = document.getElementById('guion-save-status');
+            if (statusEl) {
+                statusEl.style.color = '#fbbf24';
+                statusEl.innerText = 'Guardando...';
+            }
+            if (guionSaveTimeout) clearTimeout(guionSaveTimeout);
+            guionSaveTimeout = setTimeout(() => {
+                saveSelectedGuionMarkerNow();
+            }, 400);
+        }
+
+        async function saveSelectedGuionMarkerNow() {
+            if (guionSaveTimeout) {
+                clearTimeout(guionSaveTimeout);
+                guionSaveTimeout = null;
+            }
+            if (!selectedGuionMarkerId || !guionVideoName) return;
+            const m = guionMarkersData.find(x => x.id === selectedGuionMarkerId);
+            if (!m) return;
+
+            const titleIn = document.getElementById('guion-marker-title');
+            const noteTa = document.getElementById('guion-marker-note');
+            if (titleIn && !titleIn.disabled) m.title = titleIn.value;
+            if (noteTa && !noteTa.disabled) m.note = noteTa.value;
+
+            try {
+                const res = await fetch('/save_guion_marker', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        video_name: guionVideoName,
+                        marker_id: m.id,
+                        title: m.title,
+                        note: m.note,
+                        time: m.time
+                    })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    const statusEl = document.getElementById('guion-save-status');
+                    if (statusEl) {
+                        statusEl.style.color = '#10b981';
+                        statusEl.innerText = '✓ Guardado';
+                    }
+                    renderGuionSidebar();
+                    drawGuionTimelineDots();
+                }
+            } catch (e) {
+                console.error("Error guardando marca de guion:", e);
+            }
+        }
+
+        async function addManualGuionMarkerAtCurrentTime() {
+            if (!guionVideoName) {
+                alert("Selecciona un video primero.");
+                return;
+            }
+            await saveSelectedGuionMarkerNow();
+            const gv = document.getElementById('guion-video');
+            const curT = gv ? gv.currentTime : 0;
+            try {
+                const res = await fetch('/add_guion_marker', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        video_name: guionVideoName,
+                        time: curT,
+                        note: ""
+                    })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    guionMarkersData = data.markers || [];
+                    renderGuionSidebar();
+                    drawGuionTimelineDots();
+                    if (data.marker) {
+                        selectGuionMarker(data.marker.id, true);
+                    }
+                }
+            } catch (e) {
+                alert("Error creando marca de guion: " + e.message);
+            }
+        }
+
+        async function deleteGuionMarker(markerId, e) {
+            if (e) e.stopPropagation();
+            if (!confirm("¿Eliminar esta marca del guion?")) return;
+            try {
+                const res = await fetch('/delete_guion_marker', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        video_name: guionVideoName,
+                        marker_id: markerId
+                    })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    guionMarkersData = data.markers || [];
+                    if (selectedGuionMarkerId === markerId) {
+                        selectedGuionMarkerId = guionMarkersData.length ? guionMarkersData[0].id : null;
+                    }
+                    renderGuionSidebar();
+                    drawGuionTimelineDots();
+                    if (selectedGuionMarkerId) {
+                        selectGuionMarker(selectedGuionMarkerId, false);
+                    } else {
+                        clearGuionEditorBox();
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function nudgeSelectedGuionMarkerTime(deltaSec) {
+            const m = guionMarkersData.find(x => x.id === selectedGuionMarkerId);
+            if (!m) return;
+            m.time = Math.max(0, Math.round((m.time + deltaSec) * 10) / 10);
+            m.time_label = formatTime(m.time);
+            const gv = document.getElementById('guion-video');
+            if (gv) gv.currentTime = m.time;
+            await saveSelectedGuionMarkerNow();
+            selectGuionMarker(m.id, false);
+        }
+
+        async function setSelectedGuionMarkerToCurrentVideoTime() {
+            const m = guionMarkersData.find(x => x.id === selectedGuionMarkerId);
+            const gv = document.getElementById('guion-video');
+            if (!m || !gv) return;
+            m.time = Math.max(0, Math.round(gv.currentTime * 10) / 10);
+            m.time_label = formatTime(m.time);
+            await saveSelectedGuionMarkerNow();
+            selectGuionMarker(m.id, false);
+        }
+
+        async function copyFullGuionToClipboard() {
+            await saveSelectedGuionMarkerNow();
+            if (!guionMarkersData.length) {
+                alert("No hay marcas en este video para copiar.");
+                return;
+            }
+            const lines = [`=== GUION: ${guionVideoName} ===\n`];
+            guionMarkersData.forEach((m, i) => {
+                const tStr = m.time_label || formatTime(m.time);
+                const titleStr = m.title ? ` - ${m.title}` : '';
+                const noteStr = (m.note && m.note.trim()) ? m.note.trim() : '(Sin nota)';
+                lines.push(`[${tStr}] #${i + 1}${titleStr}\n${noteStr}\n`);
+            });
+            try {
+                await navigator.clipboard.writeText(lines.join("\n"));
+                alert("📋 Guion completo copiado al portapapeles.");
+            } catch (e) {
+                alert("No se pudo copiar automáticamente.");
+            }
         }
 
         async function markAsPublished(clipId, videoName) {
